@@ -178,7 +178,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .grp-h .chev{margin-left:auto;width:13px;height:13px;color:var(--t-lo);transition:transform .25s}
 .grp.open .chev{transform:rotate(180deg)}
 .grp-b{max-height:0;overflow:hidden;transition:max-height .3s ease;padding:0 16px}
-.grp.open .grp-b{max-height:420px;padding-bottom:14px}
+.grp.open .grp-b{max-height:760px;padding-bottom:14px}
 .row{display:flex;align-items:center;justify-content:space-between;padding:8px 0}
 .row .lbl{font-size:14px;color:var(--t-hi)}
 .row .lbl .hint{font-size:12px;color:var(--t-lo);display:block;margin-top:1px}
@@ -259,11 +259,44 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;heigh
 .track{position:absolute;inset:0;display:flex;flex-direction:column;gap:5px}
 .lane-zooms{position:relative;height:24px}
 .zblock{position:absolute;top:0;height:24px;border-radius:6px;background:var(--acc-muted);
-  border:1px solid rgba(11,11,207,.25);display:flex;align-items:center;gap:5px;padding:0 8px;
-  font-size:9.5px;font-weight:600;color:var(--acc-deep);cursor:pointer;transition:.12s;overflow:hidden;white-space:nowrap}
+  border:1px solid rgba(11,11,207,.25);display:flex;align-items:center;gap:5px;padding:0 9px;
+  font-size:10px;font-weight:600;color:var(--acc-deep);cursor:grab;transition:background .12s,border-color .12s,box-shadow .12s;overflow:hidden;white-space:nowrap;touch-action:none}
 .zblock:hover{background:#EBEBFF;border-color:rgba(11,11,207,.4)}
 .zblock.active{background:var(--acc);color:#fff;border-color:var(--acc)}
+.zblock.manual{background:#ECE6FF;border-color:rgba(61,61,233,.45);color:#3A1DAE}
+.zblock.manual.active{background:var(--acc-2);color:#fff;border-color:var(--acc-2)}
+.zblock.sel{box-shadow:0 0 0 2px #fff,0 0 0 4px var(--acc);z-index:6;overflow:visible}
+.zblock:active{cursor:grabbing}
 .zblock .zi{width:8px;height:8px;flex:0 0 auto}
+.zblock .zlbl{overflow:hidden;text-overflow:ellipsis}
+.zhandle{position:absolute;top:0;bottom:0;width:8px;cursor:ew-resize;z-index:4;opacity:0;transition:.12s}
+.zhandle.l{left:0}.zhandle.r{right:0}
+.zhandle::after{content:"";position:absolute;top:50%;left:3px;transform:translateY(-50%);width:2px;height:11px;border-radius:2px;background:currentColor}
+.zblock.sel .zhandle,.zblock:hover .zhandle{opacity:.7}
+
+/* focus-point picker on the preview */
+.focusdot{position:absolute;z-index:8;width:26px;height:26px;margin:-13px 0 0 -13px;cursor:grab;
+  border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 2px var(--acc),0 2px 10px rgba(11,11,80,.5);
+  background:rgba(11,11,207,.22);touch-action:none;transition:opacity .2s}
+.focusdot::after{content:"";position:absolute;inset:8px;border-radius:50%;background:#fff;box-shadow:0 0 6px rgba(11,11,207,.9)}
+.focusdot:active{cursor:grabbing}
+.focusdot .fd-lbl{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);white-space:nowrap;
+  font-size:10px;font-weight:700;color:#fff;background:var(--acc);padding:2px 8px;border-radius:5px;box-shadow:0 2px 8px rgba(11,11,80,.4)}
+
+/* add-zoom button + per-zoom editor */
+.add-zoom{width:100%;margin-top:8px;display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  font-size:13px;font-weight:600;color:var(--acc);background:var(--acc-muted);border:1px dashed rgba(11,11,207,.45);
+  padding:9px;border-radius:9px;transition:.15s}
+.add-zoom:hover{background:#EBEBFF;border-style:solid}
+.add-zoom .icon{stroke:currentColor;stroke-width:2.2}
+.zedit{margin-top:10px;padding:11px 12px 12px;border-radius:10px;background:var(--bg-800);border:1px solid var(--line)}
+.zedit-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:2px}
+.zedit-h #zeTitle{font-size:14px;font-weight:700;color:var(--t-hi)}
+.zedit-del{font-size:12px;font-weight:600;color:var(--red);padding:4px 8px;border-radius:6px;transition:.12s}
+.zedit-del:hover{background:#FEF3F2}
+.zedit-hint{font-size:12px;color:var(--t-lo);line-height:1.5;margin-top:4px}
+.zedit-hint b{color:var(--t-mid);font-weight:600}
+.zm.sel{box-shadow:inset 0 0 0 1.5px var(--acc)}
 .lane-clip{position:relative;flex:1;background:var(--bg-750);border-radius:8px;overflow:hidden;border:1px solid var(--line)}
 .wave{position:absolute;inset:0;display:flex;align-items:center;gap:1px;padding:0 6px}
 .wave i{flex:1;background:var(--border-med);border-radius:1px;min-width:1px}
@@ -415,6 +448,8 @@ body.notes-on .transport,body.notes-on .wave{opacity:.35}
               </div>
               <!-- subtitle (does not scale) -->
               <div class="caption" id="caption"></div>
+              <!-- focus-point picker (drag to aim a zoom) -->
+              <div class="focusdot" id="focusdot" hidden><span class="fd-lbl">Focus</span></div>
             </div>
           </div>
         </div>
@@ -477,16 +512,18 @@ body.notes-on .transport,body.notes-on .wave{opacity:.35}
 
         <!-- SMART ZOOM -->
         <section class="grp open" data-g>
-          <button class="grp-h"><svg class="gi icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg>Smart zoom <span class="cnt">· 4 moments</span><svg class="chev icon" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+          <button class="grp-h"><svg class="gi icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg>Smart zoom <span class="cnt" id="zmCount">· 4 zooms</span><svg class="chev icon" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
           <div class="grp-b">
-            <div class="row"><span class="lbl">Auto-zoom on clicks</span><button class="sw" aria-pressed="true" data-k="zoom"><span class="knob"></span></button></div>
-            <div class="sl-row"><div class="sl-top"><span>Intensity</span><span class="v" id="intV">Medium</span></div><input type="range" min="60" max="130" value="100" id="intSl"></div>
+            <div class="row"><span class="lbl">Auto-zoom on clicks<span class="hint">detects clicks &amp; key actions</span></span><button class="sw" aria-pressed="true" data-k="zoom"><span class="knob"></span></button></div>
+            <div class="sl-row"><div class="sl-top"><span>Auto intensity</span><span class="v" id="intV">Medium</span></div><input type="range" min="60" max="130" value="100" id="intSl"></div>
             <div class="row"><span class="lbl">Motion</span><div class="mini-seg" id="motion"><button class="on" data-mo="smooth">Smooth</button><button data-mo="snappy">Snappy</button></div></div>
-            <div style="margin-top:6px" id="zmList">
-              <div class="zm" data-i="0"><span class="zt">0:06</span><span class="zn">Create report</span><span class="zx">1.9×</span></div>
-              <div class="zm" data-i="1"><span class="zt">0:41</span><span class="zn">Connect data source</span><span class="zx">1.8×</span></div>
-              <div class="zm" data-i="2"><span class="zt">1:18</span><span class="zn">Share</span><span class="zx">2.0×</span></div>
-              <div class="zm" data-i="3"><span class="zt">2:02</span><span class="zn">Publish</span><span class="zx">1.9×</span></div>
+            <div id="zmList" style="margin-top:6px"></div>
+            <button id="addZoom" class="add-zoom"><svg class="icon" width="15" height="15" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Add zoom at playhead</button>
+            <div id="zoomEditor" class="zedit" hidden>
+              <div class="zedit-h"><span id="zeTitle">Custom zoom</span><button id="zeDel" class="zedit-del">Delete</button></div>
+              <div class="sl-row"><div class="sl-top"><span>Zoom level</span><span class="v" id="zeScaleV">1.8×</span></div><input type="range" min="120" max="300" value="180" id="zeScale"></div>
+              <div class="sl-row"><div class="sl-top"><span>Duration</span><span class="v" id="zeDurV">2.0s</span></div><input type="range" min="6" max="80" value="20" id="zeDur"></div>
+              <div class="zedit-hint">Drag the <b>focus point</b> on the video to aim the zoom — or drag / resize the block on the timeline.</div>
             </div>
           </div>
         </section>
@@ -570,23 +607,28 @@ body.notes-on .transport,body.notes-on .wave{opacity:.35}
 
 <script>
 (function(){
+  // auto-zoom seeds — tied to click targets in the recording
   const TARGETS=[
-    {id:'btn-create', cap:"Let’s create your first report —", zoom:1.9},
-    {id:'btn-connect',cap:"connect a data source in one click,", zoom:1.8},
-    {id:'btn-share',  cap:"share it with your team,", zoom:2.0},
-    {id:'btn-publish',cap:"and publish it live.", zoom:1.9},
+    {id:'btn-create', label:'Create report',       cap:"Let’s create your first report —", zoom:1.9, phrase:0},
+    {id:'btn-connect',label:'Connect data source', cap:"connect a data source in one click,", zoom:1.8, phrase:1},
+    {id:'btn-share',  label:'Share',               cap:"share it with your team,", zoom:2.0, phrase:2},
+    {id:'btn-publish',label:'Publish',             cap:"and publish it live.", zoom:1.9, phrase:3},
   ];
-  const LOOP=16, BEAT=4;
+  const LOOP=16, BEAT=4, TOTAL=145;
   const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
   const zoomwrap=$('#zoomwrap'), screenEl=$('#screen'), cursor=$('#cursor'),
         ripple=$('#ripple'), caption=$('#caption'), playhead=$('#playhead'), tc=$('#tc'),
-        canvas=$('#canvas');
-  const zmEls=$$('#zmList .zm'); let zblockEls=[];
+        canvas=$('#canvas'), zlane=$('#zlane'), zmList=$('#zmList'), focusdot=$('#focusdot');
 
   let playing=true, t=2, last=performance.now();
-  let centers=[], lastKey='', lastPair='';
+  let centers=[], lastKey='', lastActiveStateId='__init';
   const S={zoom:true,captions:true,clickhl:true,smooth:true,fillers:true,pauses:true,retakes:false,
            mode:'after', intensity:1, motion:'smooth'};
+
+  // ===== ZOOM MODEL — every zoom (auto or manual) is just a segment =====
+  // {id, start, dur, x, y, scale, cap, auto, ti, phrase, label}
+  let zooms=[], seq=0, selId=null;
 
   function fmt(s){s=Math.max(0,Math.round(s));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0');}
 
@@ -598,7 +640,21 @@ body.notes-on .transport,body.notes-on .wave{opacity:.35}
     centers=TARGETS.map(o=>{const el=document.getElementById(o.id);const r=el.getBoundingClientRect();
       return {x:(r.left+r.width/2-sr.left)/sr.width*100, y:(r.top+r.height/2-sr.top)/sr.height*100};});
     void zoomwrap.offsetWidth; zoomwrap.style.transition=tr; lastKey='';
+    if(!zooms.length) initZooms(); else zooms.forEach(z=>{if(z.auto&&!z.customFocus&&centers[z.ti]){z.x=centers[z.ti].x;z.y=centers[z.ti].y;}});
   }
+  function initZooms(){
+    zooms=TARGETS.map((o,i)=>({id:'z'+(seq++),start:i*BEAT,dur:2.8,x:centers[i].x,y:centers[i].y,
+      scale:o.zoom,cap:o.cap,auto:true,ti:i,phrase:o.phrase,label:o.label}));
+    renderZoomBlocks(); renderZoomList();
+  }
+
+  // active zoom at current time — prefer the latest-starting (manual on top of auto)
+  function activeZoom(){
+    let best=null;
+    for(const z of zooms) if(t>=z.start && t<z.start+z.dur && (!best||z.start>best.start)) best=z;
+    return best;
+  }
+  const effScale=z=> z.auto ? z.scale*S.intensity : z.scale;
 
   function fireRipple(c){
     ripple.style.left=c.x+'%'; ripple.style.top=c.y+'%';
@@ -606,70 +662,174 @@ body.notes-on .transport,body.notes-on .wave{opacity:.35}
     cursor.classList.add('press'); setTimeout(()=>cursor.classList.remove('press'),140);
   }
 
-  function applyStage(b,stage){
-    const pair=b+'-'+stage, changed=pair!==lastPair;
-    const key=[b,stage,S.mode,S.zoom,S.captions,S.clickhl,S.intensity.toFixed(2),S.motion].join('|');
-    if(key===lastKey){lastPair=pair;return;} lastKey=key; lastPair=pair;
-    const c=centers[b]||{x:50,y:50};
-    cursor.style.left=c.x+'%'; cursor.style.top=c.y+'%';
-    const dur = S.motion==='snappy'?'.45s':'.85s';
-    const ease= S.motion==='snappy'?'cubic-bezier(.2,.9,.3,1)':'cubic-bezier(.34,1.56,.55,1)';
+  let lastZId=null;
+  function applyActive(z){
+    const on = z && (z.auto?S.zoom:true) && S.mode==='after';
+    const sc = z?effScale(z):1;
+    const key=[z?z.id:'-',on,sc.toFixed(2),S.captions,S.clickhl,S.motion,S.mode].join('|');
+    const zChanged=(z?z.id:null)!==lastZId;
+    if(key===lastKey){lastZId=z?z.id:null;return;} lastKey=key; lastZId=z?z.id:null;
+    const dur=S.motion==='snappy'?'.45s':'.85s';
+    const ease=S.motion==='snappy'?'cubic-bezier(.2,.9,.3,1)':'cubic-bezier(.34,1.56,.55,1)';
     zoomwrap.style.transition='transform '+dur+' '+ease;
-    const zoomOn = S.zoom && S.mode==='after';
-    if(stage==='focus' && zoomOn){
-      zoomwrap.style.transformOrigin=c.x+'% '+c.y+'%';
-      zoomwrap.style.transform='scale('+(TARGETS[b].zoom*S.intensity).toFixed(3)+')';
-    } else { zoomwrap.style.transform='scale(1)'; }
-    if(stage==='focus' && S.captions && S.mode==='after'){caption.textContent=TARGETS[b].cap;caption.classList.add('show');}
-    else caption.classList.remove('show');
-    if(stage==='focus' && changed && S.clickhl && S.mode==='after') fireRipple(c);
-    zmEls.forEach((el,i)=>el.classList.toggle('active', i===b && stage==='focus'));
-    zblockEls.forEach((el,i)=>el.classList.toggle('active', i===b && stage==='focus'));
+    if(on){
+      zoomwrap.style.transformOrigin=z.x+'% '+z.y+'%';
+      zoomwrap.style.transform='scale('+sc.toFixed(3)+')';
+      cursor.style.left=z.x+'%'; cursor.style.top=z.y+'%';
+      if(S.captions && z.cap){caption.textContent=z.cap;caption.classList.add('show');}
+      else caption.classList.remove('show');
+      if(zChanged && S.clickhl && z.auto) fireRipple({x:z.x,y:z.y});
+    } else { zoomwrap.style.transform='scale(1)'; caption.classList.remove('show'); }
+  }
+
+  function updateActiveStates(z){
+    const id=z?z.id:null; if(id===lastActiveStateId) return; lastActiveStateId=id;
+    $$('#zlane .zblock').forEach(el=>el.classList.toggle('active', el.dataset.id===id));
+    $$('#zmList .zm').forEach(el=>el.classList.toggle('active', el.dataset.id===id));
   }
 
   function render(){
-    const b=Math.min(TARGETS.length-1,Math.floor(t/BEAT));
-    const phase=t-b*BEAT;
-    applyStage(b, phase<0.9?'travel':'focus');
-    setPhrase(b);
-    const total=S.mode==='before'?192:145;
+    const z=activeZoom();
+    applyActive(z);
+    setPhrase(z&&z.auto?z.phrase:-1);
+    updateActiveStates(z);
+    const total=S.mode==='before'?192:TOTAL;
     playhead.style.left=(t/LOOP*100)+'%';
     tc.innerHTML='<b>'+fmt(t/LOOP*total)+'</b> / '+fmt(total);
   }
 
   function frame(now){
-    if(playing){ t+=(now-last)/1000; if(t>=LOOP){t-=LOOP; lastPair='';} }
+    if(playing){ t+=(now-last)/1000; if(t>=LOOP){t-=LOOP; lastZId=null;} }
     last=now; render(); requestAnimationFrame(frame);
   }
+
+  // ===== render timeline blocks + list from the model =====
+  function renderZoomBlocks(){
+    zlane.innerHTML='';
+    zooms.forEach(z=>{
+      const el=document.createElement('div');
+      el.className='zblock'+(z.auto?'':' manual')+(z.id===selId?' sel':'');
+      el.dataset.id=z.id;
+      el.style.left=(z.start/LOOP*100)+'%'; el.style.width=(z.dur/LOOP*100)+'%';
+      el.innerHTML='<span class="zhandle l"></span><svg class="zi icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg><span class="zlbl">'+(z.label||'Custom')+'</span><span class="zhandle r"></span>';
+      zlane.appendChild(el);
+    });
+    bindBlockDrag(); lastActiveStateId='__init';
+  }
+  function renderZoomList(){
+    zmList.innerHTML='';
+    zooms.slice().sort((a,b)=>a.start-b.start).forEach(z=>{
+      const el=document.createElement('div');
+      el.className='zm'+(z.id===selId?' sel':'');
+      el.dataset.id=z.id;
+      el.innerHTML='<span class="zt">'+fmt(z.start/LOOP*TOTAL)+'</span><span class="zn">'+(z.label||'Custom zoom')+'</span><span class="zx">'+z.scale.toFixed(1)+'×</span>';
+      el.onclick=()=>selectZoom(z.id,true);
+      zmList.appendChild(el);
+    });
+    $('#zmCount').textContent='· '+zooms.length+' zoom'+(zooms.length===1?'':'s');
+    lastActiveStateId='__init';
+  }
+  function blockEl(id){ return $('#zlane .zblock[data-id="'+id+'"]'); }
+
+  // ===== selection + per-zoom editor =====
+  function selectZoom(id, seekToIt){
+    selId=id; const z=zooms.find(z=>z.id===id);
+    if(seekToIt && z){ t=z.start+Math.min(0.9,z.dur*0.45); lastKey=''; lastZId=null; }
+    $$('#zlane .zblock').forEach(el=>el.classList.toggle('sel', el.dataset.id===id));
+    $$('#zmList .zm').forEach(el=>el.classList.toggle('sel', el.dataset.id===id));
+    openEditor(z); showFocus(z);
+  }
+  function deselect(){ selId=null; $$('.sel').forEach(el=>el.classList.remove('sel')); openEditor(null); showFocus(null); }
+  function openEditor(z){
+    const ed=$('#zoomEditor'); if(!z){ed.hidden=true;return;} ed.hidden=false;
+    $('#zeTitle').textContent = z.auto ? z.label+' · auto' : 'Custom zoom';
+    $('#zeScale').value=Math.round(z.scale*100); $('#zeScaleV').textContent=z.scale.toFixed(1)+'×';
+    $('#zeDur').value=Math.round(z.dur*10); $('#zeDurV').textContent=z.dur.toFixed(1)+'s';
+  }
+  function showFocus(z){
+    if(!z){focusdot.hidden=true;return;}
+    focusdot.hidden=false; focusdot.style.left=z.x+'%'; focusdot.style.top=z.y+'%';
+  }
+
+  $('#zeScale').oninput=e=>{const z=zooms.find(z=>z.id===selId);if(!z)return;
+    z.scale=e.target.value/100; $('#zeScaleV').textContent=z.scale.toFixed(1)+'×';
+    const li=$('#zmList .zm[data-id="'+z.id+'"] .zx'); if(li) li.textContent=z.scale.toFixed(1)+'×';
+    lastKey=''; lastZId=null;};
+  $('#zeDur').oninput=e=>{const z=zooms.find(z=>z.id===selId);if(!z)return;
+    z.dur=clamp(e.target.value/10,0.4,LOOP-z.start); $('#zeDurV').textContent=z.dur.toFixed(1)+'s';
+    const b=blockEl(z.id); if(b) b.style.width=(z.dur/LOOP*100)+'%'; lastKey='';};
+  $('#zeDel').onclick=()=>{ zooms=zooms.filter(z=>z.id!==selId); deselect(); renderZoomBlocks(); renderZoomList(); lastKey=''; lastZId=null; };
+
+  // ===== add a zoom at the current playhead =====
+  $('#addZoom').onclick=()=>{
+    const dur=2.0, start=clamp(t,0,LOOP-dur);
+    const z={id:'z'+(seq++),start,dur,x:50,y:50,scale:1.8,cap:'',auto:false,ti:-1,phrase:-1,label:'Custom zoom'};
+    zooms.push(z); renderZoomBlocks(); renderZoomList(); selectZoom(z.id,false);
+    if(!playing){ t=clamp(start+0.45,0,LOOP); } lastKey=''; lastZId=null;
+  };
+
+  // ===== drag / resize zoom blocks on the timeline =====
+  function bindBlockDrag(){
+    $$('#zlane .zblock').forEach(el=>{
+      el.onpointerdown=e=>{
+        const z=zooms.find(z=>z.id===el.dataset.id); if(!z) return;
+        const lane=zlane.getBoundingClientRect();
+        const mode=e.target.classList.contains('l')?'l':e.target.classList.contains('r')?'r':'move';
+        const sx=e.clientX, z0={start:z.start,dur:z.dur}; let moved=false;
+        selectZoom(z.id,false);
+        el.setPointerCapture(e.pointerId);
+        el.onpointermove=ev=>{
+          const d=(ev.clientX-sx)/lane.width*LOOP; if(Math.abs(ev.clientX-sx)>3) moved=true;
+          if(mode==='move') z.start=clamp(z0.start+d,0,LOOP-z.dur);
+          else if(mode==='l'){const ns=clamp(z0.start+d,0,z0.start+z0.dur-0.4); z.start=ns; z.dur=z0.start+z0.dur-ns;}
+          else z.dur=clamp(z0.dur+d,0.4,LOOP-z.start);
+          el.style.left=(z.start/LOOP*100)+'%'; el.style.width=(z.dur/LOOP*100)+'%';
+          $('#zeDur').value=Math.round(z.dur*10); $('#zeDurV').textContent=z.dur.toFixed(1)+'s';
+          lastKey=''; lastZId=null;
+        };
+        el.onpointerup=ev=>{ el.onpointermove=null; el.onpointerup=null;
+          if(!moved){ t=z.start+Math.min(0.9,z.dur*0.45); lastKey=''; lastZId=null; }
+          renderZoomList();
+        };
+        e.preventDefault();
+      };
+    });
+  }
+
+  // ===== focus-point picker (drag on preview to aim the zoom) =====
+  focusdot.onpointerdown=e=>{
+    const z=zooms.find(z=>z.id===selId); if(!z)return;
+    const sr=screenEl.getBoundingClientRect(); focusdot.setPointerCapture(e.pointerId);
+    focusdot.onpointermove=ev=>{
+      z.x=clamp((ev.clientX-sr.left)/sr.width*100,3,97);
+      z.y=clamp((ev.clientY-sr.top)/sr.height*100,3,97);
+      focusdot.style.left=z.x+'%'; focusdot.style.top=z.y+'%';
+      z.customFocus=true;
+      if(activeZoom()===z) zoomwrap.style.transformOrigin=z.x+'% '+z.y+'%';
+      cursor.style.left=z.x+'%'; cursor.style.top=z.y+'%';
+    };
+    focusdot.onpointerup=()=>{ focusdot.onpointermove=null; focusdot.onpointerup=null; };
+    e.preventDefault(); e.stopPropagation();
+  };
 
   // build waveform
   const wave=$('#wave'); let bars='';
   for(let i=0;i<140;i++){const h=20+Math.abs(Math.sin(i*0.5)+Math.sin(i*0.13))*38+Math.random()*14;bars+='<i style="height:'+Math.min(92,h)+'%"></i>';}
   wave.innerHTML=bars;
 
-  // build zoom blocks on timeline
-  const zlane=$('#zlane');
-  TARGETS.forEach((o,i)=>{
-    const left=(i*BEAT/LOOP*100), w=(BEAT*0.62/LOOP*100);
-    const el=document.createElement('div');
-    el.className='zblock'; el.style.left=(left+3)+'%'; el.style.width=w+'%'; el.dataset.i=i;
-    el.innerHTML='<svg class="zi icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>'+o.id.replace('btn-','');
-    el.onclick=()=>seek(i); zlane.appendChild(el);
-  });
-  zblockEls=$$('#zlane .zblock');
-
-  function seek(i){ t=i*BEAT+1.2; lastPair=''; render(); }
-
   // ---- interactions ----
   $('#play').onclick=()=>{playing=!playing;
     $('#play-ic').innerHTML = playing
       ? '<rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/>'
       : '<path d="M7 4 L20 12 L7 20 Z"/>';
+    // focus picker is an editing affordance — show only when paused on a selected zoom
+    if(playing) focusdot.hidden=true;
+    else if(selId) showFocus(zooms.find(z=>z.id===selId));
   };
 
   $$('.sw[data-k]').forEach(sw=>sw.onclick=()=>{
     const k=sw.dataset.k, v=sw.getAttribute('aria-pressed')!=='true';
-    sw.setAttribute('aria-pressed',v); S[k]=v; lastKey=''; render();
+    sw.setAttribute('aria-pressed',v); S[k]=v; lastKey=''; lastZId=null; render();
   });
 
   $('#intSl').oninput=e=>{S.intensity=e.target.value/100;
@@ -678,8 +838,6 @@ body.notes-on .transport,body.notes-on .wave{opacity:.35}
 
   $$('#motion button').forEach(b=>b.onclick=()=>{$$('#motion button').forEach(x=>x.classList.remove('on'));
     b.classList.add('on'); S.motion=b.dataset.mo; lastKey='';});
-
-  zmEls.forEach(el=>el.onclick=()=>seek(+el.dataset.i));
 
   // accordions
   $$('[data-g] .grp-h').forEach(h=>h.onclick=()=>h.parentElement.classList.toggle('open'));

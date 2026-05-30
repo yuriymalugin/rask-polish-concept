@@ -245,6 +245,31 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;heigh
 .tr-toggle.on{color:var(--acc-deep);background:var(--acc-muted);border-color:rgba(11,11,207,.3)}
 .tr-toggle:hover{color:var(--t-hi);background:var(--bg-750)}
 
+/* ===== Loom-like transcript: timecode gutter · word tokens · running progress · hover-time ===== */
+.transcript-doc .tl{position:relative;padding:4px 4px 4px 46px;margin:0 0 4px;border-radius:7px;transition:background .2s}
+.transcript-doc .tl.curline{background:var(--bg-800)}
+.tlt{position:absolute;left:6px;top:6px;font-size:11px;font-weight:600;color:var(--t-lo);font-variant-numeric:tabular-nums;cursor:default}
+.transcript-doc .w{border-radius:4px;padding:0 1.5px;cursor:pointer;transition:background .1s,color .1s}
+.transcript-doc .w:hover{background:#E9E9FB}
+.transcript-doc .now{background:var(--acc)!important;color:#fff!important;text-decoration:none!important}
+#wtip{position:fixed;z-index:60;transform:translate(-50%,calc(-100% - 7px));background:#101828;color:#fff;
+  font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:5px;pointer-events:none;opacity:0;
+  transition:opacity .1s;font-variant-numeric:tabular-nums;white-space:nowrap}
+#wtip::after{content:"";position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);border:4px solid transparent;border-top-color:#101828}
+#wtip.show{opacity:1}
+/* inline retake woven into the text */
+.rk{padding:0 2px;border-radius:4px;cursor:pointer;transition:.12s}
+.rk.cand{color:#B54708;background:#FEF6EE;border-bottom:2px dotted var(--amber);border-radius:4px 4px 0 0}
+.rk.cand:hover{background:#FDEAD2}
+.rk.dropped{color:var(--t-lo);text-decoration:line-through;text-decoration-color:var(--red);opacity:.55}
+.rk.keep{color:var(--t-hi)}
+.rkpick{display:inline-flex;align-items:center;gap:2px;margin:0 4px;vertical-align:middle;white-space:nowrap;
+  background:#FFFBF4;border:1px solid #F9DBAF;border-radius:7px;padding:2px 3px}
+.rkpick-l{font-size:12px;color:var(--amber);font-weight:800;padding:0 2px}
+.rkpick button{font-size:11px;font-weight:700;color:var(--t-mid);padding:2px 7px;border-radius:5px;line-height:1.25;transition:.1s}
+.rkpick button:hover{background:#fff;color:var(--t-hi)}
+.rkpick button.on{background:var(--amber);color:#fff}
+
 /* ---------- TIMELINE ---------- */
 .timeline{flex:0 0 156px;background:var(--bg-850);border-top:1px solid var(--line);display:flex;flex-direction:column}
 .tl-tabs{display:flex;align-items:center;gap:4px;padding:8px 16px 0}
@@ -525,17 +550,10 @@ body.notes-on .transport,body.notes-on .wave{opacity:.35}
       </div>
       <div class="tpanel-body">
         <div class="transcript-doc" id="tdoc">
-          <p>Hey everyone <span class="fill">um</span> today I’ll walk you through the new <b>Acme Analytics</b> dashboard. <span class="fill">uh</span></p>
-          <p><span class="ph" data-beat="0">Let’s <b>create your first report</b></span> <a class="pausechip">⏸ 8s pause removed</a> in just one click.</p>
-          <p><span class="retake" id="takeStumble">I’ll—I’ll show you</span> <span class="ph" data-beat="1" id="takeClean">you can <b>connect a data source</b></span>, <span class="fill">like</span> Stripe or Postgres.</p>
-          <div class="rcard" id="rcard" hidden>
-            <div class="rc-h"><span class="rc-badge">⟳ Retake detected</span><span class="rc-conf">86% confident</span></div>
-            <div class="rc-q">Two takes here — keep which?</div>
-            <button class="rc-take" data-take="1" data-tag="drop"><span class="rc-pl">▶</span><span class="rc-meta"><span class="rc-t1">Take 1 · false start</span><span class="rc-tx">“I’ll—I’ll show you”</span></span><span class="rc-tag">drop</span></button>
-            <button class="rc-take sel" data-take="2" data-tag="keep"><span class="rc-pl">▶</span><span class="rc-meta"><span class="rc-t1">Take 2 · clean</span><span class="rc-tx">“you can connect a data source”</span></span><span class="rc-tag">keep</span></button>
-            <div class="rc-acts" id="rcActs"><button class="rc-apply" id="rcApply">Remove retake</button><button class="rc-keep" id="rcKeepBoth">Keep both</button></div>
-          </div>
-          <p>Then <span class="ph" data-beat="2"><b>share it with your team</b></span> <span class="fill">um</span> and <span class="ph" data-beat="3"><b>publish it live</b></span> — all without leaving Rask.</p>
+          <p class="tl">Hey everyone <span class="fill">um</span> today I’ll walk you through the new Acme Analytics dashboard. <span class="fill">uh</span></p>
+          <p class="tl">Let’s create your first report <span class="pausechip">⏸ 8s pause</span> in just one click.</p>
+          <p class="tl"><span class="rk t1" data-take="1">I’ll—I’ll show you</span> <span class="rk t2" data-take="2">you can connect a data source</span><span class="rkpick" id="rkpick" title="Retake — choose which take to keep"><span class="rkpick-l">⟳</span><button data-k="1">1st</button><button data-k="2">2nd</button><button data-k="0">both</button></span>, <span class="fill">like</span> Stripe or Postgres.</p>
+          <p class="tl">Then share it with your team <span class="fill">um</span> and publish it live — all without leaving Rask.</p>
         </div>
       </div>
     </aside>
@@ -665,6 +683,7 @@ body.notes-on .transport,body.notes-on .wave{opacity:.35}
 <div class="note n4"><span class="nn">4</span><span class="nh">One lightweight track</span><br>Audience = founders, not editors. No multi-track/layers — edits happen by text or by toggling AI suggestions.</div>
 <div class="note n5"><span class="nn">5</span><span class="nh">Ship anywhere</span><br>One declarative doc re-frames to 16:9 / 9:16 / 1:1 using the cursor track to keep the action centered.</div>
 
+<div id="wtip"></div>
 <script>
 (function(){
   // auto-zoom seeds — tied to click targets in the recording
@@ -751,7 +770,7 @@ body.notes-on .transport,body.notes-on .wave{opacity:.35}
   function render(){
     const z=activeZoom();
     applyActive(z);
-    setPhrase(z&&z.auto?z.phrase:-1);
+    tickTranscript();
     updateActiveStates(z);
     const total=S.mode==='before'?192:TOTAL;
     playhead.style.left=(t/LOOP*100)+'%';
@@ -927,81 +946,86 @@ body.notes-on .transport,body.notes-on .wave{opacity:.35}
     canvas.style.background=map[p.dataset.bg];
   });
 
-  // transcript panel (right, next to Polish) + live phrase sync
-  const tpanel=$('#tpanel'), trToggle=$('#trToggle'), phEls=$$('#tdoc .ph'); let lastPh=-1;
+  // ===== transcript panel — Loom-like: timecode gutter · hover-time · click-seek · running progress =====
+  const tpanel=$('#tpanel'), trToggle=$('#trToggle'), tdoc=$('#tdoc'), wtip=$('#wtip'), rtMark=$('#rtMark');
   function setTranscript(open){
     tpanel.classList.toggle('collapsed',!open); trToggle.classList.toggle('on',open);
     clearTimeout(window._tp); window._tp=setTimeout(computeCenters,340);
   }
   trToggle.onclick=()=>setTranscript(tpanel.classList.contains('collapsed'));
   $('#tpClose').onclick=()=>setTranscript(false);
-  function setPhrase(b){
-    if(b===lastPh) return; lastPh=b;
-    phEls.forEach((el,i)=>el.classList.toggle('active', i===b));
-    const el=phEls[b];
-    if(el && !tpanel.classList.contains('collapsed')) el.scrollIntoView({block:'center',behavior:'smooth'});
-  }
-  $$('#tdoc .fill').forEach(f=>f.onclick=()=>f.classList.toggle('fill'));
 
-  // ===== retake review flow (the "needs review" tier of speech cleanup) =====
-  const retake={status:'pending',keep:2}; // keep = which take survives (1=false start, 2=clean)
-  const rcard=$('#rcard'), rtMark=$('#rtMark');
-  function openRetake(){
-    if(tpanel.classList.contains('collapsed')) setTranscript(true);
-    rcard.hidden=false; rcard.scrollIntoView({block:'center',behavior:'smooth'});
+  // tokenize every word, assign it a timecode, draw the per-line gutter time
+  let toks=[], lastNow=-1, lastLine=null;
+  function buildWords(){
+    toks=[];
+    $$('#tdoc .tl').forEach(p=>{
+      const kids=[...p.childNodes]; p.innerHTML='';
+      const g=document.createElement('span'); g.className='tlt'; p.appendChild(g);
+      kids.forEach(node=>{
+        if(node.nodeType===3){
+          node.textContent.split(/(\s+)/).forEach(part=>{
+            if(part==='') return;
+            if(/^\s+$/.test(part)) p.appendChild(document.createTextNode(part));
+            else { const s=document.createElement('span'); s.className='w'; s.textContent=part; p.appendChild(s); toks.push(s); }
+          });
+        } else { p.appendChild(node);
+          if(node.classList&&(node.classList.contains('fill')||node.classList.contains('rk')||node.classList.contains('pausechip'))) toks.push(node);
+        }
+      });
+    });
+    toks.forEach((s,i)=>s.dataset.t=(i/toks.length*LOOP).toFixed(3));
+    $$('#tdoc .tl').forEach(p=>{const f=p.querySelector('[data-t]'); if(f) p.querySelector('.tlt').textContent=fmt(+f.dataset.t/LOOP*TOTAL);});
   }
-  function selTake(n){ retake.keep=n;
-    $$('#rcard .rc-take').forEach(b=>{const on=(+b.dataset.take)===n;
-      b.classList.toggle('sel',on); b.dataset.tag=on?'keep':'drop'; b.querySelector('.rc-tag').textContent=on?'keep':'drop';});
+  function tickTranscript(){
+    if(!toks.length || tpanel.classList.contains('collapsed')) return;
+    let lo=0; for(let i=0;i<toks.length;i++){ if(+toks[i].dataset.t<=t) lo=i; else break; }
+    if(lo===lastNow) return;
+    if(lastNow>=0&&toks[lastNow]) toks[lastNow].classList.remove('now');
+    toks[lo].classList.add('now'); lastNow=lo;
+    const line=toks[lo].closest('.tl');
+    if(line!==lastLine){ if(lastLine) lastLine.classList.remove('curline');
+      if(line){ line.classList.add('curline'); line.scrollIntoView({block:'nearest',behavior:'smooth'}); } lastLine=line; }
   }
+  tdoc.addEventListener('mousemove',e=>{ const s=e.target.closest('[data-t]');
+    if(s&&tdoc.contains(s)){ const r=s.getBoundingClientRect(); wtip.textContent=fmt(+s.dataset.t/LOOP*TOTAL);
+      wtip.style.left=(r.left+r.width/2)+'px'; wtip.style.top=r.top+'px'; wtip.classList.add('show'); }
+    else wtip.classList.remove('show'); });
+  tdoc.addEventListener('mouseleave',()=>wtip.classList.remove('show'));
+  tdoc.addEventListener('click',e=>{ if(e.target.closest('.rkpick')) return;
+    const s=e.target.closest('[data-t]'); if(s){ t=+s.dataset.t; lastKey=''; lastZId=null; } });
+
+  // ===== inline retake — both takes live in the text; the pill picks which to keep =====
+  const retake={status:'pending',keep:2};
   function setSw(on){ const sw=$('#retakeSw'); sw.setAttribute('aria-pressed',on); S.retakes=on; }
-  function rcPlay(n){ t = n===1?3.4:4.3; lastKey=''; lastZId=null;
-    const b=$('#rcard .rc-take[data-take="'+n+'"]'); if(b.animate) b.animate([{background:'#FFF1DB'},{background:''}],{duration:650}); }
-  function rcDone(kind){
-    $('#rcActs').innerHTML='<div class="rc-done '+kind+'">'+(kind==='removed'?'✓ Retake removed':'• Both takes kept')+'<span class="rc-undo" id="rcUndo">Undo</span></div>';
-    $('#rcUndo').onclick=resetRetake;
-    clearTimeout(window._rcT); window._rcT=setTimeout(()=>{rcard.hidden=true;},1500);
-  }
-  function applyRetake(remove){
-    const stumble=$('#takeStumble'), clean=$('#takeClean');
-    stumble.classList.remove('dropped','kept'); clean.classList.remove('dropped');
-    if(remove){
-      retake.status='removed';
-      if(retake.keep===2) stumble.classList.add('dropped');
-      else { clean.classList.add('dropped'); stumble.classList.add('kept'); }
-      setSw(true);
-      $('#retakeTag').className='tag-ok'; $('#retakeTag').textContent='REMOVED';
-      $('#retakeHint').textContent = retake.keep===2 ? 'false start cut' : 'kept Take 1 instead';
-      rtMark.className='rt-mark removed'; $('#rtTip').textContent='retake removed';
-      $('#sumRetake').textContent=' · cut 1 retake';
-      rcDone('removed');
+  function applyRetake(keep, confirmed){
+    retake.keep=keep; retake.status=!confirmed?'pending':(keep===0?'kept':'removed');
+    const t1=$('#tdoc .rk.t1'), t2=$('#tdoc .rk.t2'), tag=$('#retakeTag'), hint=$('#retakeHint'), sum=$('#sumRetake');
+    t1.className='rk t1'; t2.className='rk t2';
+    $$('#rkpick button').forEach(b=>b.classList.toggle('on',+b.dataset.k===keep));
+    if(!confirmed){
+      t1.classList.add('cand');
+      setSw(false); tag.className='tag-warn'; tag.textContent='NEEDS REVIEW'; hint.textContent='AI suggests cutting Take 1 · tap to confirm';
+      rtMark.className='rt-mark pending'; $('#rtTip').textContent='Retake — tap to review'; sum.textContent=' · 1 retake to review';
+    } else if(keep===0){
+      setSw(false); tag.className='tag-neutral'; tag.textContent='KEPT'; hint.textContent='stumble left in';
+      rtMark.className='rt-mark kept'; sum.textContent=' · retake kept';
     } else {
-      retake.status='kept'; stumble.classList.add('kept');
-      setSw(false);
-      $('#retakeTag').className='tag-neutral'; $('#retakeTag').textContent='KEPT';
-      $('#retakeHint').textContent='stumble left in';
-      rtMark.className='rt-mark kept';
-      $('#sumRetake').textContent=' · retake kept';
-      rcDone('kept');
+      (keep===2?t1:t2).classList.add('dropped'); (keep===2?t2:t1).classList.add('keep');
+      setSw(true); tag.className='tag-ok'; tag.textContent='REMOVED'; hint.textContent=keep===2?'false start cut':'kept 1st take';
+      rtMark.className='rt-mark removed'; $('#rtTip').textContent='retake removed'; sum.textContent=' · cut 1 retake';
     }
   }
-  function resetRetake(){
-    retake.status='pending';
-    $('#takeStumble').className='retake'; $('#takeClean').classList.remove('dropped');
-    setSw(false);
-    $('#retakeTag').className='tag-warn'; $('#retakeTag').textContent='NEEDS REVIEW';
-    $('#retakeHint').textContent='1 false start · tap to review';
-    rtMark.className='rt-mark pending'; $('#rtTip').textContent='Retake — tap to review';
-    $('#sumRetake').textContent=' · 1 retake to review';
-    $('#rcActs').innerHTML='<button class="rc-apply" id="rcApply">Remove retake</button><button class="rc-keep" id="rcKeepBoth">Keep both</button>';
-    bindRcActs(); selTake(2);
-  }
-  function bindRcActs(){ $('#rcApply').onclick=()=>applyRetake(true); $('#rcKeepBoth').onclick=()=>applyRetake(false); }
-  $$('#rcard .rc-take').forEach(b=>b.onclick=e=>{ e.target.classList.contains('rc-pl')?rcPlay(+b.dataset.take):selTake(+b.dataset.take); });
-  $('#takeStumble').onclick=openRetake;
-  rtMark.onclick=openRetake;
-  const reviewLink=$('.review .r-link'); if(reviewLink) reviewLink.onclick=openRetake;
-  bindRcActs();
+  $$('#rkpick button').forEach(b=>b.onclick=e=>{ e.stopPropagation(); applyRetake(+b.dataset.k,true); });
+  function flashRetake(){ if(tpanel.classList.contains('collapsed')) setTranscript(true);
+    const g=$('#rkpick'); g.scrollIntoView({block:'center',behavior:'smooth'});
+    if(g.animate) g.animate([{boxShadow:'0 0 0 3px rgba(245,177,74,.55)'},{boxShadow:'0 0 0 0 rgba(245,177,74,0)'}],{duration:1000}); }
+  function openRetake(){ flashRetake(); }
+  rtMark.onclick=flashRetake;
+  const reviewLink=$('.review .r-link'); if(reviewLink) reviewLink.onclick=flashRetake;
+
+  buildWords();
+  applyRetake(2,false);
 
   // notes
   $('#notesBtn').onclick=()=>{const on=document.body.classList.toggle('notes-on');

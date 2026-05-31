@@ -79,10 +79,9 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .btn .ic-sparkle{color:var(--acc)}
 .btn-share{background:var(--acc);border:1px solid var(--acc);color:#fff;box-shadow:0 1px 1px rgba(16,24,40,.05)}
 .btn-share:hover{filter:brightness(1.08)}
-.tb-avatar{width:40px;height:40px;border-radius:50%;flex:0 0 auto;background:
-  radial-gradient(circle at 50% 34%,#f7d2bf 0 16%,transparent 17%),
-  radial-gradient(circle at 46% 33%,#241915 0 20%,transparent 21%),
-  linear-gradient(135deg,#f1b489,#a66740);box-shadow:inset 0 0 0 1px rgba(16,24,40,.08);overflow:hidden}
+.tb-avatar{width:40px;height:40px;border-radius:50%;flex:0 0 auto;background:#F2F4F7;
+  box-shadow:inset 0 0 0 1px rgba(16,24,40,.08);overflow:hidden}
+.tb-avatar img{width:100%;height:100%;display:block;object-fit:cover;object-position:50% 44%}
 
 /* ---------- STAGE ---------- */
 .stage{flex:1;display:flex;min-height:0;background:#fff}
@@ -101,14 +100,14 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .zoomwrap{position:absolute;inset:0;transform-origin:50% 50%;
   transition:transform .85s cubic-bezier(.34,1.56,.55,1)}
 .mode-before .zoomwrap{transition:transform .4s ease}
-.webcam-bubble{position:absolute;left:18px;bottom:18px;z-index:7;width:168px;aspect-ratio:1;
+.webcam-bubble{position:absolute;left:calc(6% - 16px);bottom:calc(8% - 16px);z-index:12;width:168px;aspect-ratio:1;
   border-radius:50%;overflow:hidden;background:#1B1B2B;border:5px solid #fff;
   box-shadow:0 18px 42px -12px rgba(16,24,40,.42),0 4px 12px rgba(16,24,40,.18);
   pointer-events:none}
 .webcam-bubble video{width:130%;height:130%;display:block;object-fit:cover;object-position:center;
-  transform:translate(-11.5%,-11.5%)}
-.canvas.r916 .webcam-bubble{width:128px;left:12px;bottom:12px;border-width:4px}
-.canvas.r11 .webcam-bubble{width:152px;left:16px;bottom:16px}
+  transform:translate(-11.5%,-1.5%)}
+.canvas.r916 .webcam-bubble{width:128px;left:calc(6% - 14px);bottom:calc(8% - 14px);border-width:4px}
+.canvas.r11 .webcam-bubble{width:152px;left:calc(6% - 14px);bottom:calc(8% - 14px)}
 
 /* mock dashboard inside recording */
 .dash{position:absolute;inset:0;display:grid;grid-template-columns:128px 1fr;background:#F6F7FB;color:#1B1B2B}
@@ -375,14 +374,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .zhandle::after{content:"";position:absolute;top:50%;left:3px;transform:translateY(-50%);width:2px;height:11px;border-radius:2px;background:currentColor}
 .zblock.sel .zhandle,.zblock:hover .zhandle{opacity:.7}
 
-/* focus-point picker on the preview */
-.focusdot{position:absolute;z-index:8;width:26px;height:26px;margin:-13px 0 0 -13px;cursor:grab;
-  border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 2px var(--acc),0 2px 10px rgba(11,11,80,.5);
-  background:rgba(11,11,207,.22);touch-action:none;transition:opacity .2s}
-.focusdot::after{content:"";position:absolute;inset:8px;border-radius:50%;background:#fff;box-shadow:0 0 6px rgba(11,11,207,.9)}
-.focusdot:active{cursor:grabbing}
-.focusdot .fd-lbl{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);white-space:nowrap;
-  font-size:10px;font-weight:700;color:#fff;background:var(--acc);padding:2px 8px;border-radius:5px;box-shadow:0 2px 8px rgba(11,11,80,.4)}
+/* focus point lives only in the small zoom preview */
+.focusdot{display:none!important}
 
 /* add-zoom button + per-zoom editor */
 .add-zoom{width:100%;margin-top:8px;display:inline-flex;align-items:center;justify-content:center;gap:7px;
@@ -417,23 +410,31 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
   clip-path:polygon(0 72%,18% 60%,36% 66%,54% 42%,72% 48%,100% 18%,100% 100%,0 100%)}
 .ze-mini-chart::after{content:"";position:absolute;left:7px;right:7px;bottom:8px;height:26px;border-bottom:2px solid #0B0BCF;
   clip-path:polygon(0 72%,18% 60%,36% 66%,54% 42%,72% 48%,100% 18%,100% 22%,72% 52%,54% 46%,36% 70%,18% 64%,0 76%)}
-.ze-focus-dot{position:absolute;z-index:8;width:48px;height:48px;margin:-24px 0 0 -24px;border-radius:50%;
-  background:linear-gradient(135deg,#d9a181,#76523f);box-shadow:0 2px 7px rgba(0,0,0,.24);cursor:grab;touch-action:none}
-.ze-focus-dot::after{content:"";position:absolute;inset:13px;border-radius:50%;background:#f3c7b6;border:5px solid #2b1915}
+.ze-focus-dot{position:absolute;z-index:8;width:24px;height:24px;margin:-12px 0 0 -12px;border-radius:50%;
+  background:#fff;box-shadow:0 7px 18px rgba(16,24,40,.2),0 2px 5px rgba(16,24,40,.08);
+  cursor:grab;touch-action:none}
 .ze-focus-dot:active{cursor:grabbing}
 .zedit-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:2px}
 .zedit-del{font-size:12px;font-weight:600;color:var(--red);padding:4px 8px;border-radius:6px;transition:.12s}
 .zedit-del:hover{background:#FEF3F2}
 .zedit-hint{font-size:12px;color:var(--t-lo);line-height:16px;margin-top:4px;width:296px}
 .zedit-hint b{color:var(--t-mid);font-weight:600}
-.lane-clip{position:absolute;left:16px;top:48px;width:3050px;height:43px;background:transparent;border-radius:0;overflow:visible;border:0}
-.clip-card{position:absolute;top:35px;height:46px;border-radius:8px;background:#F0EFFF;border:0;
-  color:#0000B8;font-size:13px;line-height:16px;font-weight:600;padding:15px 14px 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;z-index:3}
-.clip-card.active{background:#F4F3FF;border:2px solid #0000FF;box-shadow:inset 3px 0 0 #0000FF;padding-top:13px}
-.clip-card.active::after{content:"";position:absolute;right:7px;top:8px;width:3px;height:32px;border-radius:2px;background:#0000FF}
-.clip-card.removed{background:#F0EFFF;color:#0000B8;opacity:1}
-.wave{position:absolute;left:0;right:0;top:62px;height:19px;display:flex;align-items:end;gap:1px;padding:0;opacity:1;z-index:2;overflow:hidden}
-.wave i{flex:0 0 1px;background:#8E8CFF;border-radius:1px;min-width:1px;max-height:19px}
+.lane-clip{position:absolute;left:16px;top:0;width:3050px;height:91px;background:transparent;border-radius:0;overflow:visible;border:0}
+.lane-clip::before{content:"";position:absolute;left:0;right:0;top:65px;height:20px;border-radius:5px;
+  background:#F4F3FF;border:1px solid #E2E1FF;z-index:0}
+.clip-card{position:absolute;top:29px;height:35px;border-radius:8px;background:#F0EFFF;border:1px solid #D8D6FF;
+  color:#0000B8;font-size:12px;line-height:15px;font-weight:600;padding:10px 12px 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;z-index:4}
+.clip-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:#8E8CFF}
+.clip-card.active{background:#F4F3FF;border:2px solid #0000FF;box-shadow:inset 3px 0 0 #0000FF;padding-top:9px}
+.clip-card.active::after{content:"";position:absolute;right:7px;top:7px;width:3px;height:21px;border-radius:2px;background:#0000FF}
+.clip-card.kept{background:#F0EFFF;color:#0000B8;opacity:1}
+.cut-gap{position:absolute;top:29px;height:56px;border-radius:7px;background:repeating-linear-gradient(45deg,rgba(255,56,76,.13) 0 6px,rgba(255,56,76,.04) 6px 12px);
+  border-left:1px solid rgba(255,56,76,.36);border-right:1px solid rgba(255,56,76,.36);z-index:2}
+.cut-gap::after{content:attr(data-label);position:absolute;left:50%;top:6px;transform:translateX(-50%);
+  color:#B42318;background:#fff;border:1px solid #FEE4E2;border-radius:5px;padding:2px 6px;
+  font-size:9.5px;line-height:12px;font-weight:700;white-space:nowrap;box-shadow:0 2px 8px rgba(16,24,40,.06)}
+.wave{position:absolute;left:0;right:0;top:68px;height:15px;display:flex;align-items:end;gap:1px;padding:0;opacity:1;z-index:1;overflow:hidden}
+.wave i{flex:0 0 1px;background:#B8B7FF;border-radius:1px;min-width:1px;max-height:15px}
 .mode-after .wave i{background:#8E8CFF}
 .thumbstrip{position:absolute;left:0;top:0;bottom:0;display:flex;opacity:.16;pointer-events:none}
 /* cut seams */
@@ -458,6 +459,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .transcript b{color:var(--t-hi);font-weight:600}
 .fill{color:var(--t-lo);text-decoration:line-through;text-decoration-color:var(--red);cursor:pointer;opacity:.7}
 .fill:hover{opacity:1}
+.dup{color:var(--t-lo);text-decoration:line-through;text-decoration-color:var(--amber);text-decoration-thickness:2px;opacity:.72}
+.fix{color:#B54708;background:#FEF6EE;border-radius:5px;padding:0 4px}
 .pausechip{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;color:#B54708;
   background:#FEF6EE;border:1px solid #F9DBAF;padding:1px 7px;border-radius:5px;text-decoration:none;vertical-align:middle}
 /* retake states: pending (flagged candidate) → removed (cut) / kept (left in) */
@@ -553,7 +556,7 @@ body.notes-on .transport,body.notes-on .wave{opacity:.35}
     <button class="tb-icon" aria-label="Help"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.6 9a2.4 2.4 0 1 1 3.4 2.2c-.8.4-1 .9-1 1.6M12 17h.01"/></svg></button>
     <button class="tb-icon" aria-label="Search"><svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></button>
     <button class="btn btn-share"><svg class="ic icon" viewBox="0 0 24 24"><circle cx="6" cy="12" r="2.4"/><circle cx="18" cy="6" r="2.4"/><circle cx="18" cy="18" r="2.4"/><path d="M8.1 11l7.8-3.8M8.1 13l7.8 3.8"/></svg>Share</button>
-    <div class="tb-avatar"></div>
+    <div class="tb-avatar"><img src="assets/avatar.jpg" alt="Profile"></div>
   </header>
 
   <!-- ================= STAGE ================= -->
@@ -619,13 +622,13 @@ body.notes-on .transport,body.notes-on .wave{opacity:.35}
                 <div class="ripple" id="ripple"></div>
                 <svg class="cursor" id="cursor" viewBox="0 0 24 24" width="20" height="20"><path d="M4 2 L20 12 L13 13 L9 21 Z" fill="#fff" stroke="#1B1B2B" stroke-width="1.4" stroke-linejoin="round"/></svg>
               </div>
-              <div class="webcam-bubble" aria-label="Speaker video preview">
-                <video src="assets/webcam-preview.mp4" autoplay muted loop playsinline preload="metadata"></video>
-              </div>
               <!-- subtitle (does not scale) -->
               <div class="caption" id="caption"></div>
               <!-- focus-point picker (drag to aim a zoom) -->
               <div class="focusdot" id="focusdot" hidden><span class="fd-lbl">Focus</span></div>
+            </div>
+            <div class="webcam-bubble" aria-label="Speaker video preview">
+              <video src="assets/webcam-preview.mp4" autoplay muted loop playsinline preload="metadata"></video>
             </div>
           </div>
         </div>
@@ -642,10 +645,11 @@ body.notes-on .transport,body.notes-on .wave{opacity:.35}
       </div>
       <div class="tpanel-body">
         <div class="transcript-doc" id="tdoc">
-          <p class="tl">Hey everyone <span class="fill">um</span> today I’ll walk you through the new Acme Analytics dashboard. <span class="fill">uh</span></p>
-          <p class="tl">Let’s create your first report <span class="pausechip">⏸ 8s pause</span> in just one click.</p>
-          <p class="tl"><span class="rk t1" data-take="1">I’ll—I’ll show you</span> <span class="rk t2" data-take="2">you can connect a data source</span><span class="rkpick" id="rkpick" title="Retake — choose which take to keep"><span class="rkpick-l">⟳</span><button data-k="1">1st</button><button data-k="2">2nd</button><button data-k="0">both</button></span>, <span class="fill">like</span> Stripe or Postgres.</p>
-          <p class="tl">Then share it with your team <span class="fill">um</span> and publish it live — all without leaving Rask.</p>
+          <p class="tl">Hey team <span class="fill">um</span> today I want to show the new Smart Polish flow for product demos. <span class="dup">The new Smart Polish flow</span> takes a raw walkthrough, removes the messy bits, and turns it into a clean shareable clip. <span class="fill">uh</span></p>
+          <p class="tl">So first, <span class="dup">first</span> we detect filler words, repeated starts, and awkward silence after clicks. <span class="pausechip">⏸ 8s pause</span> Then we trim the pause, remove words like <span class="fill">basically</span>, <span class="fill">actually</span>, and <span class="fill">kind of</span>, and keep the sentence moving.</p>
+          <p class="tl"><span class="rk t1" data-take="1">Now I’ll show—I’ll show you the zoom thing, wait, let me say that again</span> <span class="rk t2" data-take="2">Now I’ll show you how smart zoom follows the action</span><span class="rkpick" id="rkpick" title="Retake — choose which take to keep"><span class="rkpick-l">⟳</span><button data-k="1">1st</button><button data-k="2">2nd</button><button data-k="0">both</button></span>, <span class="fill">like</span> when we open a report, connect data, and publish.</p>
+          <p class="tl">There is also a small stumble here, <span class="fill">you know</span>, where I say <span class="dup">we can share this with the team, share this with the team</span>; Polish keeps the stronger take and marks the risky edit for review.</p>
+          <p class="tl">Finally, captions and the transcript stay editable, so a founder can fix a product name, remove a <span class="fix">false start</span>, and send the polished demo to customers.</p>
         </div>
       </div>
     </aside>
@@ -665,15 +669,15 @@ body.notes-on .transport,body.notes-on .wave{opacity:.35}
         <!-- review summary -->
         <div class="review">
           <div class="r-t">Polished automatically</div>
-          <div class="r-sub">Removed: <b>14</b> filler words · <b>6</b> shortened pauses<span id="sumRetake"> · <b>1</b> retake to review</span></div>
+          <div class="r-sub">Removed: <b>24</b> filler words · <b>7</b> shortened pauses · <b>3</b> repeated phrases<span id="sumRetake"> · <b>1</b> retake to review</span></div>
           <div class="r-save">You saved 47s <span class="sm">3:12 → 2:25</span></div>
         </div>
 
         <!-- SPEECH CLEANUP -->
         <section class="grp open" data-g>
-          <button class="grp-h"><svg class="gi icon" viewBox="0 0 24 24"><path d="M12 3v18M7 8v8M17 8v8M3 11v2M21 11v2"/></svg>Speech cleanup <span class="cnt">· 21 edits</span><svg class="chev icon" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+          <button class="grp-h"><svg class="gi icon" viewBox="0 0 24 24"><path d="M12 3v18M7 8v8M17 8v8M3 11v2M21 11v2"/></svg>Speech cleanup <span class="cnt">· 34 edits</span><svg class="chev icon" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
           <div class="grp-b">
-            <div class="row"><span class="lbl">Remove filler words<span class="info-pop" id="fillerInfo"><button class="info-dot" type="button" aria-label="Show removed filler words">i</button><span class="filler-popover" role="tooltip"><span class="filler-copy">“um”, “uh”, “like” — 14 found</span><span class="filler-list" id="fillerList"><span class="filler-chip">um</span><span class="filler-chip">uh</span><span class="filler-chip">like</span></span><span class="filler-actions"><button class="filler-edit" type="button" id="fillerEdit">Edit</button><button class="filler-add" type="button" id="fillerAdd">Add more</button></span></span></span></span><button class="sw" aria-pressed="true" data-k="fillers"><span class="knob"></span></button></div>
+            <div class="row"><span class="lbl">Remove filler words<span class="info-pop" id="fillerInfo"><button class="info-dot" type="button" aria-label="Show removed filler words">i</button><span class="filler-popover" role="tooltip"><span class="filler-copy">“um”, “uh”, “like”, “basically”, “actually” — 24 found</span><span class="filler-list" id="fillerList"><span class="filler-chip">um</span><span class="filler-chip">uh</span><span class="filler-chip">like</span><span class="filler-chip">basically</span><span class="filler-chip">actually</span><span class="filler-chip">you know</span><span class="filler-chip">kind of</span></span><span class="filler-actions"><button class="filler-edit" type="button" id="fillerEdit">Edit</button><button class="filler-add" type="button" id="fillerAdd">Add more</button></span></span></span></span><button class="sw" aria-pressed="true" data-k="fillers"><span class="knob"></span></button></div>
             <div class="row"><span class="lbl">Shorten long pauses</span><button class="sw" aria-pressed="true" data-k="pauses"><span class="knob"></span></button></div>
             <div class="sl-row"><div class="sl-top"><span>Max pause length</span><span class="v" id="pauseV">0.5s</span></div><input type="range" min="2" max="20" value="5" id="pauseSl"></div>
             <div class="row"><span class="lbl">Remove retakes</span><button class="sw" aria-pressed="false" data-k="retakes" id="retakeSw"><span class="knob"></span></button></div>
@@ -780,21 +784,26 @@ body.notes-on .transport,body.notes-on .wave{opacity:.35}
       <div class="track" id="trackView">
         <div class="lane-zooms" id="zlane"></div>
         <div class="lane-clip">
-          <div class="clip-card active" style="left:10px;width:314px">Lesha, hello. I have gathered the flow for the visa application and now.</div>
-          <div class="clip-card removed" style="left:411px;width:383px">He hallado una solución. Me asocié con un chico y logramos crecer un diez mil por ciento.</div>
-          <div class="clip-card removed" style="left:955px;width:383px">He hallado una solución. Me asocié con un chico y logramos crecer un diez mil por ciento.</div>
+          <div class="clip-card active" style="left:10px;width:185px">Hey team, Smart Polish...</div>
+          <div class="cut-gap" style="left:195px;width:42px" data-label="cut 8s"></div>
+          <div class="clip-card kept" style="left:237px;width:225px">So first, we detect filler words...</div>
+          <div class="cut-gap" style="left:462px;width:38px" data-label="cut 5s"></div>
+          <div class="clip-card kept" style="left:500px;width:210px">Now I’ll show you how smart zoom...</div>
+          <div class="cut-gap" style="left:710px;width:44px" data-label="cut 7s"></div>
+          <div class="clip-card kept" style="left:754px;width:280px">Finally, captions stay editable...</div>
           <div class="wave" id="wave"></div>
           <!-- cut seams (after) -->
-          <div class="seam" style="left:14%"><div class="tip">+0.8s pause removed</div></div>
+          <div class="seam" style="left:14%"><div class="tip">duplicate phrase removed</div></div>
           <div class="seam" style="left:23%"><div class="tip">“um” removed</div></div>
           <div class="rt-mark pending" id="rtMark" style="left:27%"><div class="tip" id="rtTip">Retake — tap to review</div></div>
-          <div class="seam" style="left:49%"><div class="tip">+1.2s pause removed</div></div>
-          <div class="seam" style="left:67%"><div class="tip">“uh” removed</div></div>
-          <div class="seam" style="left:84%"><div class="tip">+0.6s pause removed</div></div>
+          <div class="seam" style="left:49%"><div class="tip">+8s pause shortened</div></div>
+          <div class="seam" style="left:67%"><div class="tip">“kind of” removed</div></div>
+          <div class="seam" style="left:84%"><div class="tip">false start cleaned</div></div>
           <!-- removed regions (before) -->
-          <div class="removed" style="left:13%;width:5%"></div>
-          <div class="removed" style="left:32%;width:7%"></div>
-          <div class="removed" style="left:48%;width:6%"></div>
+          <div class="removed" style="left:9%;width:4%"></div>
+          <div class="removed" style="left:24%;width:5%"></div>
+          <div class="removed" style="left:38%;width:4%"></div>
+          <div class="removed" style="left:54%;width:6%"></div>
         </div>
       </div>
       <div class="playhead" id="playhead" style="left:0%"></div>
@@ -815,12 +824,12 @@ body.notes-on .transport,body.notes-on .wave{opacity:.35}
 (function(){
   // auto-zoom seeds — tied to click targets in the recording
   const TARGETS=[
-    {id:'btn-create', label:'Create report',       cap:"Let’s create your first report —", zoom:1.9, phrase:0},
-    {id:'btn-connect',label:'Connect data source', cap:"connect a data source in one click,", zoom:1.8, phrase:1},
-    {id:'btn-share',  label:'Share',               cap:"share it with your team,", zoom:2.0, phrase:2},
-    {id:'btn-publish',label:'Publish',             cap:"and publish it live.", zoom:1.9, phrase:3},
+    {id:'btn-create', label:'Create report',       cap:"Smart Polish turns rough demos into clean shareable clips.", zoom:1.9, phrase:0},
+    {id:'btn-connect',label:'Connect data source', cap:"It trims filler words and long pauses after each click.", zoom:1.8, phrase:1},
+    {id:'btn-share',  label:'Share',               cap:"Smart zoom follows the action as the feature is explained.", zoom:2.0, phrase:2},
+    {id:'btn-publish',label:'Publish',             cap:"Captions and transcript edits stay ready for review.", zoom:1.9, phrase:3},
   ];
-  const LOOP=16, BEAT=4, TOTAL=145, TL_WINDOW=30;
+  const LOOP=16, BEAT=4, TOTAL=45, TL_WINDOW=30;
   const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
   const zoomwrap=$('#zoomwrap'), screenEl=$('#screen'), cursor=$('#cursor'),
@@ -908,7 +917,7 @@ body.notes-on .transport,body.notes-on .wave{opacity:.35}
     updateActiveStates(z);
     const total=S.mode==='before'?192:TOTAL;
     playhead.style.left=(t/TL_WINDOW*100)+'%';
-    tc.innerHTML='<b>'+fmtFull(t/LOOP*60.022)+'</b> <span class="total">/ 00:01:00,022</span>';
+    tc.innerHTML='<b>'+fmtFull(t/LOOP*45)+'</b> <span class="total">/ 00:00:45,000</span>';
   }
 
   function frame(now){
@@ -968,13 +977,13 @@ body.notes-on .transport,body.notes-on .wave{opacity:.35}
   }
   function showFocus(z){
     if(!z){focusdot.hidden=true; if(zeFocusDot) zeFocusDot.hidden=true; return;}
-    focusdot.hidden=false; focusdot.style.left=z.x+'%'; focusdot.style.top=z.y+'%';
+    focusdot.hidden=true;
     if(zeFocusDot){zeFocusDot.hidden=false; zeFocusDot.style.left=z.x+'%'; zeFocusDot.style.top=z.y+'%';}
   }
 
   function setZoomFocus(z,x,y){
     z.x=clamp(x,3,97); z.y=clamp(y,3,97); z.customFocus=true;
-    focusdot.style.left=z.x+'%'; focusdot.style.top=z.y+'%';
+    focusdot.hidden=true;
     if(zeFocusDot){zeFocusDot.style.left=z.x+'%'; zeFocusDot.style.top=z.y+'%';}
     if(activeZoom()===z) zoomwrap.style.transformOrigin=z.x+'% '+z.y+'%';
     cursor.style.left=z.x+'%'; cursor.style.top=z.y+'%';
@@ -1079,7 +1088,7 @@ body.notes-on .transport,body.notes-on .wave{opacity:.35}
   const fillerInfo=$('#fillerInfo'), fillerList=$('#fillerList'), fillerEdit=$('#fillerEdit'), fillerAdd=$('#fillerAdd');
   function syncFillerCopy(){
     const words=[...fillerList.querySelectorAll('.filler-chip')].map(ch=>ch.textContent.trim()).filter(Boolean);
-    $('.filler-copy').textContent=words.slice(0,3).map(w=>'“'+w+'”').join(', ')+' — 14 found';
+    $('.filler-copy').textContent=words.slice(0,5).map(w=>'“'+w+'”').join(', ')+' — 24 found';
   }
   if(fillerInfo){
     $('.info-dot').onclick=e=>{ fillerInfo.classList.toggle('open'); e.stopPropagation(); };
@@ -1160,7 +1169,7 @@ body.notes-on .transport,body.notes-on .wave{opacity:.35}
             else { const s=document.createElement('span'); s.className='w'; s.textContent=part; p.appendChild(s); toks.push(s); }
           });
         } else { p.appendChild(node);
-          if(node.classList&&(node.classList.contains('fill')||node.classList.contains('rk')||node.classList.contains('pausechip'))) toks.push(node);
+          if(node.classList&&(node.classList.contains('fill')||node.classList.contains('dup')||node.classList.contains('fix')||node.classList.contains('rk')||node.classList.contains('pausechip'))) toks.push(node);
         }
       });
     });

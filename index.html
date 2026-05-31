@@ -1562,6 +1562,7 @@ body.flow-onboarding .onboarding{display:flex}
 
   // build waveform once: Before and After share the same source audio layer.
   const wave=$('#wave');
+  const WAVE_BARS=640;
   const phrases=[
     {s:5,e:98,level:34,events:[{at:.18,type:'dup'},{at:.82,type:'filler'}]},
     {s:119,e:231,level:39,events:[{at:.36,type:'retake'},{at:.78,type:'pause'}]},
@@ -1593,11 +1594,14 @@ body.flow-onboarding .onboarding{display:flex}
     const opening=12*Math.exp(-Math.pow((p-.08)/.055,2));
     const ending=-10*Math.max(0,(p-.82)/.18);
     const edits=seg.events.reduce((sum,ev)=>sum+eventDip(p,ev),0);
-    return 8+(seg.level*speech+opening+ending-edits)*attack*release;
+    const raw=8+(seg.level*speech+opening+ending-edits)*attack*release;
+    const endP=clamp((i-WAVE_BARS*.9)/(WAVE_BARS*.1),0,1);
+    const fade=1-Math.pow(endP,1.45)*.88;
+    return 2+(raw-2)*fade;
   }
   function renderWaveform(){
     let bars='';
-    for(let i=0;i<640;i++){
+    for(let i=0;i<WAVE_BARS;i++){
       const h=waveHeight(i);
       bars+='<i style="height:'+Math.round(Math.max(2,Math.min(48,h)))+'px"></i>';
     }

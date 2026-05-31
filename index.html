@@ -235,6 +235,8 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .grp-h{width:100%;display:flex;align-items:center;gap:12px;padding:0 16px;height:50px;font-weight:600;font-size:16px;line-height:24px;color:var(--t-hi)}
 .grp-h:hover{background:var(--bg-750)}
 .grp-h .gi{width:24px;height:24px;color:var(--acc)}
+.smartzoom-icon{stroke:none;fill:currentColor}
+.smartzoom-icon path{fill:currentColor}
 .grp-h .cnt{font-size:14px;line-height:20px;color:var(--t-lo);font-weight:500}
 .grp-h .chev{margin-left:auto;width:16px;height:16px;color:var(--t-lo);transition:transform .25s}
 .grp.open .chev{transform:rotate(180deg)}
@@ -405,7 +407,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .zblock.manual.active{background:#D7EAF8;color:#004AA5}
 .zblock.sel{box-shadow:inset 0 0 0 1.5px var(--acc);z-index:6;overflow:visible}
 .zblock:active{cursor:grabbing}
-.zblock .zi{width:16px;height:16px;flex:0 0 auto}
+.zblock .zi{width:16px;height:14px;flex:0 0 auto}
 .zblock .zlbl{overflow:hidden;text-overflow:ellipsis}
 .zhandle{position:absolute;top:0;bottom:0;width:8px;cursor:ew-resize;z-index:4;opacity:0;transition:.12s}
 .zhandle.l{left:0}.zhandle.r{right:0}
@@ -1066,7 +1068,7 @@ body.flow-onboarding .onboarding{display:flex}
 
         <!-- SMART ZOOM -->
         <section class="grp open zoom-group" data-g>
-          <button class="grp-h"><svg class="gi icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg>Smart zoom <span class="cnt" id="zmCount">· 4 zooms</span><svg class="chev icon" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+          <button class="grp-h"><svg class="gi smartzoom-icon" viewBox="0 0 28 24" aria-hidden="true"><path d="M26.5605 10.9883C26.7754 10.9883 26.9577 11.0632 27.1074 11.2129C27.2572 11.3561 27.332 11.5384 27.332 11.7598C27.332 11.9746 27.2572 12.1569 27.1074 12.3066C26.9577 12.4564 26.7754 12.5312 26.5605 12.5312H18.7539C18.8762 12.0326 18.9554 11.5171 18.9854 10.9883H26.5605ZM23.9434 8.33203C24.1712 8.33203 24.3568 8.4069 24.5 8.55664C24.6497 8.69987 24.7246 8.87891 24.7246 9.09375C24.7246 9.3151 24.6497 9.50065 24.5 9.65039C24.3568 9.80013 24.1712 9.875 23.9434 9.875H18.9746C18.9361 9.34572 18.8507 8.83001 18.7197 8.33203H23.9434ZM21.3848 5.66602C21.5996 5.66602 21.7819 5.74089 21.9316 5.89062C22.0814 6.03385 22.1562 6.21289 22.1562 6.42773C22.1562 6.64909 22.0814 6.83464 21.9316 6.98438C21.7819 7.13411 21.5996 7.20898 21.3848 7.20898H18.3389C18.1094 6.66302 17.8234 6.14694 17.4902 5.66602H21.3848ZM18.7578 3C18.9727 3 19.1549 3.07487 19.3047 3.22461C19.4609 3.36784 19.5391 3.55013 19.5391 3.77148C19.5391 3.99284 19.4609 4.17839 19.3047 4.32812C19.1549 4.47135 18.9727 4.54297 18.7578 4.54297H16.5615C15.9593 3.9302 15.2651 3.40851 14.501 3H18.7578Z"/><path d="M2.73242 10.6211C2.73242 9.59245 2.92448 8.62891 3.30859 7.73047C3.69271 6.82552 4.22656 6.03451 4.91016 5.35742C5.59375 4.67383 6.38477 4.13997 7.2832 3.75586C8.18164 3.36523 9.14518 3.16992 10.1738 3.16992C11.209 3.16992 12.1758 3.36523 13.0742 3.75586C13.9727 4.13997 14.7637 4.67383 15.4473 5.35742C16.1309 6.03451 16.6647 6.82552 17.0488 7.73047C17.4329 8.62891 17.625 9.59245 17.625 10.6211C17.625 11.4414 17.498 12.2259 17.2441 12.9746C16.9902 13.7168 16.6322 14.3939 16.1699 15.0059L20.5352 19.3809C20.6458 19.5046 20.7305 19.6413 20.7891 19.791C20.8477 19.9408 20.877 20.0938 20.877 20.25C20.877 20.4909 20.8249 20.7025 20.7207 20.8848C20.6165 21.0736 20.4733 21.2201 20.291 21.3242C20.1087 21.4349 19.9004 21.4902 19.666 21.4902C19.5033 21.4902 19.3437 21.4609 19.1875 21.4023C19.0312 21.3503 18.8945 21.2656 18.7773 21.1484L14.3828 16.7441C13.7839 17.1608 13.1296 17.4863 12.4199 17.7207C11.7103 17.9551 10.9616 18.0723 10.1738 18.0723C9.14518 18.0723 8.18164 17.8802 7.2832 17.4961C6.38477 17.112 5.59375 16.5781 4.91016 15.8945C4.22656 15.2109 3.69271 14.4199 3.30859 13.5215C2.92448 12.6165 2.73242 11.6497 2.73242 10.6211ZM4.49023 10.6211C4.49023 11.4089 4.63672 12.1478 4.92969 12.8379C5.22266 13.5215 5.62956 14.1237 6.15039 14.6445C6.67773 15.1654 7.2832 15.5723 7.9668 15.8652C8.65039 16.1582 9.38607 16.3047 10.1738 16.3047C10.9616 16.3047 11.6973 16.1582 12.3809 15.8652C13.071 15.5723 13.6764 15.1654 14.1973 14.6445C14.7181 14.1237 15.125 13.5215 15.418 12.8379C15.7109 12.1478 15.8574 11.4089 15.8574 10.6211C15.8574 9.83333 15.7109 9.09766 15.418 8.41406C15.125 7.72396 14.7181 7.11849 14.1973 6.59766C13.6764 6.07682 13.071 5.66992 12.3809 5.37695C11.6973 5.08398 10.9616 4.9375 10.1738 4.9375C9.38607 4.9375 8.65039 5.08398 7.9668 5.37695C7.2832 5.66992 6.67773 6.07682 6.15039 6.59766C5.62956 7.11849 5.22266 7.72396 4.92969 8.41406C4.63672 9.09766 4.49023 9.83333 4.49023 10.6211Z"/><path d="M10.3242 14.1484C10.2396 14.1484 10.1647 14.1224 10.0996 14.0703C10.041 14.0117 10.0052 13.9434 9.99219 13.8652C9.90755 13.2467 9.82617 12.7682 9.74805 12.4297C9.66992 12.0846 9.53971 11.8242 9.35742 11.6484C9.17513 11.4727 8.90169 11.3392 8.53711 11.248C8.17904 11.1504 7.67773 11.0397 7.0332 10.916C6.8444 10.8704 6.75 10.7598 6.75 10.584C6.75 10.4928 6.77604 10.418 6.82812 10.3594C6.88672 10.3008 6.95508 10.265 7.0332 10.252C7.67773 10.1608 8.17904 10.0729 8.53711 9.98828C8.90169 9.89714 9.17188 9.76367 9.34766 9.58789C9.52995 9.4056 9.66341 9.13867 9.74805 8.78711C9.83268 8.42904 9.91406 7.9375 9.99219 7.3125C10.0182 7.10417 10.1289 7 10.3242 7C10.5195 7 10.6302 7.10742 10.6562 7.32227C10.7344 7.93424 10.8158 8.41276 10.9004 8.75781C10.985 9.10286 11.1185 9.36003 11.3008 9.5293C11.4896 9.69857 11.763 9.83203 12.1211 9.92969C12.4857 10.0208 12.9837 10.1283 13.6152 10.252C13.8105 10.2845 13.9082 10.3952 13.9082 10.584C13.9082 10.7663 13.7975 10.877 13.5762 10.916C12.9512 11.0137 12.4596 11.1081 12.1016 11.1992C11.7435 11.2904 11.4733 11.4238 11.291 11.5996C11.1087 11.7754 10.9753 12.0391 10.8906 12.3906C10.8125 12.7422 10.7344 13.2272 10.6562 13.8457C10.6302 14.0475 10.5195 14.1484 10.3242 14.1484Z"/></svg>Smart zoom <span class="cnt" id="zmCount">· 4 zooms</span><svg class="chev icon" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
           <div class="grp-b">
             <div class="row"><span class="lbl">Auto-zoom on clicks<span class="hint">detects clicks &amp; key actions</span></span><button class="sw" aria-pressed="true" data-k="zoom"><span class="knob"></span></button></div>
             <div class="sl-row"><div class="sl-top"><span>Intensity</span><span class="v" id="intV">Medium</span></div><input type="range" min="60" max="130" value="100" id="intSl"></div>
@@ -1222,6 +1224,10 @@ body.flow-onboarding .onboarding{display:flex}
         zeFocusDot=$('#zeFocusDot'), polishPanel=$('#polishPanel'), zoomBack=$('#zoomBack'),
         zoomInspectorTitle=$('#zoomInspectorTitle'), zeVideoPreview=$('#zeVideoPreview'),
         captionText=$('#captionText');
+  const SMART_ZOOM_PATHS=$('.zoom-group .smartzoom-icon')?.innerHTML||'';
+  function smartZoomIcon(cls){
+    return '<svg class="'+cls+' smartzoom-icon" viewBox="0 0 28 24" aria-hidden="true">'+SMART_ZOOM_PATHS+'</svg>';
+  }
 
   let playing=true, t=4.55, last=performance.now();
   let centers=[], lastKey='', lastActiveStateId='__init';
@@ -1320,7 +1326,7 @@ body.flow-onboarding .onboarding{display:flex}
       el.className='zblock'+(z.auto?'':' manual')+(z.id===selId?' sel':'');
       el.dataset.id=z.id;
       el.style.left=(z.start/TL_WINDOW*100)+'%'; el.style.width=(z.dur/TL_WINDOW*100)+'%';
-      el.innerHTML='<span class="zhandle l"></span><svg class="zi icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg><span class="zlbl">'+zoomBlockLabel(z)+'</span><span class="zhandle r"></span>';
+      el.innerHTML='<span class="zhandle l"></span>'+smartZoomIcon('zi')+'<span class="zlbl">'+zoomBlockLabel(z)+'</span><span class="zhandle r"></span>';
       zlane.appendChild(el);
     });
     const add=document.createElement('button');

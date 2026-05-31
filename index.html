@@ -177,6 +177,24 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .panel-h{flex:0 0 56px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:8px;border-bottom:1px solid var(--line)}
 .panel-h .ti{font-weight:700;font-size:14px;color:var(--t-hi)}
 .panel-h .ic{width:16px;height:16px;color:var(--acc)}
+.panel-normal-head,.panel-zoom-head{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%}
+.panel-zoom-head{display:none;justify-content:flex-start}
+.zoom-back{width:32px;height:32px;border-radius:8px;display:grid;place-items:center;color:var(--t-mid);flex:0 0 auto}
+.zoom-back:hover{background:var(--bg-750);color:var(--t-hi)}
+.zoom-back .icon{width:18px;height:18px}
+.zoom-title{font-size:16px;line-height:24px;font-weight:600;color:var(--t-hi);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.panel.zoom-inspector .panel-normal-head{display:none}
+.panel.zoom-inspector .panel-zoom-head{display:flex}
+.panel.zoom-inspector .review,
+.panel.zoom-inspector .grp:not(.zoom-group){display:none}
+.panel.zoom-inspector .zoom-group{border-bottom:0;padding:0}
+.panel.zoom-inspector .zoom-group>.grp-h,
+.panel.zoom-inspector .zoom-group>.grp-b>.row,
+.panel.zoom-inspector .zoom-group>.grp-b>.sl-row,
+.panel.zoom-inspector #zmList,
+.panel.zoom-inspector #addZoom{display:none}
+.panel.zoom-inspector .zoom-group>.grp-b{max-height:none;padding:16px;overflow:visible}
+.panel.zoom-inspector #zoomEditor{display:flex;margin-top:0;border:0;border-radius:0;background:transparent;padding:0 0 24px}
 .panel-scroll{overflow-y:auto;flex:1;padding:0}
 .panel-scroll::-webkit-scrollbar{width:6px}
 .panel-scroll::-webkit-scrollbar-thumb{background:var(--border-med);border-radius:8px}
@@ -205,10 +223,11 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .grp.open .grp-b{max-height:880px;padding-bottom:16px;overflow:visible}
 .row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 0}
 .row .lbl{font-size:14px;line-height:20px;font-weight:500;color:var(--t-hi);position:relative}
+.row .lbl:has(.info-pop){display:inline-flex;align-items:center}
 .row .lbl .hint{font-size:12px;line-height:16px;font-weight:500;color:var(--t-lo);display:block;margin-top:1px}
 .tag-warn{font-size:12px;font-weight:700;color:#B54708;background:#FEF6EE;border:1px solid #F9DBAF;
   padding:2px 7px;border-radius:5px;margin-left:6px;letter-spacing:.02em;vertical-align:middle}
-.info-pop{position:relative;display:inline-flex;vertical-align:-3px;margin-left:8px}
+.info-pop{position:relative;display:inline-flex;align-items:center;margin-left:8px}
 .info-dot{display:inline-grid;place-items:center;width:18px;height:18px;border:1.5px solid var(--t-lo);
   border-radius:50%;font-size:12px;line-height:1;color:var(--t-lo);font-weight:700;background:#fff}
 .info-dot:hover,.info-dot:focus-visible,.info-pop:hover .info-dot,.info-pop:focus-within .info-dot{color:var(--acc);border-color:var(--acc);outline:none}
@@ -386,6 +405,13 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .zedit{margin-top:12px;padding:16px 16px 24px;border-radius:12px;background:var(--bg-800);border:1px solid var(--line);display:flex;flex-direction:column;gap:12px}
 .ze-thumb{width:296px;height:166.5px;border-radius:12px;margin-bottom:4px;position:relative;overflow:hidden;
   background:linear-gradient(135deg,#1a1a6e 0%,#0B0BCF 50%,#3D3DE9 100%)}
+.ze-video-preview{position:absolute;inset:0;overflow:hidden;background:linear-gradient(135deg,#1a1a6e 0%,#0B0BCF 50%,#3D3DE9 100%)}
+.ze-video-scale{position:absolute;left:0;top:0;width:760px;height:427.5px;transform:scale(.3895);transform-origin:0 0}
+.ze-video-preview .canvas{width:760px;height:427.5px;max-width:none;aspect-ratio:auto;border-radius:0;box-shadow:none}
+.ze-video-preview .pad{inset:0}
+.ze-video-preview .screen{width:88%;height:84%}
+.ze-video-preview .caption{font-size:13px}
+.ze-video-preview .cursor{display:block}
 .ze-mini-screen{position:absolute;left:18px;top:18px;width:228px;height:128px;border-radius:7px;overflow:hidden;background:#F6F7FB;
   display:grid;grid-template-columns:52px 1fr;box-shadow:0 10px 24px rgba(16,24,40,.2)}
 .ze-mini-side{background:#fff;border-right:1px solid #ECEDF3;padding:8px 6px;font-size:5px;color:#7A7A8C}
@@ -420,25 +446,28 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .zedit-hint{font-size:12px;color:var(--t-lo);line-height:16px;margin-top:4px;width:296px}
 .zedit-hint b{color:var(--t-mid);font-weight:600}
 .lane-clip{position:absolute;left:16px;top:0;width:3050px;height:91px;background:transparent;border-radius:0;overflow:visible;border:0}
-.lane-clip::before{content:"";position:absolute;left:0;right:0;top:62px;height:19px;border-radius:5px;
-  background:#F4F3FF;border:1px solid #E2E1FF;z-index:0}
-.clip-card{position:absolute;top:35px;height:48px;border-radius:8px;background:rgba(240,239,255,.94);border:1px solid #D8D6FF;
+.lane-clip::before{display:none}
+.clip-card{position:absolute;top:35px;height:48px;border-radius:8px;background:rgba(11,11,207,.08);border:1px solid rgba(11,11,207,.12);
   color:#0000B8;font-size:13px;line-height:16px;font-weight:600;padding:16px 14px 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;z-index:4}
-.clip-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:#8E8CFF}
-.clip-card.active{background:rgba(244,243,255,.96);border:2px solid #0000FF;box-shadow:inset 3px 0 0 #0000FF;padding-top:14px}
+.clip-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--acc)}
+.clip-card.active{background:rgba(11,11,207,.08);border:2px solid #0000FF;box-shadow:inset 3px 0 0 #0000FF;padding-top:14px}
 .clip-card.active::after{content:"";position:absolute;right:7px;top:8px;width:3px;height:32px;border-radius:2px;background:#0000FF}
-.clip-card.kept{background:rgba(240,239,255,.94);color:#0000B8;opacity:1}
+.clip-card.kept{background:rgba(11,11,207,.08);color:#0000B8;opacity:1}
+.raw-clip{display:none}
+.mode-before .clip-card:not(.raw-clip),.mode-before .cut-gap,.mode-before .lane-zooms{display:none}
+.mode-before .raw-clip{display:block;left:10px!important;width:calc(100% - 20px)!important;background:rgba(11,11,207,.08);border:1px solid rgba(11,11,207,.12);padding-top:16px}
+.mode-before .raw-clip::after{display:none}
 .cut-gap{position:absolute;top:35px;height:48px;border-radius:7px;background:repeating-linear-gradient(45deg,rgba(255,56,76,.13) 0 6px,rgba(255,56,76,.04) 6px 12px);
   border-left:1px solid rgba(255,56,76,.36);border-right:1px solid rgba(255,56,76,.36);z-index:2}
 .cut-gap::after{content:attr(data-label);position:absolute;left:50%;top:6px;transform:translateX(-50%);
   color:#B42318;background:#fff;border:1px solid #FEE4E2;border-radius:5px;padding:2px 6px;
   font-size:9.5px;line-height:12px;font-weight:700;white-space:nowrap;box-shadow:0 2px 8px rgba(16,24,40,.06)}
-.wave{position:absolute;left:0;right:0;top:62px;height:19px;display:flex;align-items:end;gap:1px;padding:0;opacity:1;z-index:3;overflow:hidden;pointer-events:none}
-.wave i{flex:0 0 1px;background:#B8B7FF;border-radius:1px;min-width:1px;max-height:19px}
-.mode-after .wave i{background:#8E8CFF}
+.wave{position:absolute;left:0;right:0;top:35px;height:48px;display:flex;align-items:end;gap:1px;padding:0;opacity:1;z-index:1;overflow:hidden;pointer-events:none}
+.wave i{flex:0 0 1px;background:rgba(142,140,255,.72);border-radius:1px 1px 0 0;min-width:1px;max-height:48px}
+.mode-after .wave i{background:rgba(142,140,255,.78)}
 .thumbstrip{position:absolute;left:0;top:0;bottom:0;display:flex;opacity:.16;pointer-events:none}
 /* cut seams */
-.seam{position:absolute;top:0;bottom:0;width:2px;background:repeating-linear-gradient(180deg,var(--amber) 0 3px,transparent 3px 6px);z-index:5}
+.seam{display:none}
 .seam::after{content:"";position:absolute;top:-3px;left:-3px;width:8px;height:8px;border-radius:50%;background:var(--amber)}
 .seam .tip{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);background:#fff;
   color:var(--t-hi);font-size:9.5px;font-weight:600;padding:3px 7px;border-radius:5px;white-space:nowrap;
@@ -447,7 +476,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 /* removed regions (only visible in BEFORE) */
 .removed{position:absolute;top:0;bottom:0;background:repeating-linear-gradient(45deg,rgba(255,56,76,.12) 0 6px,rgba(255,56,76,.04) 6px 12px);
   border-left:1px solid rgba(255,56,76,.4);border-right:1px solid rgba(255,56,76,.4);z-index:2;display:none}
-.mode-before .removed{display:block}
+.mode-before .removed{display:none}
 .mode-before .seam{display:none}
 /* playhead */
 .playhead{position:absolute;top:-5px;bottom:-520px;width:2px;background:#FF384C;z-index:8;pointer-events:none}
@@ -514,10 +543,15 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .rt-mark.pending{background:repeating-linear-gradient(45deg,rgba(245,177,74,.55) 0 4px,rgba(245,177,74,.16) 4px 8px);
   border:1px solid var(--amber);border-radius:4px}
 .rt-mark.pending::after{content:"⟳";position:absolute;top:-7px;left:50%;transform:translateX(-50%);font-size:10px;color:var(--amber);font-weight:700}
-.rt-mark.removed{width:2px;margin-left:-1px;background:repeating-linear-gradient(180deg,var(--amber) 0 3px,transparent 3px 6px)}
+.rt-mark.removed{display:none}
 .rt-mark.removed::after{content:"";position:absolute;top:-3px;left:-3px;width:8px;height:8px;border-radius:50%;background:var(--amber)}
 .rt-mark.kept{display:none}
 .mode-before .rt-mark{display:none}
+.mode-before .fill,.mode-before .dup,.mode-before .fix,.mode-before .rk,.mode-before .ph.dropped{
+  color:inherit!important;background:transparent!important;border:0!important;text-decoration:none!important;opacity:1!important;padding:0!important;
+}
+.mode-before .rkpick,.mode-before .pausechip,.mode-before .tag-warn,.mode-before .tag-ok,.mode-before .tag-neutral{display:none!important}
+.mode-before .transcript-doc .now{background:transparent!important;color:inherit!important}
 
 /* ---------- DESIGN NOTES ---------- */
 .notes-toggle{position:fixed;right:18px;bottom:16px;z-index:50;display:none;align-items:center;gap:8px;
@@ -540,9 +574,301 @@ body.notes-on .transport,body.notes-on .wave{opacity:.35}
 .note.n4{bottom:62px;left:28px} .note.n4::after{left:34px;bottom:-6px;border-left:none;border-top:none;transform:rotate(45deg)}
 .note.n5{top:124px;left:300px} .note.n5::after{left:44px;top:-6px;border-right:none;border-bottom:none;transform:rotate(45deg)}
 .icon{stroke:currentColor;stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---------- RECORDING ONBOARDING ---------- */
+body.flow-onboarding .app{display:none}
+body.flow-onboarding .notes-toggle,body.flow-onboarding .note{display:none!important}
+.onboarding{display:none;height:100vh;min-width:1180px;background:#fff;color:var(--t-hi)}
+body.flow-onboarding .onboarding{display:flex}
+.ob-shell{position:relative;display:flex;width:100%;height:100%;overflow:hidden;background:#fff}
+.ob-sidebar{width:208px;flex:0 0 208px;border-right:1px solid var(--line);background:#fff;display:flex;flex-direction:column}
+.ob-logo{height:52px;display:flex;align-items:center;gap:8px;padding:0 18px;font-weight:800;font-size:20px;letter-spacing:-.04em;color:#111}
+.ob-logo mark{background:var(--acc);color:#fff;border-radius:4px;padding:1px 4px;margin-right:1px}
+.ob-space{display:flex;align-items:center;gap:8px;padding:10px;margin:0 10px 12px;border-radius:10px}
+.ob-space .avatar{width:40px;height:40px;border-radius:10px;background:#F1F3FE;color:#2944CC;display:grid;place-items:center;font-weight:600;font-size:18px}
+.ob-space b{font-size:13px;line-height:20px;font-weight:500;color:var(--t-hi);display:block}
+.ob-space span{font-size:11px;line-height:16px;color:var(--t-lo)}
+.ob-nav{padding:12px 10px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:4px}
+.ob-nav button{height:40px;border-radius:10px;padding:0 12px;display:flex;align-items:center;gap:8px;font-size:13px;line-height:20px;color:var(--t-hi);text-align:left}
+.ob-nav button.on,.ob-nav button:hover{background:#F9FAFB}
+.ob-bottom{margin-top:auto;border-top:1px solid var(--line);padding:12px 10px}
+.ob-profile{display:flex;gap:8px;align-items:center;padding:0 0 0 0}
+.ob-profile img{width:36px;height:36px;border-radius:50%;object-fit:cover}
+.ob-profile b{font-size:12.8px;line-height:20px;font-weight:500;display:block}
+.ob-profile span{font-size:11px;line-height:16px;color:var(--t-lo);display:block;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ob-main{flex:1;position:relative;min-width:0;background:#fff;overflow:hidden}
+.ob-step{display:none;position:absolute;inset:0}
+.onboarding[data-step="intro"] .ob-step.intro,
+.onboarding[data-step="permissions"] .ob-step.recorder,
+.onboarding[data-step="camera-modal"] .ob-step.recorder,
+.onboarding[data-step="recorder-ready"] .ob-step.recorder,
+.onboarding[data-step="screen-modal"] .ob-step.recorder,
+.onboarding[data-step="recording"] .ob-step.recorder,
+.onboarding[data-step="review"] .ob-step.review{display:block}
+.ob-promo{position:absolute;left:20px;right:20px;top:32px;border-radius:12px;min-height:180px;padding:30px;overflow:hidden;
+  background:radial-gradient(circle at 78% 20%,rgba(61,61,233,.4),transparent 24%),linear-gradient(135deg,#1B1B2B,#0D1638 58%,#1D646E)}
+.ob-promo h2{font-size:22px;line-height:30px;color:#fff;font-weight:500;margin-bottom:12px}
+.ob-promo p,.ob-promo li{font-size:12.8px;line-height:20px;color:rgba(255,255,255,.68)}
+.ob-promo ul{list-style:none;display:grid;gap:2px}
+.ob-promo li::before{content:"";display:inline-block;width:5px;height:9px;border:solid rgba(255,255,255,.8);border-width:0 1.5px 1.5px 0;transform:rotate(45deg);margin-right:8px}
+.ob-plan-card{position:absolute;right:72px;top:34px;width:190px;height:124px;border-radius:12px;background:#fff;box-shadow:0 18px 42px rgba(0,0,0,.22);transform:rotate(-7deg);padding:18px}
+.ob-plan-card:nth-child(2){right:244px;top:48px;transform:rotate(8deg);opacity:.94}
+.ob-plan-card b{font-size:18px}.ob-plan-card span{display:block;color:var(--t-lo);font-size:12px;margin-top:10px}
+.ob-create{position:absolute;left:50%;top:50%;transform:translate(-50%,-36%);width:520px;text-align:center}
+.ob-video-card{width:400px;height:225px;border-radius:12px;margin:0 auto 16px;overflow:hidden;position:relative;background:linear-gradient(180deg,#fff,#111);box-shadow:0 28px 70px -40px rgba(16,24,40,.45)}
+.ob-video-card::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.95),rgba(20,20,30,.18) 45%,#000)}
+.ob-video-wave{position:absolute;left:48px;right:48px;bottom:34px;height:4px;border-radius:8px;background:rgba(255,255,255,.32)}
+.ob-video-wave::after{content:"";position:absolute;left:0;top:0;bottom:0;width:72%;border-radius:8px;background:#fff}
+.ob-play{position:absolute;left:18px;bottom:22px;width:0;height:0;border-top:7px solid transparent;border-bottom:7px solid transparent;border-left:10px solid #fff}
+.ob-create h1{font-size:22px;line-height:30px;font-weight:500;margin-bottom:6px}
+.ob-create p{font-size:14px;line-height:22px;color:#667085;margin:0 auto;max-width:500px}
+.ob-primary,.ob-secondary{min-height:48px;border-radius:8px;font-size:15px;font-weight:500;padding:0 22px;display:inline-flex;align-items:center;justify-content:center}
+.ob-primary{background:var(--acc);border:1px solid var(--acc);color:#fff;box-shadow:0 2px 8px rgba(11,11,207,.28)}
+.ob-primary:hover{filter:brightness(1.07)}
+.ob-secondary{color:#667085;background:#fff}
+.ob-actions{display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:24px}
+.rec-shell{position:absolute;inset:0;background:#fff;color:var(--t-hi);display:flex;flex-direction:column}
+.rec-appbar{height:73px;flex:0 0 73px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:16px 20px 17px;background:#fff;z-index:5}
+.rec-app-left,.rec-app-actions{display:flex;align-items:center;gap:12px}
+.rec-back{width:24px;height:24px;border-radius:8px;color:var(--t-mid);display:grid;place-items:center;flex:0 0 auto}
+.rec-back:hover{background:var(--bg-750)}
+.rec-title{font-size:15.1px;line-height:22px;font-weight:500;color:var(--t-hi);white-space:nowrap}
+.rec-canvas{position:relative;flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;background:var(--bg-900)}
+.rec-center{text-align:center;max-width:560px;background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);padding:32px;box-shadow:var(--shadow)}
+.rec-center svg{width:28px;height:28px;color:var(--t-lo);margin-bottom:14px}
+.rec-center h2{font-size:22px;line-height:30px;font-weight:600;margin-bottom:8px;color:var(--t-hi)}
+.rec-center p{font-size:15px;line-height:22px;color:var(--t-lo);margin-bottom:18px}
+.rec-controls{height:76px;background:#fff;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:center;gap:18px;color:var(--t-mid);box-shadow:0 -8px 24px -22px rgba(16,24,40,.34)}
+.rec-tool{min-width:116px;height:44px;border-radius:8px;border:1px solid var(--border-med);background:#fff;display:flex;align-items:center;justify-content:center;gap:7px;font-size:14px;font-weight:500;color:var(--t-mid);box-shadow:0 1px 1px rgba(16,24,40,.05)}
+.rec-tool:hover{background:var(--bg-750);color:var(--t-hi)}
+.rec-tool.hot{background:#FFF5F4;border-color:#FFD1CA;color:#B42318}.rec-tool.active{background:var(--acc-muted);border-color:var(--acc-2);color:var(--acc-deep)}
+.rec-dot{width:56px;height:56px;border-radius:50%;border:3px solid rgba(255,56,76,.32);display:grid;place-items:center;background:#fff;box-shadow:0 6px 18px -10px rgba(255,56,76,.8)}
+.rec-dot span{width:34px;height:34px;border-radius:50%;background:var(--red);display:block}
+.browser-permission{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:390px;border-radius:var(--r-lg);background:#fff;color:#1D1D20;padding:24px;box-shadow:0 24px 70px rgba(16,24,40,.22);z-index:8;border:1px solid var(--line)}
+.browser-permission h3{font-size:20px;line-height:28px;margin-bottom:12px}.browser-permission p{font-size:15px;line-height:22px;color:#475467;margin-bottom:18px}
+.modal-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px}.modal-actions button{height:44px;border-radius:8px;font-size:14px;font-weight:600}
+.modal-actions .light{border:1px solid var(--line);background:#fff;color:#344054}.modal-actions .brand{background:var(--acc-2);color:#fff}
+.rec-camera{position:absolute;inset:0}.rec-camera video{width:100%;height:100%;object-fit:cover;filter:saturate(.86) brightness(.95)}
+.rec-toast{position:absolute;right:24px;top:24px;background:#fff;color:var(--t-hi);border:1px solid var(--line);border-radius:12px;padding:15px 18px 16px 52px;width:320px;box-shadow:var(--shadow);font-size:16px;font-weight:600;line-height:24px}
+.rec-toast::before{content:"";position:absolute;left:16px;top:18px;width:20px;height:20px;border-radius:50%;background:rgba(247,144,9,.12);box-shadow:inset 0 0 0 1px rgba(247,144,9,.35)}
+.rec-toast a{display:block;color:var(--acc-deep);font-weight:500;margin-top:6px;text-decoration:underline}
+.system-share{position:absolute;inset:0;background:rgba(242,243,248,.78);backdrop-filter:blur(3px);z-index:7;display:flex;align-items:center;justify-content:center}
+.system-card{width:390px;border-radius:var(--r-lg);background:#fff;color:var(--t-hi);padding:24px;box-shadow:0 24px 70px rgba(16,24,40,.22);border:1px solid var(--line)}
+.system-card h3{font-size:20px;line-height:28px;font-weight:600;margin-bottom:8px}.system-card p{font-size:15px;line-height:22px;color:var(--t-lo);margin-bottom:18px}
+.system-card button{width:100%;height:44px;border-radius:8px;border:1px solid var(--border-med);background:#fff;margin-top:8px;font-size:14px;font-weight:600;color:var(--t-mid);box-shadow:0 1px 1px rgba(16,24,40,.05)}
+.system-card button:first-of-type{background:var(--acc);border-color:var(--acc);color:#fff;box-shadow:0 2px 8px rgba(11,11,207,.24)}
+.system-card button:hover{background:var(--bg-750)}.system-card button:first-of-type:hover{filter:brightness(1.06);background:var(--acc)}
+.share-preview{position:absolute;inset:32px 42px 32px;border-radius:16px;overflow:hidden;background:#E9ECF4;box-shadow:0 18px 60px -30px rgba(16,24,40,.35),inset 0 0 0 1px rgba(16,24,40,.12)}
+.share-preview::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(11,11,207,.12),rgba(16,24,40,.28)),url('assets/avatar.jpg');background-size:cover;background-position:center;filter:blur(22px) saturate(.7);transform:scale(1.1);opacity:.35}
+.share-ui{position:absolute;inset:56px 80px 70px;border-radius:10px;background:rgba(255,255,255,.62);box-shadow:0 18px 60px rgba(0,0,0,.18);display:grid;place-items:center;text-align:center}
+.share-ui h2{font-size:22px;line-height:30px;color:#fff;text-shadow:0 2px 18px rgba(0,0,0,.3)}.share-ui p{font-size:15px;color:rgba(255,255,255,.78);margin-top:6px}
+.rec-mini-cam{position:absolute;right:36px;top:86px;width:156px;height:92px;border-radius:10px;overflow:hidden;border:2px solid rgba(255,255,255,.8);box-shadow:0 8px 24px rgba(0,0,0,.28);z-index:3}
+.rec-mini-cam video{width:100%;height:100%;object-fit:cover}
+.rec-time{position:absolute;left:50%;top:88px;transform:translateX(-50%);padding:6px 10px;border-radius:999px;background:rgba(255,56,76,.18);color:#fff;font-size:12px;font-weight:700;letter-spacing:.02em}
+.review-page{position:absolute;inset:0;background:#fff;display:flex;flex-direction:column}
+.review-topbar{height:73px;border-bottom:1px solid #EAECF0;display:flex;align-items:center;justify-content:space-between;padding:16px 20px 17px;background:#fff;flex:0 0 auto}
+.review-top-left,.review-top-actions{display:flex;align-items:center;gap:12px}
+.review-back{width:24px;height:24px;border-radius:8px;color:#344054;display:grid;place-items:center}
+.review-back:hover{background:#F2F4F7}.review-top-title{font-size:16px;line-height:22px;font-weight:600;color:#101828}
+.review-top-btn{height:40px;border-radius:8px;border:1px solid #D0D5DD;background:#fff;color:#344054;padding:0 14px;display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600;box-shadow:0 1px 1px rgba(16,24,40,.05)}
+.review-top-btn.plan{border-color:#3D3DE9;background:#F5F5FF;color:#0909A2}.review-top-btn.icon{width:40px;padding:0;justify-content:center}.review-top-btn.share{background:#0B0BCF;border-color:#0B0BCF;color:#fff}
+.review-avatar{width:40px;height:40px;border-radius:50%;overflow:hidden;background:#E7E7FC}.review-avatar img{width:100%;height:100%;object-fit:cover;object-position:50% 44%}
+.review-content{flex:1;min-height:0;background:#F8FAFC;display:grid;grid-template-columns:minmax(520px,680px) 380px;gap:48px;align-items:center;justify-content:center;padding:56px 64px}
+.review-player-wrap{display:flex;flex-direction:column;align-items:center;gap:12px;min-width:0}
+.review-ready-title{font-size:24px;line-height:30px;font-weight:600;color:#101828;text-align:center}
+.review-player{width:min(560px,100%);background:#fff;border:1px solid rgba(0,0,0,.12);border-radius:16px;overflow:hidden;box-shadow:0 18px 52px -28px rgba(16,24,40,.28)}
+.review-tabs{height:52px;display:grid;grid-template-columns:repeat(3,1fr);align-items:end;position:relative}
+.review-tab{height:52px;display:grid;place-items:center;font-size:14px;font-weight:500;color:#667085}.review-tab.on{color:#101828}
+.review-tab-indicator{position:absolute;bottom:0;left:33.333%;width:33.333%;height:2px;background:#344054}
+.review-preview{width:100%;aspect-ratio:16/9;background:linear-gradient(135deg,#1a1a6e,#0B0BCF 55%,#3D3DE9);padding:42px;position:relative;overflow:hidden}
+.review-preview .screen{position:absolute;inset:42px;width:auto;height:auto}.review-preview .webcam-bubble{left:24px;bottom:24px;width:142px;border-width:4px}
+.review-progress{height:8px;position:relative;background:rgba(242,244,247,.72)}
+.review-progress span{position:absolute;inset:0 auto 0 0;width:22%;background:#344054;border-radius:0 8px 8px 0}
+.review-controls{height:64px;display:flex;align-items:center;gap:12px;padding:14px 16px 16px;background:#fff}
+.review-control{width:32px;height:32px;border-radius:10px;color:#344054;display:grid;place-items:center;font-size:18px;font-weight:700}.review-control:hover{background:#F2F4F7}
+.review-time{margin-left:auto;margin-right:auto;font-size:12px;line-height:16px;font-weight:600;color:#101828;white-space:nowrap}.review-time span{color:#D0D5DD;font-weight:500}
+.review-actions-row{width:min(560px,100%);display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.review-action{height:40px;border-radius:8px;border:1px solid #D0D5DD;background:#fff;color:#344054;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 1px 1px rgba(16,24,40,.05)}
+.review-action.primary{background:#F5F5FF;border-color:#3D3DE9;color:#0909A2;justify-content:space-between;padding:0 16px}
+.review-summary{align-self:center;background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:0 16px 48px -24px rgba(16,24,40,.28)}
+.review-summary h1{font-size:24px;line-height:32px;margin-bottom:8px}.review-summary p{font-size:14px;line-height:22px;color:#667085;margin-bottom:18px}
+.polish-list{display:grid;gap:10px;margin:18px 0 22px}.polish-list li{list-style:none;display:flex;gap:10px;font-size:14px;line-height:20px;color:#344054}
+.polish-list li::before{content:"";width:18px;height:18px;border-radius:50%;background:var(--acc-muted);box-shadow:inset 0 0 0 1px rgba(11,11,207,.18);flex:0 0 auto}
+.review-summary .ob-primary{width:100%}.review-summary .ob-secondary{width:100%;margin-top:8px}
 </style>
 </head>
-<body class="mode-after">
+<body class="mode-after flow-onboarding">
+<div class="onboarding" id="onboarding" data-step="intro">
+  <div class="ob-shell">
+    <aside class="ob-sidebar">
+      <div class="ob-logo"><mark>R</mark>RASK</div>
+      <div class="ob-space"><div class="avatar">M</div><div><b>My Teamspace</b><span>Owner</span></div></div>
+      <nav class="ob-nav">
+        <button>Settings & members</button>
+        <button>Translation</button>
+        <button>Voice Clone Library</button>
+        <button>Dictionary</button>
+        <button class="on">Create Video</button>
+      </nav>
+      <nav class="ob-nav" style="margin-top:auto;border-top:0">
+        <button>Help Center</button>
+        <button>Get help</button>
+      </nav>
+      <div class="ob-bottom">
+        <div class="ob-profile"><img src="assets/avatar.jpg" alt=""><div><b>Free Plan</b><span>yuriymalugin@gmail.com</span></div></div>
+      </div>
+    </aside>
+    <main class="ob-main">
+      <section class="ob-step intro">
+        <div class="ob-promo">
+          <h2>Trial has ended, subscribe now with 35% off</h2>
+          <p>Prices are increasing soon! Subscribe today and get:</p>
+          <ul>
+            <li>AI cleanup for long pauses, retakes and filler words</li>
+            <li>Smart zooms and captions for publish-ready demos</li>
+            <li>Team Spaces, subtitles and more</li>
+          </ul>
+          <div class="ob-plan-card"><b>Creator Pro</b><span>For regular content production</span></div>
+          <div class="ob-plan-card"><b>Business</b><span>For teams shipping global video</span></div>
+        </div>
+        <div class="ob-create">
+          <div class="ob-video-card"><span class="ob-play"></span><span class="ob-video-wave"></span></div>
+          <h1>Create Video</h1>
+          <p>Record your screen and let AI clean the audio and add smart zooms, with full control to fine-tune the edit and ship publish-ready videos every time.</p>
+          <div class="ob-actions">
+            <button class="ob-primary" data-flow-step="permissions">Start Recording</button>
+            <button class="ob-secondary">Learn more</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="ob-step recorder">
+        <div class="rec-shell">
+          <header class="rec-appbar">
+            <div class="rec-app-left">
+              <button class="rec-back" data-flow-step="intro" aria-label="Back"><svg class="icon" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button>
+              <div class="rec-title">Record video</div>
+            </div>
+            <div class="rec-app-actions">
+              <button class="review-top-btn plan">View plans</button>
+              <button class="review-top-btn">✦ Advanced tools</button>
+              <button class="review-top-btn icon" aria-label="Help">?</button>
+              <div class="review-avatar"><img src="assets/avatar.jpg" alt=""></div>
+            </div>
+          </header>
+          <div class="rec-canvas">
+            <div class="rec-center" data-rec-panel="permissions">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M8 11V7a4 4 0 0 1 8 0v4"/><rect x="5" y="11" width="14" height="10" rx="2"/></svg>
+              <h2>Permission to record</h2>
+              <p>We need access to your camera and microphone.</p>
+              <button class="ob-primary" data-flow-step="camera-modal">Enable camera & microphone</button>
+            </div>
+            <div class="rec-camera" data-rec-panel="camera" hidden>
+              <video src="assets/webcam-preview.mp4" autoplay muted loop playsinline></video>
+              <div class="rec-toast">We're not detecting much sound from your mic.<a>Learn more</a></div>
+            </div>
+            <div class="share-preview" data-rec-panel="share" hidden>
+              <div class="share-ui"><div><h2>Your screen is being shared</h2><p>Start recording your video</p></div></div>
+              <div class="rec-mini-cam"><video src="assets/webcam-preview.mp4" autoplay muted loop playsinline></video></div>
+              <div class="rec-toast">We're not detecting much sound from your mic.<a>Learn more</a></div>
+            </div>
+            <div class="rec-time" data-rec-panel="recording" hidden>REC 00:00</div>
+            <div class="browser-permission" data-rec-panel="camera-dialog" hidden>
+              <h3>Camera & microphone access</h3>
+              <p>Rask needs permission to use your camera and microphone to record.</p>
+              <div class="modal-actions"><button class="light" data-flow-step="permissions">Not now</button><button class="brand" data-flow-step="recorder-ready">Allow access</button></div>
+            </div>
+            <div class="system-share" data-rec-panel="share-dialog" hidden>
+              <div class="system-card">
+                <h3>Share your screen</h3>
+                <p>Select what you want to capture for this recording.</p>
+                <button data-flow-step="recording">Share current window</button>
+                <button data-flow-step="recording">Share full screen</button>
+                <button data-flow-step="recorder-ready">Cancel</button>
+              </div>
+            </div>
+          </div>
+          <div class="rec-controls">
+            <button class="rec-tool">More</button>
+            <button class="rec-tool hot">Unmute</button>
+            <button class="rec-tool" data-flow-step="camera-modal">Start camera</button>
+            <button class="rec-dot" data-record-action><span></span></button>
+            <button class="rec-tool" data-flow-step="screen-modal">Share screen</button>
+            <button class="rec-tool">Quick mode</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="ob-step review">
+        <div class="review-page">
+          <header class="review-topbar">
+            <div class="review-top-left">
+              <button class="review-back" data-flow-step="intro" aria-label="Back">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+              </button>
+              <div class="review-top-title">Video</div>
+            </div>
+            <div class="review-top-actions">
+              <button class="review-top-btn plan">View plans</button>
+              <button class="review-top-btn">✦ Advanced tools</button>
+              <button class="review-top-btn icon" aria-label="Search">⌕</button>
+              <button class="review-top-btn icon" aria-label="Help">?</button>
+              <div class="review-avatar"><img src="assets/avatar.jpg" alt=""></div>
+              <button class="review-top-btn share">Share</button>
+            </div>
+          </header>
+          <div class="review-content">
+            <div class="review-player-wrap">
+              <h1 class="review-ready-title">Your video is ready!</h1>
+              <div class="review-player">
+                <div class="review-tabs">
+                  <button class="review-tab">Original</button>
+                  <button class="review-tab on">Polished</button>
+                  <button class="review-tab">Captions</button>
+                  <div class="review-tab-indicator"></div>
+                </div>
+                <div class="review-preview">
+                  <div class="screen">
+                    <div class="dash">
+                      <div class="d-side"><div class="d-brand"><i></i>Acme</div><div class="d-nav on">Dashboard</div><div class="d-nav">Reports</div><div class="d-nav">Data sources</div></div>
+                      <div class="d-main"><div class="d-top"><div><div class="d-h">Analytics Overview</div><div class="d-sub">Polished preview</div></div><div class="d-actions"><button class="d-btn">Share</button><button class="d-btn primary">+ Create</button></div></div><div class="d-kpis"><div class="d-card"><div class="k-l">Revenue</div><div class="k-v">$48.2k</div><div class="k-d">▲ 12.4%</div></div><div class="d-card"><div class="k-l">Active users</div><div class="k-v">3,914</div><div class="k-d">▲ 6.1%</div></div><div class="d-card"><div class="k-l">Conversion</div><div class="k-v">4.8%</div><div class="k-d">▲ 0.9%</div></div></div><div class="d-chart"><div class="c-h"><span>Revenue trend</span><span>$48,219</span></div></div></div>
+                    </div>
+                  </div>
+                  <div class="webcam-bubble"><video src="assets/webcam-preview.mp4" autoplay muted loop playsinline></video></div>
+                </div>
+                <div class="review-progress"><span></span></div>
+                <div class="review-controls">
+                  <button class="review-control" data-review-play aria-label="Pause">▮▮</button>
+                  <button class="review-control" aria-label="Replay">↺</button>
+                  <button class="review-control" aria-label="Redo">↻</button>
+                  <div class="review-time">00:00:14,278 <span>/ 00:00:45,000</span></div>
+                  <button class="review-control" aria-label="Fullscreen">⛶</button>
+                </div>
+              </div>
+              <div class="review-actions-row">
+                <button class="review-action">Edit polish</button>
+                <button class="review-action primary"><span>Download</span><span>⌄</span></button>
+              </div>
+            </div>
+            <aside class="review-summary">
+              <h1>Your recording is polished</h1>
+              <p>Rask cleaned the first pass automatically. Review the summary, then open the editor for full control.</p>
+              <ul class="polish-list">
+                <li>Removed 24 filler words and 3 repeated phrases</li>
+                <li>Shortened 7 long pauses and cut 47 seconds</li>
+                <li>Added 4 smart zooms around key product actions</li>
+                <li>Generated captions and an editable transcript</li>
+              </ul>
+              <button class="ob-primary" data-open-editor>Open editor</button>
+              <button class="ob-secondary" data-flow-step="recording">Back to recorder preview</button>
+            </aside>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
 <div class="app">
 
   <!-- ================= TOP BAR ================= -->
@@ -655,12 +981,18 @@ body.notes-on .transport,body.notes-on .wave{opacity:.35}
     </aside>
 
     <!-- RIGHT PANEL -->
-    <aside class="panel">
+    <aside class="panel" id="polishPanel">
       <div class="panel-h">
-        <button class="tr-toggle on" id="trToggle">Transcript</button>
-        <div class="seg ba" id="ba">
-          <button data-m="before">Before</button>
-          <button data-m="after" class="on">After</button>
+        <div class="panel-normal-head">
+          <button class="tr-toggle on" id="trToggle">Transcript</button>
+          <div class="seg ba" id="ba">
+            <button data-m="before">Before</button>
+            <button data-m="after" class="on">After</button>
+          </div>
+        </div>
+        <div class="panel-zoom-head">
+          <button class="zoom-back" id="zoomBack" aria-label="Back to all settings"><svg class="icon" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button>
+          <div class="zoom-title" id="zoomInspectorTitle">SmartZoom: Custom zoom</div>
         </div>
       </div>
 
@@ -685,39 +1017,19 @@ body.notes-on .transport,body.notes-on .wave{opacity:.35}
         </section>
 
         <!-- SMART ZOOM -->
-        <section class="grp open" data-g>
+        <section class="grp open zoom-group" data-g>
           <button class="grp-h"><svg class="gi icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg>Smart zoom <span class="cnt" id="zmCount">· 4 zooms</span><svg class="chev icon" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
           <div class="grp-b">
             <div class="row"><span class="lbl">Auto-zoom on clicks<span class="hint">detects clicks &amp; key actions</span></span><button class="sw" aria-pressed="true" data-k="zoom"><span class="knob"></span></button></div>
             <div class="sl-row"><div class="sl-top"><span>Intensity</span><span class="v" id="intV">Medium</span></div><input type="range" min="60" max="130" value="100" id="intSl"></div>
             <div class="row"><span class="lbl">Motion</span><div class="mini-seg" id="motion"><button class="on" data-mo="smooth">Smooth</button><button data-mo="snappy">Snappy</button></div></div>
             <div id="zmList" style="margin-top:6px"></div>
-            <button id="addZoom" class="add-zoom">+ Add zoom</button>
-            <div id="zoomEditor" class="zedit" hidden>
-              <div class="ze-thumb">
-                <div class="ze-mini-screen">
-                  <div class="ze-mini-side">
-                    <div class="ze-mini-logo"><i></i>Acme</div>
-                    <div class="ze-mini-nav on">Dashboard</div>
-                    <div class="ze-mini-nav">Reports</div>
-                    <div class="ze-mini-nav">Data sources</div>
-                    <div class="ze-mini-nav">Audience</div>
-                  </div>
-                  <div class="ze-mini-main">
-                    <div class="ze-mini-top">
-                      <div><div class="ze-mini-title">Analytics Overview</div><div class="ze-mini-sub">Last 30 days · live</div></div>
-                      <div class="ze-mini-actions"><button class="ze-mini-btn">Share</button><button class="ze-mini-btn primary">+ Create</button></div>
-                    </div>
-                    <div class="ze-mini-kpis">
-                      <div class="ze-mini-card"><span>Revenue</span><b>$48.2k</b><em>▲ 12.4%</em></div>
-                      <div class="ze-mini-card"><span>Active users</span><b>3,914</b><em>▲ 6.1%</em></div>
-                      <div class="ze-mini-card"><span>Conversion</span><b>4.8%</b><em>▲ 0.9%</em></div>
-                    </div>
-                    <div class="ze-mini-chart"></div>
-                  </div>
-                </div>
-                <div class="ze-focus-dot" id="zeFocusDot" title="Drag focus point"></div>
-              </div>
+	            <button id="addZoom" class="add-zoom">+ Add zoom</button>
+	            <div id="zoomEditor" class="zedit" hidden>
+	              <div class="ze-thumb">
+	                <div class="ze-video-preview" id="zeVideoPreview"></div>
+	                <div class="ze-focus-dot" id="zeFocusDot" title="Drag focus point"></div>
+	              </div>
               <div class="sl-row"><div class="sl-top"><span>Zoom level</span><span class="v" id="zeScaleV">1.8×</span></div><input type="range" min="120" max="300" value="180" id="zeScale"></div>
               <div class="sl-row"><div class="sl-top"><span>Duration</span><span class="v" id="zeDurV">2.0s</span></div><input type="range" min="6" max="80" value="20" id="zeDur"></div>
               <div class="zedit-hint">Drag the <b>focus point</b> on the video to aim the zoom — or drag / resize the block on the timeline.</div>
@@ -791,6 +1103,7 @@ body.notes-on .transport,body.notes-on .wave{opacity:.35}
           <div class="clip-card kept" style="left:500px;width:210px">Now I’ll show you how smart zoom...</div>
           <div class="cut-gap" style="left:710px;width:44px" data-label="cut 7s"></div>
           <div class="clip-card kept" style="left:754px;width:280px">Finally, captions stay editable...</div>
+          <div class="clip-card raw-clip">Raw recording</div>
           <div class="wave" id="wave"></div>
           <!-- cut seams (after) -->
           <div class="seam" style="left:14%"><div class="tip">duplicate phrase removed</div></div>
@@ -842,7 +1155,8 @@ body.notes-on .transport,body.notes-on .wave{opacity:.35}
   const zoomwrap=$('#zoomwrap'), screenEl=$('#screen'), cursor=$('#cursor'),
         ripple=$('#ripple'), caption=$('#caption'), playhead=$('#playhead'), tc=$('#tc'),
         canvas=$('#canvas'), zlane=$('#zlane'), zmList=$('#zmList'), focusdot=$('#focusdot'),
-        zeFocusDot=$('#zeFocusDot');
+        zeFocusDot=$('#zeFocusDot'), polishPanel=$('#polishPanel'), zoomBack=$('#zoomBack'),
+        zoomInspectorTitle=$('#zoomInspectorTitle'), zeVideoPreview=$('#zeVideoPreview');
 
   let playing=true, t=4.55, last=performance.now();
   let centers=[], lastKey='', lastActiveStateId='__init';
@@ -874,7 +1188,7 @@ body.notes-on .transport,body.notes-on .wave{opacity:.35}
     zooms=TARGETS.map((o,i)=>({id:'z'+(seq++),start:i*BEAT,dur:2.8,x:centers[i].x,y:centers[i].y,
       scale:o.zoom,cap:o.cap,auto:true,ti:i,phrase:o.phrase,label:o.label}));
     renderZoomBlocks(); renderZoomList();
-    selectZoom(zooms[zooms.length-1].id,false);
+    selectZoom(zooms[zooms.length-1].id,false,false);
   }
 
   // active zoom at current time — prefer the latest-starting (manual on top of auto)
@@ -940,11 +1254,12 @@ body.notes-on .transport,body.notes-on .wave{opacity:.35}
       el.className='zblock'+(z.auto?'':' manual')+(z.id===selId?' sel':'');
       el.dataset.id=z.id;
       el.style.left=(z.start/TL_WINDOW*100)+'%'; el.style.width=(z.dur/TL_WINDOW*100)+'%';
-      el.innerHTML='<span class="zhandle l"></span><svg class="zi icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg><span class="zlbl">Zoom: '+(z.scale*S.intensity).toFixed(1)+'</span><span class="zhandle r"></span>';
+      el.innerHTML='<span class="zhandle l"></span><svg class="zi icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg><span class="zlbl">'+zoomBlockLabel(z)+'</span><span class="zhandle r"></span>';
       zlane.appendChild(el);
     });
     bindBlockDrag(); lastActiveStateId='__init';
   }
+  function zoomBlockLabel(z){ return (z.label||'Custom zoom')+' · '+(z.scale*S.intensity).toFixed(1)+'×'; }
   function renderZoomList(){
     zmList.innerHTML='';
     const displayTimes={'Create report':'0:06','Connect data source':'0:41','Share':'1:18','Publish':'2:02'};
@@ -964,24 +1279,61 @@ body.notes-on .transport,body.notes-on .wave{opacity:.35}
   function updateTimelineZoomLabels(){
     zooms.forEach(z=>{
       const lbl=$('#zlane .zblock[data-id="'+z.id+'"] .zlbl');
-      if(lbl) lbl.textContent='Zoom: '+(z.scale*S.intensity).toFixed(1);
+      if(lbl) lbl.textContent=zoomBlockLabel(z);
     });
   }
 
   // ===== selection + per-zoom editor =====
-  function selectZoom(id, seekToIt){
+  function selectZoom(id, seekToIt, inspect=true){
     selId=id; const z=zooms.find(z=>z.id===id);
     if(seekToIt && z){ t=z.start+Math.min(0.9,z.dur*0.45); lastKey=''; lastZId=null; }
     $$('#zlane .zblock').forEach(el=>el.classList.toggle('sel', el.dataset.id===id));
     $$('#zmList .zm').forEach(el=>el.classList.toggle('sel', el.dataset.id===id));
-    openEditor(z); showFocus(z);
+    openEditor(z,inspect); showFocus(z);
   }
-  function deselect(){ selId=null; $$('.sel').forEach(el=>el.classList.remove('sel')); openEditor(null); showFocus(null); }
-  function openEditor(z){
-    const ed=$('#zoomEditor'); if(!z){ed.hidden=true;return;} ed.hidden=false;
+  function deselect(){ selId=null; $$('.sel').forEach(el=>el.classList.remove('sel')); closeZoomInspector(); showFocus(null); }
+  function openEditor(z,inspect=true){
+    const ed=$('#zoomEditor'); if(!z || !inspect){ed.hidden=true;return;} ed.hidden=false;
+    if(inspect){
+      polishPanel.classList.add('zoom-inspector');
+      zoomInspectorTitle.textContent='SmartZoom: '+(z.label||'Custom zoom');
+      syncZoomPreview(z);
+    }
     $('#zeScale').value=Math.round(z.scale*100); $('#zeScaleV').textContent=z.scale.toFixed(1)+'×';
     $('#zeDur').value=Math.round(z.dur*10); $('#zeDurV').textContent=z.dur.toFixed(1)+'s';
     updateRangeFill($('#zeScale')); updateRangeFill($('#zeDur'));
+  }
+  function closeZoomInspector(){
+    polishPanel.classList.remove('zoom-inspector');
+    $('#zoomEditor').hidden=true;
+    focusdot.hidden=true; if(zeFocusDot) zeFocusDot.hidden=true;
+  }
+  zoomBack.onclick=()=>{ selId=null; $$('.sel').forEach(el=>el.classList.remove('sel')); closeZoomInspector(); };
+  function syncZoomPreview(z){
+    if(!zeVideoPreview) return;
+    const clone=canvas.cloneNode(true);
+    clone.querySelectorAll('[id]').forEach(el=>el.removeAttribute('id'));
+    clone.classList.remove('r916','r11');
+    const clonedZoom=clone.querySelector('.zoomwrap');
+    const clonedCursor=clone.querySelector('.cursor');
+    const clonedRipple=clone.querySelector('.ripple');
+    const clonedCaption=clone.querySelector('.caption');
+    if(clonedZoom){
+      clonedZoom.style.transition='none';
+      clonedZoom.style.transformOrigin=z.x+'% '+z.y+'%';
+      clonedZoom.style.transform='scale('+effScale(z).toFixed(3)+')';
+    }
+    if(clonedCursor){clonedCursor.style.left=z.x+'%'; clonedCursor.style.top=z.y+'%';}
+    if(clonedRipple) clonedRipple.remove();
+    if(clonedCaption){
+      clonedCaption.textContent=z.cap||'';
+      clonedCaption.classList.toggle('show',Boolean(z.cap));
+    }
+    zeVideoPreview.innerHTML='';
+    const scaleWrap=document.createElement('div');
+    scaleWrap.className='ze-video-scale';
+    scaleWrap.appendChild(clone);
+    zeVideoPreview.appendChild(scaleWrap);
   }
   function showFocus(z){
     if(!z){focusdot.hidden=true; if(zeFocusDot) zeFocusDot.hidden=true; return;}
@@ -995,6 +1347,7 @@ body.notes-on .transport,body.notes-on .wave{opacity:.35}
     if(zeFocusDot){zeFocusDot.style.left=z.x+'%'; zeFocusDot.style.top=z.y+'%';}
     if(activeZoom()===z) zoomwrap.style.transformOrigin=z.x+'% '+z.y+'%';
     cursor.style.left=z.x+'%'; cursor.style.top=z.y+'%';
+    syncZoomPreview(z);
     lastKey=''; lastZId=null;
   }
 
@@ -1003,11 +1356,12 @@ body.notes-on .transport,body.notes-on .wave{opacity:.35}
     z.scale=e.target.value/100; $('#zeScaleV').textContent=z.scale.toFixed(1)+'×';
     const li=$('#zmList .zm[data-id="'+z.id+'"] .zx'); if(li) li.textContent=z.scale.toFixed(1)+'×';
     updateTimelineZoomLabels();
+    syncZoomPreview(z);
     lastKey=''; lastZId=null;};
   $('#zeDur').oninput=e=>{const z=zooms.find(z=>z.id===selId);if(!z)return;
     updateRangeFill(e.target);
     z.dur=clamp(e.target.value/10,0.4,LOOP-z.start); $('#zeDurV').textContent=z.dur.toFixed(1)+'s';
-    const b=blockEl(z.id); if(b) b.style.width=(z.dur/TL_WINDOW*100)+'%'; lastKey='';};
+    const b=blockEl(z.id); if(b) b.style.width=(z.dur/TL_WINDOW*100)+'%'; syncZoomPreview(z); lastKey='';};
   const zeDel=$('#zeDel');
   if(zeDel) zeDel.onclick=()=>{ zooms=zooms.filter(z=>z.id!==selId); deselect(); renderZoomBlocks(); renderZoomList(); lastKey=''; lastZId=null; };
 
@@ -1068,15 +1422,56 @@ body.notes-on .transport,body.notes-on .wave{opacity:.35}
     e.preventDefault(); e.stopPropagation();
   };
 
-  // build waveform
-  const wave=$('#wave'); let bars='';
-  for(let i=0;i<640;i++){
-    const phrase=Math.sin(i*0.042)*0.45+Math.sin(i*0.17)*0.35+Math.sin(i*0.71)*0.2;
-    const quiet=(i>118&&i<154)||(i>318&&i<345)||(i>468&&i<486);
-    const h=quiet?2+Math.abs(phrase)*4:3+Math.abs(phrase)*13;
-    bars+='<i style="height:'+Math.round(h)+'px"></i>';
+  // build waveform: After shows the edit map; Before is one continuous raw audio take.
+  const wave=$('#wave');
+  const phrases=[
+    {s:5,e:98,level:34,events:[{at:.18,type:'dup'},{at:.82,type:'filler'}]},
+    {s:119,e:231,level:39,events:[{at:.36,type:'retake'},{at:.78,type:'pause'}]},
+    {s:250,e:355,level:36,events:[{at:.62,type:'filler'}]},
+    {s:377,e:517,level:32,events:[{at:.22,type:'falseStart'}]},
+    {s:518,e:640,level:25,events:[]}
+  ];
+  const cuts=[{s:98,e:119},{s:231,e:250},{s:355,e:377}];
+  function eventDip(p,ev){
+    const d=Math.abs(p-ev.at);
+    if(ev.type==='dup') return d<.055 ? 18*(1-d/.055) : 0;
+    if(ev.type==='filler') return d<.032 ? 15*(1-d/.032) : 0;
+    if(ev.type==='pause') return d<.075 ? 20*(1-d/.075) : 0;
+    if(ev.type==='falseStart') return d<.05 ? 17*(1-d/.05) : 0;
+    if(ev.type==='retake') return d<.065 ? -8*Math.sin((1-d/.065)*Math.PI) : 0;
+    return 0;
   }
-  wave.innerHTML=bars;
+  function waveHeight(i,mode){
+    if(mode==='before'){
+      const arc=.72+.28*Math.sin(i*.011);
+      const speech=Math.abs(Math.sin(i*.24))*0.48+Math.abs(Math.sin(i*.61))*0.34+Math.abs(Math.sin(i*1.18))*0.25;
+      const phraseLift=10*Math.max(0,Math.sin((i/640)*Math.PI*5.5));
+      return 7+(30*speech+phraseLift)*arc;
+    }
+    const cut=cuts.find(c=>i>=c.s&&i<c.e);
+    if(cut){
+      const p=(i-cut.s)/(cut.e-cut.s);
+      return 2+Math.abs(Math.sin(p*Math.PI*5))*4;
+    }
+    const seg=phrases.find(p=>i>=p.s&&i<p.e) || phrases[phrases.length-1];
+    const p=Math.max(0,Math.min(1,(i-seg.s)/(seg.e-seg.s)));
+    const attack=Math.min(1,p/.12);
+    const release=1-Math.max(0,(p-.72)/.28)*.58;
+    const speech=Math.abs(Math.sin(i*.29))*0.55+Math.abs(Math.sin(i*.73))*0.34+Math.abs(Math.sin(i*1.37))*0.18;
+    const opening=12*Math.exp(-Math.pow((p-.08)/.055,2));
+    const ending=-10*Math.max(0,(p-.82)/.18);
+    const edits=seg.events.reduce((sum,ev)=>sum+eventDip(p,ev),0);
+    return 8+(seg.level*speech+opening+ending-edits)*attack*release;
+  }
+  function renderWaveform(mode=S.mode){
+    let bars='';
+    for(let i=0;i<640;i++){
+      const h=waveHeight(i,mode);
+      bars+='<i style="height:'+Math.round(Math.max(2,Math.min(48,h)))+'px"></i>';
+    }
+    wave.innerHTML=bars;
+  }
+  renderWaveform();
 
   // ---- interactions ----
   $('#play').onclick=()=>{playing=!playing;
@@ -1145,6 +1540,8 @@ body.notes-on .transport,body.notes-on .wave{opacity:.35}
     document.body.classList.toggle('mode-before',b.dataset.m==='before');
     document.body.classList.toggle('mode-after',b.dataset.m==='after');
     S.mode=b.dataset.m;
+    if(S.mode==='before') closeZoomInspector();
+    renderWaveform(S.mode);
     lastKey=''; render();
   });
 
@@ -1249,6 +1646,72 @@ body.notes-on .transport,body.notes-on .wave{opacity:.35}
   setTimeout(computeCenters,300);
   setTimeout(()=>{ if(!zooms.length) initZooms(); if(!zmList.children.length) renderZoomList(); },600);
   requestAnimationFrame(frame);
+})();
+</script>
+<script>
+(function(){
+  const root=document.getElementById('onboarding');
+  if(!root) return;
+  const panels=[...root.querySelectorAll('[data-rec-panel]')];
+  const recTime=root.querySelector('.rec-time');
+  let recTimer=null, recStart=0;
+  const panelMap={
+    permissions:['permissions'],
+    'camera-modal':['permissions','camera-dialog'],
+    'recorder-ready':['camera'],
+    'screen-modal':['camera','share-dialog'],
+    recording:['share','recording'],
+    review:[]
+  };
+  function fmt(sec){
+    sec=Math.max(0,Math.floor(sec));
+    return String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0');
+  }
+  function setRecorderPanels(step){
+    const visible=panelMap[step]||[];
+    panels.forEach(p=>p.hidden=!visible.includes(p.dataset.recPanel));
+    root.querySelectorAll('.rec-tool').forEach(btn=>btn.classList.remove('active'));
+    if(step==='recording') root.querySelector('[data-flow-step="screen-modal"]')?.classList.add('active');
+  }
+  function startRecordingClock(){
+    clearInterval(recTimer);
+    recStart=Date.now();
+    if(recTime) recTime.textContent='REC 00:00';
+    recTimer=setInterval(()=>{ if(recTime) recTime.textContent='REC '+fmt((Date.now()-recStart)/1000); },500);
+  }
+  function stopRecordingClock(){
+    clearInterval(recTimer);
+    recTimer=null;
+  }
+  function go(step){
+    root.dataset.step=step;
+    setRecorderPanels(step);
+    if(step==='recording') startRecordingClock();
+    else if(step==='review') stopRecordingClock();
+  }
+	  root.addEventListener('click',e=>{
+	    const stepBtn=e.target.closest('[data-flow-step]');
+	    if(stepBtn){ go(stepBtn.dataset.flowStep); return; }
+	    const reviewPlay=e.target.closest('[data-review-play]');
+	    if(reviewPlay){
+	      const video=root.querySelector('.review-preview video');
+	      if(video?.paused){ video.play(); reviewPlay.textContent='▮▮'; reviewPlay.setAttribute('aria-label','Pause'); }
+	      else { video?.pause(); reviewPlay.textContent='▶'; reviewPlay.setAttribute('aria-label','Play'); }
+	      return;
+	    }
+	    if(e.target.closest('[data-record-action]')){
+	      go(root.dataset.step==='recording'?'review':'screen-modal');
+	    }
+    if(e.target.closest('[data-open-editor]')){
+      stopRecordingClock();
+      document.body.classList.remove('flow-onboarding');
+      document.body.classList.add('flow-edit');
+      window.dispatchEvent(new Event('resize'));
+      setTimeout(()=>window.dispatchEvent(new Event('resize')),120);
+    }
+  });
+  root.dataset.step='intro';
+  setRecorderPanels('intro');
 })();
 </script>
 </body>

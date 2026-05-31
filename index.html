@@ -487,8 +487,25 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .cut-gap::after{content:attr(data-label);position:absolute;left:50%;top:6px;transform:translateX(-50%);
   color:#B42318;background:#fff;border:1px solid #FEE4E2;border-radius:5px;padding:2px 6px;
   font-size:9.5px;line-height:12px;font-weight:700;white-space:nowrap;box-shadow:0 2px 8px rgba(16,24,40,.06)}
+.micro-cut{position:absolute;top:41px;height:18px;min-width:12px;border-radius:5px;
+  background:rgba(255,56,76,.1);border:1px solid rgba(255,56,76,.32);z-index:5;
+  display:flex;align-items:center;justify-content:center;padding:0 5px;color:#B42318;
+  font-size:9px;line-height:12px;font-weight:700;white-space:nowrap;box-shadow:0 2px 8px rgba(16,24,40,.04)}
+.micro-cut::before{content:"";position:absolute;left:50%;top:-10px;width:1px;height:10px;background:rgba(255,56,76,.46)}
+.micro-cut.tiny{width:12px;min-width:12px;padding:0}
+.micro-cut.tiny span{position:absolute;left:50%;bottom:calc(100% + 5px);transform:translateX(-50%);
+  background:#fff;border:1px solid #FEE4E2;border-radius:5px;padding:2px 6px;opacity:0;pointer-events:none;
+  transition:.12s;box-shadow:0 2px 8px rgba(16,24,40,.06)}
+.micro-cut.tiny:hover span{opacity:1}
+.cleanup-fillers-off .micro-cut[data-clean="fillers"],
+.cleanup-pauses-off .micro-cut[data-clean="pauses"],
+.cleanup-retakes-off .micro-cut[data-clean="retakes"],
+.cleanup-fillers-off .cut-gap[data-clean="fillers"],
+.cleanup-pauses-off .cut-gap[data-clean="pauses"],
+.cleanup-retakes-off .cut-gap[data-clean="retakes"]{display:none}
+.mode-before .micro-cut{display:none}
 .wave{position:absolute;left:0;right:0;top:35px;height:48px;display:flex;align-items:end;gap:1px;padding:0;opacity:1;z-index:1;overflow:hidden;pointer-events:none}
-.wave i{flex:0 0 1px;background:rgba(142,140,255,.72);border-radius:1px 1px 0 0;min-width:1px;max-height:48px}
+.wave i{flex:1 0 1px;background:rgba(142,140,255,.72);border-radius:1px 1px 0 0;min-width:1px;max-height:48px}
 .mode-after .wave i{background:rgba(142,140,255,.78)}
 .thumbstrip{position:absolute;left:0;top:0;bottom:0;display:flex;opacity:.16;pointer-events:none}
 /* cut seams */
@@ -517,6 +534,12 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .fix{color:#B54708;background:#FEF6EE;border-radius:5px;padding:0 4px}
 .pausechip{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;color:#B54708;
   background:#FEF6EE;border:1px solid #F9DBAF;padding:1px 7px;border-radius:5px;text-decoration:none;vertical-align:middle}
+.cleanup-fillers-off .fill,.cleanup-fillers-off .dup{
+  color:inherit;text-decoration:none;opacity:1;background:transparent;border-color:transparent
+}
+.cleanup-pauses-off .pausechip{
+  color:var(--t-mid);background:#fff;border-color:var(--line)
+}
 /* retake states: pending (flagged candidate) → removed (cut) / kept (left in) */
 .retake{background:#FEF6EE;color:#B54708;border-bottom:2px dotted var(--amber);padding:1px 4px;border-radius:4px 4px 0 0;cursor:pointer;transition:.15s}
 .retake:hover{background:#FDEAD2}
@@ -1126,14 +1149,26 @@ body.flow-onboarding .onboarding{display:flex}
         <div class="lane-zooms" id="zlane"></div>
         <div class="lane-clip">
           <div class="clip-card active" style="left:10px;width:185px">Hey team, Smart Polish...</div>
-          <div class="cut-gap" style="left:195px;width:42px" data-label="cut 8s"></div>
+          <div class="cut-gap" data-clean="pauses" style="left:195px;width:42px" data-label="cut 8s"></div>
           <div class="clip-card kept" style="left:237px;width:225px">So first, we detect filler words...</div>
-          <div class="cut-gap" style="left:462px;width:38px" data-label="cut 5s"></div>
+          <div class="cut-gap" data-clean="retakes" style="left:462px;width:38px" data-label="cut 5s"></div>
           <div class="clip-card kept" style="left:500px;width:210px">Now I’ll show you how smart zoom...</div>
-          <div class="cut-gap" style="left:710px;width:44px" data-label="cut 7s"></div>
+          <div class="cut-gap" data-clean="pauses" style="left:710px;width:44px" data-label="cut 7s"></div>
           <div class="clip-card kept" style="left:754px;width:280px">Finally, captions stay editable...</div>
           <div class="clip-card raw-clip">Raw recording</div>
           <div class="wave" id="wave"></div>
+          <div class="micro-cut tiny" data-clean="fillers" style="left:72px"><span>um</span></div>
+          <div class="micro-cut" data-clean="fillers" style="left:118px;width:48px">repeat</div>
+          <div class="micro-cut tiny" data-clean="fillers" style="left:182px"><span>uh</span></div>
+          <div class="micro-cut tiny" data-clean="fillers" style="left:292px"><span>first</span></div>
+          <div class="micro-cut tiny" data-clean="fillers" style="left:371px"><span>basically</span></div>
+          <div class="micro-cut tiny" data-clean="fillers" style="left:404px"><span>actually</span></div>
+          <div class="micro-cut tiny" data-clean="fillers" style="left:437px"><span>kind of</span></div>
+          <div class="micro-cut" data-clean="retakes" style="left:538px;width:70px">retake</div>
+          <div class="micro-cut tiny" data-clean="fillers" style="left:617px"><span>like</span></div>
+          <div class="micro-cut tiny" data-clean="fillers" style="left:817px"><span>you know</span></div>
+          <div class="micro-cut" data-clean="fillers" style="left:864px;width:76px">duplicate</div>
+          <div class="micro-cut tiny" data-clean="fillers" style="left:984px"><span>false start</span></div>
           <!-- cut seams (after) -->
           <div class="seam" style="left:14%"><div class="tip">duplicate phrase removed</div></div>
           <div class="seam" style="left:23%"><div class="tip">“um” removed</div></div>
@@ -1578,8 +1613,37 @@ body.flow-onboarding .onboarding{display:flex}
     const k=sw.dataset.k;
     if(k==='retakes'){ openRetake(); return; }   // probabilistic → review, never silent toggle
     const v=sw.getAttribute('aria-pressed')!=='true';
-    sw.setAttribute('aria-pressed',v); S[k]=v; lastKey=''; lastZId=null; render();
+    sw.setAttribute('aria-pressed',v); S[k]=v; applyCleanupState(); lastKey=''; lastZId=null; render();
   });
+
+  function cleanupCounts(){
+    const retakeCuts=S.retakes?1:0;
+    return {
+      fillers:S.fillers?24:0,
+      pauses:S.pauses?7:0,
+      repeats:S.fillers?3:0,
+      edits:(S.fillers?27:0)+(S.pauses?7:0)+retakeCuts,
+      saved:(S.fillers?14:0)+(S.pauses?28:0)+(S.retakes?5:0),
+      retakeCuts
+    };
+  }
+  function applyCleanupState(){
+    const c=cleanupCounts();
+    document.body.classList.toggle('cleanup-fillers-off',!S.fillers);
+    document.body.classList.toggle('cleanup-pauses-off',!S.pauses);
+    document.body.classList.toggle('cleanup-retakes-off',!S.retakes);
+    const sub=$('.review .r-sub');
+    if(sub) sub.innerHTML='Removed: <b>'+c.fillers+'</b> filler words · <b>'+c.pauses+'</b> shortened pauses · <b>'+c.repeats+'</b> repeated phrases<span id="sumRetake">'+retakeSummaryText()+'</span>';
+    const save=$('.review .r-save');
+    if(save) save.innerHTML='You saved '+c.saved+'s <span class="sm">3:12 → '+fmt(192-c.saved)+'</span>';
+    const speechCnt=$('.grp[data-g] .cnt');
+    if(speechCnt) speechCnt.textContent='· '+c.edits+' edits';
+  }
+  function retakeSummaryText(){
+    if(retake.status==='removed') return ' · cut 1 retake';
+    if(retake.status==='kept') return ' · retake kept';
+    return ' · <b>1</b> retake to review';
+  }
 
   const fillerInfo=$('#fillerInfo'), fillerList=$('#fillerList'), fillerEdit=$('#fillerEdit'), fillerAdd=$('#fillerAdd');
   function syncFillerCopy(){
@@ -1704,15 +1768,16 @@ body.flow-onboarding .onboarding{display:flex}
     if(!confirmed){
       t1.classList.add('cand');
       setSw(false);
-      rtMark.className='rt-mark pending'; $('#rtTip').textContent='Retake — tap to review'; sum.textContent=' · 1 retake to review';
+      rtMark.className='rt-mark pending'; $('#rtTip').textContent='Retake — tap to review'; if(sum) sum.textContent=' · 1 retake to review';
     } else if(keep===0){
       setSw(false);
-      rtMark.className='rt-mark kept'; sum.textContent=' · retake kept';
+      rtMark.className='rt-mark kept'; if(sum) sum.textContent=' · retake kept';
     } else {
       (keep===2?t1:t2).classList.add('dropped'); (keep===2?t2:t1).classList.add('keep');
       setSw(true);
-      rtMark.className='rt-mark removed'; $('#rtTip').textContent='retake removed'; sum.textContent=' · cut 1 retake';
+      rtMark.className='rt-mark removed'; $('#rtTip').textContent='retake removed'; if(sum) sum.textContent=' · cut 1 retake';
     }
+    applyCleanupState();
   }
   $$('#rkpick button').forEach(b=>b.onclick=e=>{ e.stopPropagation(); applyRetake(+b.dataset.k,true); });
   function flashRetake(){ if(tpanel.classList.contains('collapsed')) setTranscript(true);

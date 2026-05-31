@@ -155,7 +155,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .caption{position:absolute;left:50%;bottom:14px;transform:translate(-50%,8px);max-width:78%;
   background:rgba(15,12,28,.82);color:#fff;font-size:13px;font-weight:600;letter-spacing:-.01em;
   padding:7px 14px;border-radius:9px;opacity:0;transition:opacity .35s,transform .35s;
-  backdrop-filter:blur(4px);text-align:center;z-index:6;white-space:nowrap}
+  backdrop-filter:blur(4px);text-align:center;z-index:6;white-space:nowrap;cursor:pointer}
 .caption.show{opacity:1;transform:translate(-50%,0)}
 
 /* transport */
@@ -187,12 +187,17 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .panel.zoom-inspector .panel-zoom-head{display:flex}
 .panel.style-inspector .panel-normal-head{display:none}
 .panel.style-inspector .panel-zoom-head{display:flex}
+.panel.caption-inspector .panel-normal-head{display:none}
+.panel.caption-inspector .panel-zoom-head{display:flex}
 .panel.zoom-inspector .review,
 .panel.zoom-inspector .grp:not(.zoom-group),
 .panel.style-inspector .review,
-.panel.style-inspector .grp:not(.style-group){display:none}
+.panel.style-inspector .grp:not(.style-group),
+.panel.caption-inspector .review,
+.panel.caption-inspector .grp:not(.caption-group){display:none}
 .panel.zoom-inspector .zoom-group{border-bottom:0;padding:0}
 .panel.style-inspector .style-group{border-bottom:0;padding:0}
+.panel.caption-inspector .caption-group{border-bottom:0;padding:0}
 .panel.zoom-inspector .zoom-group>.grp-h,
 .panel.zoom-inspector .zoom-group>.grp-b>.row,
 .panel.zoom-inspector .zoom-group>.grp-b>.sl-row,
@@ -202,6 +207,13 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .panel.zoom-inspector #zoomEditor{display:flex;margin-top:0;border:0;border-radius:0;background:transparent;padding:0 0 24px}
 .panel.style-inspector .style-group>.grp-h{display:none}
 .panel.style-inspector .style-group>.grp-b{max-height:none;padding:16px;overflow:visible}
+.panel.caption-inspector .caption-group>.grp-h{display:none}
+.panel.caption-inspector .caption-group>.grp-b{max-height:none;padding:16px;overflow:visible}
+.caption-edit{display:none;flex-direction:column;gap:8px;margin-bottom:14px}
+.panel.caption-inspector .caption-edit{display:flex}
+.caption-edit textarea{width:100%;min-height:92px;resize:vertical;border:1px solid var(--border-med);border-radius:10px;padding:10px 12px;
+  font:500 14px/20px 'Inter',system-ui,sans-serif;color:var(--t-hi);outline:none;background:#fff}
+.caption-edit textarea:focus{border-color:var(--acc);box-shadow:0 0 0 3px rgba(11,11,207,.08)}
 .panel-scroll{overflow-y:auto;flex:1;padding:0}
 .panel-scroll::-webkit-scrollbar{width:6px}
 .panel-scroll::-webkit-scrollbar-thumb{background:var(--border-med);border-radius:8px}
@@ -382,8 +394,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
   font-variant-numeric:tabular-nums;word-spacing:160px;white-space:pre;pointer-events:none;z-index:1}
 
 /* timeline track view */
-.track{position:absolute;inset:0 0 0 0;display:block;min-width:3050px;height:145px}
-.lane-zooms{position:absolute;left:16px;top:91px;width:3050px;height:48px}
+.track{position:absolute;inset:0 0 0 0;display:block;min-width:100%;height:145px}
+.lane-zooms{position:absolute;left:16px;right:16px;top:91px;height:48px}
 .zblock{position:absolute;top:0;height:44px;border-radius:8px;background:#DBECFA;
   border:0;display:flex;align-items:center;justify-content:center;gap:5px;padding:0 10px;
   font-size:13px;line-height:16px;font-weight:500;color:#004AA5;cursor:grab;transition:background .12s,border-color .12s,box-shadow .12s;overflow:hidden;white-space:nowrap;touch-action:none}
@@ -492,8 +504,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .mode-before .removed{display:none}
 .mode-before .seam{display:none}
 /* playhead */
-.playhead{position:absolute;top:-5px;bottom:-520px;width:2px;background:#FF384C;z-index:8;pointer-events:none}
-.playhead::before{content:"";position:absolute;top:0;left:-4px;width:10px;height:10px;border-radius:50%;background:#FF384C}
+.playhead{position:absolute;top:0;bottom:-520px;width:2px;background:#FF384C;z-index:8;pointer-events:none}
+.playhead::before{content:"";position:absolute;top:0;left:50%;width:10px;height:10px;border-radius:50%;background:#FF384C;transform:translate(-50%,-50%)}
 
 /* transcript view */
 .transcript{position:absolute;inset:0;overflow-y:auto;font-size:13px;line-height:2;color:var(--t-mid);display:none;padding-right:6px}
@@ -1072,9 +1084,13 @@ body.flow-onboarding .onboarding{display:flex}
         </section>
 
         <!-- CAPTIONS -->
-        <section class="grp open" data-g>
+        <section class="grp open caption-group" data-g>
           <button class="grp-h"><svg class="gi icon" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 11h4M7 14h7"/></svg>Caption<svg class="chev icon" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
           <div class="grp-b">
+            <div class="caption-edit">
+              <div class="row"><span class="lbl">Subtitle text</span></div>
+              <textarea id="captionText" spellcheck="false"></textarea>
+            </div>
             <div class="row"><span class="lbl">Auto-captions</span><button class="sw" aria-pressed="true" data-k="captions"><span class="knob"></span></button></div>
             <div class="row"><span class="lbl">Style</span><div class="mini-seg"><button class="on">Subtle</button><button>Bold</button></div></div>
           </div>
@@ -1169,7 +1185,8 @@ body.flow-onboarding .onboarding{display:flex}
         ripple=$('#ripple'), caption=$('#caption'), playhead=$('#playhead'), tc=$('#tc'),
         canvas=$('#canvas'), zlane=$('#zlane'), zmList=$('#zmList'), focusdot=$('#focusdot'),
         zeFocusDot=$('#zeFocusDot'), polishPanel=$('#polishPanel'), zoomBack=$('#zoomBack'),
-        zoomInspectorTitle=$('#zoomInspectorTitle'), zeVideoPreview=$('#zeVideoPreview');
+        zoomInspectorTitle=$('#zoomInspectorTitle'), zeVideoPreview=$('#zeVideoPreview'),
+        captionText=$('#captionText');
 
   let playing=true, t=4.55, last=performance.now();
   let centers=[], lastKey='', lastActiveStateId='__init';
@@ -1314,7 +1331,7 @@ body.flow-onboarding .onboarding{display:flex}
   function openEditor(z,inspect=true){
     const ed=$('#zoomEditor'); if(!z || !inspect){ed.hidden=true;return;} ed.hidden=false;
     if(inspect){
-      polishPanel.classList.remove('style-inspector');
+      polishPanel.classList.remove('style-inspector','caption-inspector');
       polishPanel.classList.add('zoom-inspector');
       zoomInspectorTitle.textContent='SmartZoom: '+(z.label||'Custom zoom');
       syncZoomPreview(z);
@@ -1324,7 +1341,7 @@ body.flow-onboarding .onboarding{display:flex}
     updateRangeFill($('#zeScale')); updateRangeFill($('#zeDur'));
   }
   function closeZoomInspector(){
-    polishPanel.classList.remove('zoom-inspector','style-inspector');
+    polishPanel.classList.remove('zoom-inspector','style-inspector','caption-inspector');
     $('#zoomEditor').hidden=true;
     focusdot.hidden=true; if(zeFocusDot) zeFocusDot.hidden=true;
   }
@@ -1333,13 +1350,34 @@ body.flow-onboarding .onboarding{display:flex}
     if(document.body.classList.contains('mode-before')) return;
     selId=null; $$('.sel').forEach(el=>el.classList.remove('sel'));
     $('#zoomEditor').hidden=true; showFocus(null);
-    polishPanel.classList.remove('zoom-inspector');
+    polishPanel.classList.remove('zoom-inspector','caption-inspector');
     polishPanel.classList.add('style-inspector');
     zoomInspectorTitle.textContent='Style & background';
   }
+  function openCaptionInspector(){
+    const z=activeZoom();
+    if(!z || document.body.classList.contains('mode-before')) return;
+    selId=null; $$('.sel').forEach(el=>el.classList.remove('sel'));
+    $('#zoomEditor').hidden=true; showFocus(null);
+    polishPanel.classList.remove('zoom-inspector','style-inspector');
+    polishPanel.classList.add('caption-inspector');
+    zoomInspectorTitle.textContent='Captions';
+    captionText.value=caption.textContent||z.cap||'';
+    setTimeout(()=>captionText.focus(),0);
+  }
   canvas.onclick=e=>{
-    if(e.target.closest('.focusdot')) return;
+    if(e.target.closest('.focusdot') || e.target.closest('.caption')) return;
     openStyleInspector();
+  };
+  caption.onclick=e=>{ e.stopPropagation(); openCaptionInspector(); };
+  captionText.oninput=()=>{
+    const z=activeZoom();
+    if(!z) return;
+    z.cap=captionText.value;
+    caption.textContent=z.cap;
+    caption.classList.toggle('show',Boolean(z.cap)&&S.captions);
+    syncZoomPreview(z);
+    lastKey='';
   };
   function syncZoomPreview(z){
     if(!zeVideoPreview) return;
@@ -1481,7 +1519,7 @@ body.flow-onboarding .onboarding{display:flex}
     e.preventDefault(); e.stopPropagation();
   };
 
-  // build waveform: After shows the edit map; Before is one continuous raw audio take.
+  // build waveform once: Before and After share the same source audio layer.
   const wave=$('#wave');
   const phrases=[
     {s:5,e:98,level:34,events:[{at:.18,type:'dup'},{at:.82,type:'filler'}]},
@@ -1500,13 +1538,7 @@ body.flow-onboarding .onboarding{display:flex}
     if(ev.type==='retake') return d<.065 ? -8*Math.sin((1-d/.065)*Math.PI) : 0;
     return 0;
   }
-  function waveHeight(i,mode){
-    if(mode==='before'){
-      const arc=.72+.28*Math.sin(i*.011);
-      const speech=Math.abs(Math.sin(i*.24))*0.48+Math.abs(Math.sin(i*.61))*0.34+Math.abs(Math.sin(i*1.18))*0.25;
-      const phraseLift=10*Math.max(0,Math.sin((i/640)*Math.PI*5.5));
-      return 7+(30*speech+phraseLift)*arc;
-    }
+  function waveHeight(i){
     const cut=cuts.find(c=>i>=c.s&&i<c.e);
     if(cut){
       const p=(i-cut.s)/(cut.e-cut.s);
@@ -1522,10 +1554,10 @@ body.flow-onboarding .onboarding{display:flex}
     const edits=seg.events.reduce((sum,ev)=>sum+eventDip(p,ev),0);
     return 8+(seg.level*speech+opening+ending-edits)*attack*release;
   }
-  function renderWaveform(mode=S.mode){
+  function renderWaveform(){
     let bars='';
     for(let i=0;i<640;i++){
-      const h=waveHeight(i,mode);
+      const h=waveHeight(i);
       bars+='<i style="height:'+Math.round(Math.max(2,Math.min(48,h)))+'px"></i>';
     }
     wave.innerHTML=bars;
@@ -1600,7 +1632,6 @@ body.flow-onboarding .onboarding{display:flex}
     document.body.classList.toggle('mode-after',b.dataset.m==='after');
     S.mode=b.dataset.m;
     if(S.mode==='before') closeZoomInspector();
-    renderWaveform(S.mode);
     lastKey=''; render();
   });
 

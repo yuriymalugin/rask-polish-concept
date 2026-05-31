@@ -13,7 +13,7 @@
   --bg-900:#F2F3F8; --bg-850:#FFFFFF; --bg-800:#F9FAFB; --bg-750:#F2F4F7; --bg-700:#E4E7EC;
   --line:#EAECF0; --line-2:#F2F4F7;
   /* Typography — Figma tokens */
-  --t-hi:#101828; --t-mid:#344054; --t-lo:#667085;
+  --t-hi:#101828; --t-mid:#344054; --t-lo:#7E89A0;
   /* Rask brand blue — exact token from Figma: #0B0BCF */
   --acc:#0B0BCF; --acc-2:#3D3DE9; --acc-soft:rgba(11,11,207,.08);
   --acc-muted:#F5F5FF; --acc-deep:#0909A2;
@@ -65,6 +65,20 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .btn-localize:hover{background:#EBEBFF;border-color:rgba(11,11,207,.4)}
 .btn-export{background:var(--grad);color:#fff;box-shadow:0 2px 8px rgba(11,11,207,.35)}
 .btn-export:hover{filter:brightness(1.07)}
+/* Rask app chrome (top bar) */
+.tb-left{display:flex;align-items:center;gap:8px;min-width:0}
+.tb-back{width:28px;height:28px;border-radius:8px;color:var(--t-mid);display:grid;place-items:center;flex:0 0 auto}
+.tb-back:hover{background:var(--bg-750)}
+.tb-back .icon{width:18px;height:18px}
+.tb-title{font-size:14px;font-weight:600;color:var(--t-hi);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb-icon{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;color:var(--t-mid);flex:0 0 auto}
+.tb-icon:hover{background:var(--bg-750);color:var(--t-hi)}
+.tb-icon .icon{width:18px;height:18px}
+.btn .ic-sparkle{color:var(--acc)}
+.btn-share{background:var(--acc);color:#fff;box-shadow:0 1px 3px rgba(11,11,207,.3)}
+.btn-share:hover{filter:brightness(1.08)}
+.tb-avatar{width:32px;height:32px;border-radius:50%;flex:0 0 auto;border:2px solid #fff;
+  background:linear-gradient(135deg,#FDA4AF,#FBBF24);box-shadow:0 1px 3px rgba(16,24,40,.2)}
 
 /* ---------- STAGE ---------- */
 .stage{flex:1;display:flex;min-height:0}
@@ -158,7 +172,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 
 /* review summary */
 .review{margin:12px 14px;border-radius:var(--r-md);padding:14px;
-  background:var(--acc-muted);border:1px solid rgba(11,11,207,.18);position:relative;overflow:hidden}
+  background:var(--acc-muted);border:1px solid rgba(11,11,207,.1);position:relative;overflow:hidden}
 .review::after{content:"";position:absolute;right:-30px;top:-30px;width:120px;height:120px;
   background:radial-gradient(circle,rgba(61,61,233,.12),transparent 70%)}
 .review .r-t{font-size:14px;font-weight:700;display:flex;align-items:center;gap:6px;position:relative;color:var(--acc-deep)}
@@ -271,7 +285,17 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;heigh
 .rkpick button.on{background:var(--amber);color:#fff}
 
 /* ---------- TIMELINE ---------- */
-.timeline{flex:0 0 156px;background:var(--bg-850);border-top:1px solid var(--line);display:flex;flex-direction:column}
+.timeline{flex:0 0 190px;background:var(--bg-850);border-top:1px solid var(--line);display:flex;flex-direction:column}
+/* timeline transport + ruler (Figma chrome) */
+.tl-transport{display:flex;align-items:center;gap:14px;padding:10px 16px 4px}
+.tp-time{font-size:13px;font-weight:600;color:var(--t-hi);font-variant-numeric:tabular-nums;min-width:96px}
+.tp-time b{color:var(--t-hi)}
+.tp-center{display:flex;align-items:center;gap:10px}
+.tp-btn{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;color:var(--t-mid)}
+.tp-btn:hover{background:var(--bg-750);color:var(--t-hi)}
+.tp-btn .icon{width:18px;height:18px}
+.tp-speed{font-size:12px;font-weight:600;color:var(--t-mid);padding:4px 9px;border-radius:8px;border:1px solid var(--line)}
+.tl-ruler{display:flex;justify-content:space-between;padding:2px 16px 4px;font-size:10px;font-weight:500;color:var(--t-lo);font-variant-numeric:tabular-nums}
 .tl-tabs{display:flex;align-items:center;gap:4px;padding:8px 16px 0}
 .tl-tab{font-size:11.5px;font-weight:600;color:var(--t-lo);padding:5px 11px;border-radius:7px 7px 0 0}
 .tl-tab.on{color:var(--t-hi);background:var(--bg-800)}
@@ -315,6 +339,10 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;heigh
 .add-zoom:hover{background:#EBEBFF;border-style:solid}
 .add-zoom .icon{stroke:currentColor;stroke-width:2.2}
 .zedit{margin-top:10px;padding:11px 12px 12px;border-radius:10px;background:var(--bg-800);border:1px solid var(--line)}
+.ze-thumb{width:100%;height:84px;border-radius:8px;margin-bottom:10px;position:relative;overflow:hidden;
+  background:linear-gradient(135deg,#1a1a6e 0%,#0B0BCF 55%,#3D3DE9 100%)}
+.ze-thumb::after{content:"";position:absolute;inset:13px;border-radius:5px;background:#fff;opacity:.94;
+  box-shadow:0 4px 10px -4px rgba(11,11,80,.5)}
 .zedit-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:2px}
 .zedit-h #zeTitle{font-size:14px;font-weight:700;color:var(--t-hi)}
 .zedit-del{font-size:12px;font-weight:600;color:var(--red);padding:4px 8px;border-radius:6px;transition:.12s}
@@ -340,8 +368,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;heigh
 .mode-before .removed{display:block}
 .mode-before .seam{display:none}
 /* playhead */
-.playhead{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--acc);z-index:6;pointer-events:none}
-.playhead::before{content:"";position:absolute;top:-2px;left:-5px;width:12px;height:8px;border-radius:3px;background:var(--acc)}
+.playhead{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--red);z-index:6;pointer-events:none}
+.playhead::before{content:"";position:absolute;top:-3px;left:-4px;width:10px;height:7px;border-radius:2px;background:var(--red)}
 
 /* transcript view */
 .transcript{position:absolute;inset:0;overflow-y:auto;font-size:13px;line-height:2;color:var(--t-mid);display:none;padding-right:6px}
@@ -435,30 +463,21 @@ body.notes-on .transport,body.notes-on .wave{opacity:.35}
 
   <!-- ================= TOP BAR ================= -->
   <header class="topbar">
-    <div class="brand">
-      <div class="logo">R</div>
-      <b>Rask</b>
-      <span class="feat-chip">Record&nbsp;&amp;&nbsp;Polish</span>
-    </div>
-    <div class="divider"></div>
-    <div class="proj">
-      <span class="name">Acme Analytics — Feature Walkthrough</span>
-      <span class="badge-auto">✨ Auto-polished</span>
+    <div class="tb-left">
+      <button class="tb-back" aria-label="Back"><svg class="icon" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button>
+      <span class="tb-title">Visa application in the chat, process flow</span>
     </div>
     <div class="spacer"></div>
-
-    <div class="seg" id="aspect">
-      <button data-a="169" class="on">16:9</button>
-      <button data-a="916">9:16</button>
-      <button data-a="11">1:1</button>
-    </div>
     <div class="seg ba" id="ba">
       <button data-m="before">Before</button>
       <button data-m="after" class="on">After</button>
     </div>
-    <button class="btn btn-ghost"><svg class="ic icon" viewBox="0 0 24 24"><path d="M4 12v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-6"/><path d="M16 6l-4-4-4 4"/><path d="M12 2v13"/></svg>Share link</button>
-    <button class="btn btn-localize"><svg class="ic icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 3 2.5 15 0 18M12 3c-2.5 3-2.5 15 0 18"/></svg>Localize · 30 langs</button>
-    <button class="btn btn-export"><svg class="ic icon" viewBox="0 0 24 24"><path d="M12 3v12"/><path d="M8 11l4 4 4-4"/><path d="M5 21h14"/></svg>Export</button>
+    <button class="btn btn-ghost">View plans</button>
+    <button class="btn btn-ghost"><svg class="ic icon ic-sparkle" viewBox="0 0 24 24"><path d="M12 3l1.5 4.2L18 9l-4.5 1.8L12 15l-1.5-4.2L6 9l4.5-1.8z"/></svg>Advanced tools<svg class="icon" viewBox="0 0 24 24" style="width:13px;height:13px"><path d="M6 9l6 6 6-6"/></svg></button>
+    <button class="tb-icon" aria-label="Search"><svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></button>
+    <button class="tb-icon" aria-label="Help"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.6 9a2.4 2.4 0 1 1 3.4 2.2c-.8.4-1 .9-1 1.6M12 17h.01"/></svg></button>
+    <button class="btn btn-share"><svg class="ic icon" viewBox="0 0 24 24"><circle cx="6" cy="12" r="2.4"/><circle cx="18" cy="6" r="2.4"/><circle cx="18" cy="18" r="2.4"/><path d="M8.1 11l7.8-3.8M8.1 13l7.8 3.8"/></svg>Share</button>
+    <div class="tb-avatar"></div>
   </header>
 
   <!-- ================= STAGE ================= -->
@@ -533,12 +552,6 @@ body.notes-on .transport,body.notes-on .wave{opacity:.35}
         </div>
       </div>
 
-      <div class="transport">
-        <button class="play" id="play"><svg id="play-ic" class="icon" width="14" height="14" viewBox="0 0 24 24" fill="#fff" stroke="none"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg></button>
-        <div class="tc" id="tc"><b>0:00</b> / 2:25</div>
-        <div class="t-spacer"></div>
-        <div class="t-pill"><span class="dot"></span>1080p · MP4</div>
-      </div>
     </section>
 
     <!-- TRANSCRIPT PANEL (opens next to Polish) -->
@@ -598,6 +611,7 @@ body.notes-on .transport,body.notes-on .wave{opacity:.35}
             <div id="zmList" style="margin-top:6px"></div>
             <button id="addZoom" class="add-zoom"><svg class="icon" width="15" height="15" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Add zoom at playhead</button>
             <div id="zoomEditor" class="zedit" hidden>
+              <div class="ze-thumb"></div>
               <div class="zedit-h"><span id="zeTitle">Custom zoom</span><button id="zeDel" class="zedit-del">Delete</button></div>
               <div class="sl-row"><div class="sl-top"><span>Zoom level</span><span class="v" id="zeScaleV">1.8×</span></div><input type="range" min="120" max="300" value="180" id="zeScale"></div>
               <div class="sl-row"><div class="sl-top"><span>Duration</span><span class="v" id="zeDurV">2.0s</span></div><input type="range" min="6" max="80" value="20" id="zeDur"></div>
@@ -646,11 +660,19 @@ body.notes-on .transport,body.notes-on .wave{opacity:.35}
 
   <!-- ================= TIMELINE ================= -->
   <footer class="timeline">
-    <div class="tl-tabs">
-      <button class="tl-tab on" style="cursor:default">Timeline</button>
-      <div class="tl-spacer"></div>
+    <div class="tl-transport">
+      <div class="tp-time" id="tc"><b>0:00</b> / 2:25</div>
+      <div class="t-spacer"></div>
+      <div class="tp-center">
+        <button class="tp-btn" aria-label="Back"><svg class="icon" viewBox="0 0 24 24"><path d="M11 6l-7 6 7 6z"/><path d="M19 6l-7 6 7 6z"/></svg></button>
+        <button class="play" id="play"><svg id="play-ic" class="icon" width="14" height="14" viewBox="0 0 24 24" fill="#fff" stroke="none"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg></button>
+        <button class="tp-btn" aria-label="Forward"><svg class="icon" viewBox="0 0 24 24"><path d="M13 6l7 6-7 6z"/><path d="M5 6l7 6-7 6z"/></svg></button>
+        <span class="tp-speed">1×</span>
+      </div>
+      <div class="t-spacer"></div>
       <div class="tl-zoomctl"><span>Single track · 2:25</span></div>
     </div>
+    <div class="tl-ruler"><span>0:00</span><span>0:20</span><span>0:40</span><span>1:00</span><span>1:20</span><span>1:40</span><span>2:00</span><span>2:20</span></div>
     <div class="tl-body">
       <!-- track -->
       <div class="track" id="trackView">

@@ -185,9 +185,14 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .zoom-title{font-size:16px;line-height:24px;font-weight:600;color:var(--t-hi);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .panel.zoom-inspector .panel-normal-head{display:none}
 .panel.zoom-inspector .panel-zoom-head{display:flex}
+.panel.style-inspector .panel-normal-head{display:none}
+.panel.style-inspector .panel-zoom-head{display:flex}
 .panel.zoom-inspector .review,
-.panel.zoom-inspector .grp:not(.zoom-group){display:none}
+.panel.zoom-inspector .grp:not(.zoom-group),
+.panel.style-inspector .review,
+.panel.style-inspector .grp:not(.style-group){display:none}
 .panel.zoom-inspector .zoom-group{border-bottom:0;padding:0}
+.panel.style-inspector .style-group{border-bottom:0;padding:0}
 .panel.zoom-inspector .zoom-group>.grp-h,
 .panel.zoom-inspector .zoom-group>.grp-b>.row,
 .panel.zoom-inspector .zoom-group>.grp-b>.sl-row,
@@ -195,6 +200,8 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .panel.zoom-inspector #addZoom{display:none}
 .panel.zoom-inspector .zoom-group>.grp-b{max-height:none;padding:16px;overflow:visible}
 .panel.zoom-inspector #zoomEditor{display:flex;margin-top:0;border:0;border-radius:0;background:transparent;padding:0 0 24px}
+.panel.style-inspector .style-group>.grp-h{display:none}
+.panel.style-inspector .style-group>.grp-b{max-height:none;padding:16px;overflow:visible}
 .panel-scroll{overflow-y:auto;flex:1;padding:0}
 .panel-scroll::-webkit-scrollbar{width:6px}
 .panel-scroll::-webkit-scrollbar-thumb{background:var(--border-med);border-radius:8px}
@@ -377,7 +384,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 /* timeline track view */
 .track{position:absolute;inset:0 0 0 0;display:block;min-width:3050px;height:145px}
 .lane-zooms{position:absolute;left:16px;top:91px;width:3050px;height:48px}
-.zblock{position:absolute;top:0;height:44px;max-width:260px;border-radius:8px;background:#DBECFA;
+.zblock{position:absolute;top:0;height:44px;border-radius:8px;background:#DBECFA;
   border:0;display:flex;align-items:center;justify-content:center;gap:5px;padding:0 10px;
   font-size:13px;line-height:16px;font-weight:500;color:#004AA5;cursor:grab;transition:background .12s,border-color .12s,box-shadow .12s;overflow:hidden;white-space:nowrap;touch-action:none}
 .zblock:hover{background:#D0E7F8}
@@ -392,6 +399,12 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .zhandle.l{left:0}.zhandle.r{right:0}
 .zhandle::after{content:"";position:absolute;top:50%;left:3px;transform:translateY(-50%);width:2px;height:11px;border-radius:2px;background:currentColor}
 .zblock.sel .zhandle,.zblock:hover .zhandle{opacity:.7}
+.zoom-add-ghost{position:absolute;top:4px;width:36px;height:36px;margin-left:-18px;border-radius:10px;
+  display:grid;place-items:center;background:#fff;color:var(--acc);border:1px dashed rgba(11,11,207,.5);
+  box-shadow:0 8px 20px -12px rgba(16,24,40,.45);font-size:22px;line-height:1;font-weight:500;
+  opacity:0;transform:scale(.92);pointer-events:none;transition:opacity .12s,transform .12s,background .12s;z-index:7}
+.zoom-add-ghost.on{opacity:1;transform:scale(1);pointer-events:auto;cursor:pointer}
+.zoom-add-ghost:hover{background:var(--acc-muted);border-style:solid}
 
 /* focus point lives only in the small zoom preview */
 .focusdot{display:none!important}
@@ -1048,7 +1061,7 @@ body.flow-onboarding .onboarding{display:flex}
         </section>
 
         <!-- STYLE -->
-        <section class="grp open" data-g>
+        <section class="grp open style-group" data-g>
           <button class="grp-h"><svg class="gi icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18"/></svg>Style &amp; background<svg class="chev icon" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
           <div class="grp-b">
             <div class="row"><span class="lbl">Background</span></div>
@@ -1137,12 +1150,12 @@ body.flow-onboarding .onboarding{display:flex}
 (function(){
   // auto-zoom seeds — tied to click targets in the recording
   const TARGETS=[
-    {id:'btn-create', label:'Create report',       cap:"Smart Polish turns rough demos into clean shareable clips.", zoom:1.9, phrase:0},
-    {id:'btn-connect',label:'Connect data source', cap:"It trims filler words and long pauses after each click.", zoom:1.8, phrase:1},
-    {id:'btn-share',  label:'Share',               cap:"Smart zoom follows the action as the feature is explained.", zoom:2.0, phrase:2},
-    {id:'btn-publish',label:'Publish',             cap:"Captions and transcript edits stay ready for review.", zoom:1.9, phrase:3},
+    {id:'btn-create', label:'Create report',       cap:"Smart Polish turns rough demos into clean shareable clips.", zoom:1.9, phrase:0, start:3.4, dur:5.4},
+    {id:'btn-connect',label:'Connect data source', cap:"It trims filler words and long pauses after each click.", zoom:1.8, phrase:1, start:14.4, dur:5.6},
+    {id:'btn-share',  label:'Share',               cap:"Smart zoom follows the action as the feature is explained.", zoom:2.0, phrase:2, start:26.4, dur:5.8},
+    {id:'btn-publish',label:'Publish',             cap:"Captions and transcript edits stay ready for review.", zoom:1.9, phrase:3, start:39.8, dur:4.8},
   ];
-  const LOOP=16, BEAT=4, TOTAL=45, TL_WINDOW=30;
+  const AFTER_TOTAL=45, BEFORE_TOTAL=192, LOOP=AFTER_TOTAL, TOTAL=AFTER_TOTAL, TL_WINDOW=AFTER_TOTAL;
   const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
   function updateRangeFill(input){
@@ -1185,7 +1198,7 @@ body.flow-onboarding .onboarding{display:flex}
     if(!zooms.length) initZooms(); else zooms.forEach(z=>{if(z.auto&&!z.customFocus&&centers[z.ti]){z.x=centers[z.ti].x;z.y=centers[z.ti].y;}});
   }
   function initZooms(){
-    zooms=TARGETS.map((o,i)=>({id:'z'+(seq++),start:i*BEAT,dur:2.8,x:centers[i].x,y:centers[i].y,
+    zooms=TARGETS.map((o,i)=>({id:'z'+(seq++),start:o.start,dur:o.dur,x:centers[i].x,y:centers[i].y,
       scale:o.zoom,cap:o.cap,auto:true,ti:i,phrase:o.phrase,label:o.label}));
     renderZoomBlocks(); renderZoomList();
     selectZoom(zooms[zooms.length-1].id,false,false);
@@ -1230,19 +1243,20 @@ body.flow-onboarding .onboarding{display:flex}
     $$('#zlane .zblock').forEach(el=>el.classList.toggle('active', el.dataset.id===id));
     $$('#zmList .zm').forEach(el=>el.classList.toggle('active', el.dataset.id===id));
   }
+  function timelineDuration(){ return S.mode==='before'?BEFORE_TOTAL:AFTER_TOTAL; }
 
   function render(){
     const z=activeZoom();
     applyActive(z);
     tickTranscript();
     updateActiveStates(z);
-    const total=S.mode==='before'?192:TOTAL;
-    playhead.style.left=(t/TL_WINDOW*100)+'%';
-    tc.innerHTML='<b>'+fmtFull(t/LOOP*45)+'</b> <span class="total">/ 00:00:45,000</span>';
+    const total=timelineDuration();
+    playhead.style.left=(t/total*100)+'%';
+    tc.innerHTML='<b>'+fmtFull(t)+'</b> <span class="total">/ '+fmtFull(total)+'</span>';
   }
 
   function frame(now){
-    if(playing){ t+=(now-last)/1000; if(t>=LOOP){t-=LOOP; lastZId=null;} }
+    if(playing){ t+=(now-last)/1000; const total=timelineDuration(); if(t>=total){t-=total; lastZId=null;} }
     last=now; render(); requestAnimationFrame(frame);
   }
 
@@ -1257,18 +1271,23 @@ body.flow-onboarding .onboarding{display:flex}
       el.innerHTML='<span class="zhandle l"></span><svg class="zi icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4M11 8v6M8 11h6"/></svg><span class="zlbl">'+zoomBlockLabel(z)+'</span><span class="zhandle r"></span>';
       zlane.appendChild(el);
     });
-    bindBlockDrag(); lastActiveStateId='__init';
+    const add=document.createElement('button');
+    add.className='zoom-add-ghost';
+    add.type='button';
+    add.setAttribute('aria-label','Add zoom here');
+    add.textContent='+';
+    zlane.appendChild(add);
+    bindBlockDrag(); bindZoomAddGhost(add); lastActiveStateId='__init';
   }
   function zoomBlockLabel(z){ return (z.label||'Custom zoom')+' · '+(z.scale*S.intensity).toFixed(1)+'×'; }
   function renderZoomList(){
     zmList.innerHTML='';
-    const displayTimes={'Create report':'0:06','Connect data source':'0:41','Share':'1:18','Publish':'2:02'};
     zooms.slice().sort((a,b)=>a.start-b.start).forEach(z=>{
       const el=document.createElement('div');
       el.className='zm'+(z.id===selId?' sel':'');
       el.dataset.id=z.id;
       const label=z.label||'Custom zoom';
-      el.innerHTML='<span class="zt">'+(displayTimes[label]||fmt(z.start/LOOP*TOTAL))+'</span><span class="zn">'+label+'</span><span class="zx">'+z.scale.toFixed(1)+'×</span>';
+      el.innerHTML='<span class="zt">'+fmt(z.start)+'</span><span class="zn">'+label+'</span><span class="zx">'+z.scale.toFixed(1)+'×</span>';
       el.onclick=()=>selectZoom(z.id,true);
       zmList.appendChild(el);
     });
@@ -1295,6 +1314,7 @@ body.flow-onboarding .onboarding{display:flex}
   function openEditor(z,inspect=true){
     const ed=$('#zoomEditor'); if(!z || !inspect){ed.hidden=true;return;} ed.hidden=false;
     if(inspect){
+      polishPanel.classList.remove('style-inspector');
       polishPanel.classList.add('zoom-inspector');
       zoomInspectorTitle.textContent='SmartZoom: '+(z.label||'Custom zoom');
       syncZoomPreview(z);
@@ -1304,11 +1324,23 @@ body.flow-onboarding .onboarding{display:flex}
     updateRangeFill($('#zeScale')); updateRangeFill($('#zeDur'));
   }
   function closeZoomInspector(){
-    polishPanel.classList.remove('zoom-inspector');
+    polishPanel.classList.remove('zoom-inspector','style-inspector');
     $('#zoomEditor').hidden=true;
     focusdot.hidden=true; if(zeFocusDot) zeFocusDot.hidden=true;
   }
   zoomBack.onclick=()=>{ selId=null; $$('.sel').forEach(el=>el.classList.remove('sel')); closeZoomInspector(); };
+  function openStyleInspector(){
+    if(document.body.classList.contains('mode-before')) return;
+    selId=null; $$('.sel').forEach(el=>el.classList.remove('sel'));
+    $('#zoomEditor').hidden=true; showFocus(null);
+    polishPanel.classList.remove('zoom-inspector');
+    polishPanel.classList.add('style-inspector');
+    zoomInspectorTitle.textContent='Style & background';
+  }
+  canvas.onclick=e=>{
+    if(e.target.closest('.focusdot')) return;
+    openStyleInspector();
+  };
   function syncZoomPreview(z){
     if(!zeVideoPreview) return;
     const clone=canvas.cloneNode(true);
@@ -1360,18 +1392,45 @@ body.flow-onboarding .onboarding{display:flex}
     lastKey=''; lastZId=null;};
   $('#zeDur').oninput=e=>{const z=zooms.find(z=>z.id===selId);if(!z)return;
     updateRangeFill(e.target);
-    z.dur=clamp(e.target.value/10,0.4,LOOP-z.start); $('#zeDurV').textContent=z.dur.toFixed(1)+'s';
+    z.dur=clamp(e.target.value/10,0.4,AFTER_TOTAL-z.start); $('#zeDurV').textContent=z.dur.toFixed(1)+'s';
     const b=blockEl(z.id); if(b) b.style.width=(z.dur/TL_WINDOW*100)+'%'; syncZoomPreview(z); lastKey='';};
   const zeDel=$('#zeDel');
   if(zeDel) zeDel.onclick=()=>{ zooms=zooms.filter(z=>z.id!==selId); deselect(); renderZoomBlocks(); renderZoomList(); lastKey=''; lastZId=null; };
 
-  // ===== add a zoom at the current playhead =====
-  $('#addZoom').onclick=()=>{
-    const dur=2.0, start=clamp(t,0,LOOP-dur);
+  function createManualZoom(at){
+    const dur=2.0, start=clamp(at,0,AFTER_TOTAL-dur);
     const z={id:'z'+(seq++),start,dur,x:50,y:50,scale:1.8,cap:'',auto:false,ti:-1,phrase:-1,label:'Custom zoom'};
     zooms.push(z); renderZoomBlocks(); renderZoomList(); selectZoom(z.id,false);
     if(!playing){ t=clamp(start+0.45,0,LOOP); } lastKey=''; lastZId=null;
+    return z;
+  }
+
+  // ===== add a zoom at the current playhead =====
+  $('#addZoom').onclick=()=>{
+    createManualZoom(t);
   };
+
+  function bindZoomAddGhost(add){
+    let addAt=0;
+    function hide(){ add.classList.remove('on'); }
+    function hasZoomAt(time){ return zooms.some(z=>time>=z.start&&time<=z.start+z.dur); }
+    zlane.onmousemove=e=>{
+      if(document.body.classList.contains('mode-before') || e.target.closest('.zblock')){ hide(); return; }
+      const r=zlane.getBoundingClientRect();
+      const x=clamp(e.clientX-r.left,18,r.width-18);
+      const time=x/r.width*TL_WINDOW;
+      if(hasZoomAt(time)){ hide(); return; }
+      addAt=clamp(time,0,AFTER_TOTAL-2.0);
+      add.style.left=x+'px';
+      add.classList.add('on');
+    };
+    zlane.onmouseleave=hide;
+    add.onclick=e=>{
+      e.stopPropagation();
+      hide();
+      createManualZoom(addAt);
+    };
+  }
 
   // ===== drag / resize zoom blocks on the timeline =====
   function bindBlockDrag(){
@@ -1385,9 +1444,9 @@ body.flow-onboarding .onboarding{display:flex}
         el.setPointerCapture(e.pointerId);
         el.onpointermove=ev=>{
           const d=(ev.clientX-sx)/lane.width*TL_WINDOW; if(Math.abs(ev.clientX-sx)>3) moved=true;
-          if(mode==='move') z.start=clamp(z0.start+d,0,LOOP-z.dur);
+          if(mode==='move') z.start=clamp(z0.start+d,0,AFTER_TOTAL-z.dur);
           else if(mode==='l'){const ns=clamp(z0.start+d,0,z0.start+z0.dur-0.4); z.start=ns; z.dur=z0.start+z0.dur-ns;}
-          else z.dur=clamp(z0.dur+d,0.4,LOOP-z.start);
+          else z.dur=clamp(z0.dur+d,0.4,AFTER_TOTAL-z.start);
           el.style.left=(z.start/TL_WINDOW*100)+'%'; el.style.width=(z.dur/TL_WINDOW*100)+'%';
           $('#zeDur').value=Math.round(z.dur*10); $('#zeDurV').textContent=z.dur.toFixed(1)+'s'; updateRangeFill($('#zeDur'));
           lastKey=''; lastZId=null;

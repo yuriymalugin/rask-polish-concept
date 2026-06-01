@@ -327,7 +327,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .preset{width:42px;height:30px;border-radius:7px;cursor:pointer;border:2px solid transparent;transition:.12s}
 .preset.on{border-color:var(--acc);box-shadow:0 0 0 3px rgba(11,11,207,.15)}
 .bg1{background:linear-gradient(135deg,#FDA4AF,#FBBF24)}
-.bg2{background:linear-gradient(135deg,#FDA4AF,#FBBF24)}
+.bg2{background:linear-gradient(135deg,#0909A2 0%,#0B0BCF 46%,#3D3DE9 100%)}
 .bg3{background:linear-gradient(135deg,#1B1B2B,#4B4B66)}
 .bg4{background:#EDEDF2}
 
@@ -2253,7 +2253,7 @@ body.mode-after .onboarding.review-paused[data-step="review"] .review-preview .d
   $$('#presets .preset').forEach(p=>p.onclick=()=>{
     $$('#presets .preset').forEach(x=>x.classList.remove('on')); p.classList.add('on');
     const map={'1':'linear-gradient(135deg,#FDA4AF 0%,#FBBF24 100%)',
-               '2':'linear-gradient(135deg,#FDA4AF,#FBBF24)',
+               '2':'linear-gradient(135deg,#0909A2 0%,#0B0BCF 46%,#3D3DE9 100%)',
                '3':'linear-gradient(135deg,#1B1B2B,#4B4B66)','4':'#EDEDF2'};
     canvas.style.background=map[p.dataset.bg];
   });

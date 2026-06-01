@@ -2564,6 +2564,7 @@ body.mode-after .onboarding.review-paused[data-step="review"] .review-preview .d
     root.querySelectorAll('.rec-tool').forEach(btn=>btn.classList.remove('active'));
     if(step==='recording') root.querySelector('[data-flow-step="screen-modal"]')?.classList.add('active');
     requestAnimationFrame(syncOnboardingVideoPlayback);
+    requestAnimationFrame(ensureRecordingClock);
   }
   function startRecordingClock(){
     clearInterval(recTimer);
@@ -2579,7 +2580,10 @@ body.mode-after .onboarding.review-paused[data-step="review"] .review-preview .d
   function stopRecordingClock(){
     clearInterval(recTimer);
     recTimer=null;
-    if(recRecordLabel) recRecordLabel.textContent='Start Record';
+    if(recRecordLabel && root.dataset.step!=='recording') recRecordLabel.textContent='Start Record';
+  }
+  function ensureRecordingClock(){
+    if(root.dataset.step==='recording' && !recTimer) startRecordingClock();
   }
   function syncReviewMode(mode){
     root.querySelectorAll('[data-review-mode]').forEach(btn=>btn.classList.toggle('on',btn.dataset.reviewMode===mode));
@@ -2709,6 +2713,7 @@ body.mode-after .onboarding.review-paused[data-step="review"] .review-preview .d
     }
 	    if(e.target.closest('[data-record-action]')){
 	      go(root.dataset.step==='recording'?'review-loading':'screen-modal');
+	      return;
 	    }
     if(e.target.closest('[data-open-editor]')){
       stopRecordingClock();
@@ -2720,6 +2725,7 @@ body.mode-after .onboarding.review-paused[data-step="review"] .review-preview .d
   });
   root.dataset.step=directEditor?'review':'intro';
   setRecorderPanels(root.dataset.step);
+  ensureRecordingClock();
   if(root.dataset.step==='review'){
     mountReviewPreview();
     setPreviewMode('after');

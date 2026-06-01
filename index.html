@@ -85,14 +85,14 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 
 /* ---------- STAGE ---------- */
 .stage{flex:1;display:flex;min-height:0;background:#fff}
-.preview{flex:1;min-width:0;display:flex;flex-direction:column;background:var(--bg-900)}
-.canvas-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:34px;min-height:0}
-.canvas{position:relative;width:100%;max-width:760px;aspect-ratio:16/9;border-radius:var(--r-lg);
-  background:linear-gradient(135deg,#1a1a6e 0%,#0B0BCF 50%,#3D3DE9 100%);
-  display:flex;align-items:center;justify-content:center;transition:aspect-ratio .35s,max-width .35s;
+.preview{flex:1;min-width:0;display:flex;flex-direction:column;background:var(--bg-900);transition:flex .32s cubic-bezier(.2,.8,.2,1)}
+.canvas-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:16px;min-height:0;min-width:0;transition:padding .32s cubic-bezier(.2,.8,.2,1)}
+.canvas{position:relative;width:min(100%,calc((100vh - 73px - 32px) * 16 / 9));max-width:none;aspect-ratio:16/9;border-radius:var(--r-lg);
+  background:linear-gradient(135deg,#FDA4AF 0%,#FBBF24 100%);
+  display:flex;align-items:center;justify-content:center;transition:aspect-ratio .35s,max-width .35s,width .35s;
   box-shadow:0 20px 60px -16px rgba(11,11,100,.45),0 0 0 1px rgba(11,11,207,.12)}
-.canvas.r916{aspect-ratio:9/16;max-width:300px}
-.canvas.r11{aspect-ratio:1/1;max-width:520px}
+.canvas.r916{aspect-ratio:9/16;width:min(100%,calc((100vh - 73px - 32px) * 9 / 16))}
+.canvas.r11{aspect-ratio:1/1;width:min(100%,calc(100vh - 73px - 32px))}
 .pad{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
 /* the recorded "screen" (clips zoom) */
 .screen{position:relative;width:88%;height:84%;border-radius:11px;overflow:hidden;background:#fff;
@@ -104,8 +104,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   border-radius:50%;overflow:hidden;background:#1B1B2B;border:5px solid #fff;
   box-shadow:0 18px 42px -12px rgba(16,24,40,.42),0 4px 12px rgba(16,24,40,.18);
   pointer-events:none}
-.webcam-bubble video{width:130%;height:130%;display:block;object-fit:cover;object-position:center;
-  transform:translate(-11.5%,-1.5%)}
+.webcam-bubble video{width:100%;height:100%;display:block;object-fit:cover;object-position:center;transform:none}
 .canvas.r916 .webcam-bubble{width:128px;left:calc(6% - 24px);bottom:calc(8% - 24px);border-width:4px}
 .canvas.r11 .webcam-bubble{width:152px;left:calc(6% - 24px);bottom:calc(8% - 24px)}
 
@@ -157,6 +156,8 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   padding:7px 14px;border-radius:9px;opacity:0;transition:opacity .35s,transform .35s;
   backdrop-filter:blur(4px);text-align:center;z-index:6;white-space:nowrap;cursor:pointer}
 .caption.show{opacity:1;transform:translate(-50%,0)}
+.caption.swap{animation:captionRise .34s cubic-bezier(.2,.85,.2,1)}
+@keyframes captionRise{0%{opacity:0;transform:translate(-50%,10px)}100%{opacity:1;transform:translate(-50%,0)}}
 
 /* transport */
 .transport{flex:0 0 52px;display:flex;align-items:center;gap:14px;padding:0 30px;
@@ -172,8 +173,8 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .t-pill .dot{width:7px;height:7px;border-radius:50%;background:var(--green)}
 
 /* ---------- RIGHT PANEL ---------- */
-.panel{flex:0 0 360px;background:var(--bg-850);border-left:1px solid var(--line);
-  display:flex;flex-direction:column;overflow:hidden}
+.panel{flex:0 0 360px;width:360px;background:var(--bg-850);border-left:1px solid var(--line);
+  display:flex;flex-direction:column;overflow:hidden;transition:flex-basis .32s cubic-bezier(.2,.8,.2,1),width .32s cubic-bezier(.2,.8,.2,1),background .2s}
 .panel-h{flex:0 0 56px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:8px;border-bottom:1px solid var(--line)}
 .panel-h .ti{font-weight:700;font-size:14px;color:var(--t-hi)}
 .panel-h .ic{width:16px;height:16px;color:var(--acc)}
@@ -217,6 +218,27 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .panel-scroll{overflow-y:auto;flex:1;padding:0}
 .panel-scroll::-webkit-scrollbar{width:6px}
 .panel-scroll::-webkit-scrollbar-thumb{background:var(--border-med);border-radius:8px}
+.panel-collapse{width:36px;height:36px;border-radius:8px;display:grid;place-items:center;flex:0 0 auto;
+  background:var(--bg-750);border:1px solid var(--line);color:var(--t-lo);transition:.16s}
+.panel-collapse:hover{background:#fff;color:var(--acc);border-color:rgba(11,11,207,.28);box-shadow:0 3px 10px rgba(16,24,40,.08)}
+.panel-collapse .icon{width:17px;height:17px}
+.panel-rail{display:none}
+.app.side-compact .canvas-wrap{padding:12px 24px}
+.app.side-compact .tpanel{flex-basis:0;width:0;border-left:none;opacity:0}
+.app.side-compact .panel{flex-basis:56px;width:56px;background:#fff}
+.app.side-compact .panel-h,.app.side-compact .panel-scroll{display:none}
+.app.side-compact .panel-rail{display:flex;flex:1;flex-direction:column;align-items:center;border-left:1px solid var(--line);background:#fff}
+.rail-toggle,.rail-btn{width:56px;height:56px;display:grid;place-items:center;color:var(--acc);border-bottom:1px solid var(--line);transition:.16s;position:relative}
+.rail-toggle{height:48px;background:var(--bg-850);color:var(--t-lo)}
+.rail-toggle:hover,.rail-btn:hover{background:var(--acc-muted);color:var(--acc-deep)}
+.rail-toggle .icon{width:18px;height:18px}
+.rail-btn .sf-symbol{font-size:24px;line-height:1}
+.rail-btn[data-rail="transcript"] .sf-symbol{font-size:21px}
+.rail-btn[data-rail="style"] .sf-symbol{font-size:25px}
+.rail-btn::after{content:attr(aria-label);position:absolute;right:calc(100% + 10px);top:50%;transform:translate(4px,-50%);
+  padding:5px 8px;border-radius:7px;background:#101828;color:#fff;font-size:11px;font-weight:600;white-space:nowrap;
+  opacity:0;pointer-events:none;transition:.14s;box-shadow:0 8px 18px rgba(16,24,40,.18)}
+.rail-btn:hover::after{opacity:1;transform:translate(0,-50%)}
 
 /* review summary */
 .review{margin:16px;border-radius:var(--r-md);padding:16px;background:var(--acc-muted);border:0;position:relative;overflow:hidden}
@@ -304,7 +326,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .presets{display:flex;gap:8px;padding:6px 0}
 .preset{width:42px;height:30px;border-radius:7px;cursor:pointer;border:2px solid transparent;transition:.12s}
 .preset.on{border-color:var(--acc);box-shadow:0 0 0 3px rgba(11,11,207,.15)}
-.bg1{background:linear-gradient(135deg,#3D3DE9 0%,#0B0BCF 100%)}
+.bg1{background:linear-gradient(135deg,#FDA4AF,#FBBF24)}
 .bg2{background:linear-gradient(135deg,#FDA4AF,#FBBF24)}
 .bg3{background:linear-gradient(135deg,#1B1B2B,#4B4B66)}
 .bg4{background:#EDEDF2}
@@ -431,8 +453,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .add-zoom .icon{stroke:currentColor;stroke-width:2.2}
 .zedit{margin-top:12px;padding:16px 16px 24px;border-radius:12px;background:var(--bg-800);border:1px solid var(--line);display:flex;flex-direction:column;gap:12px}
 .ze-thumb{width:296px;height:166.5px;border-radius:12px;margin-bottom:4px;position:relative;overflow:hidden;
-  background:linear-gradient(135deg,#1a1a6e 0%,#0B0BCF 50%,#3D3DE9 100%)}
-.ze-video-preview{position:absolute;inset:0;overflow:hidden;background:linear-gradient(135deg,#1a1a6e 0%,#0B0BCF 50%,#3D3DE9 100%)}
+  background:linear-gradient(135deg,#FDA4AF 0%,#FBBF24 100%)}
+.ze-video-preview{position:absolute;inset:0;overflow:hidden;background:linear-gradient(135deg,#FDA4AF 0%,#FBBF24 100%)}
 .ze-video-scale{position:absolute;left:0;top:0;width:760px;height:427.5px;transform:scale(.3895);transform-origin:0 0}
 .ze-video-preview .canvas{width:760px;height:427.5px;max-width:none;aspect-ratio:auto;border-radius:0;box-shadow:none}
 .ze-video-preview .pad{inset:0}
@@ -494,6 +516,12 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
   display:flex;align-items:center;justify-content:center;padding:0 5px;color:#B42318;
   font-size:9px;line-height:12px;font-weight:700;white-space:nowrap;box-shadow:0 2px 8px rgba(16,24,40,.04)}
 .micro-cut::before{content:"";position:absolute;left:50%;top:-10px;width:1px;height:10px;background:rgba(255,56,76,.46)}
+.cut-gap,.micro-cut{touch-action:none;cursor:pointer}
+.cut-gap.selected,.micro-cut.selected{outline:2px solid #F59E0B;outline-offset:1px;z-index:9;overflow:visible}
+.cut-gap.selected{background:repeating-linear-gradient(45deg,rgba(245,158,11,.25) 0 6px,rgba(245,158,11,.08) 6px 12px)}
+.cut-gap.selected::before,.micro-cut.selected::after{content:"";position:absolute;left:50%;top:-18px;width:1px;height:18px;background:#F59E0B}
+.clip-handle{position:absolute;top:-3px;bottom:-3px;width:10px;border-radius:5px;background:#fff;border:1.5px solid #F59E0B;box-shadow:0 2px 8px rgba(16,24,40,.12);cursor:ew-resize;z-index:10}
+.clip-handle.l{left:-6px}.clip-handle.r{right:-6px}
 .micro-cut.tiny{width:12px;min-width:12px;padding:0}
 .micro-cut.tiny span{position:absolute;left:50%;bottom:calc(100% + 5px);transform:translateX(-50%);
   background:#fff;border:1px solid #FEE4E2;border-radius:5px;padding:2px 6px;opacity:0;pointer-events:none;
@@ -730,7 +758,7 @@ body.flow-onboarding .onboarding{display:flex}
 .review-tabs{height:52px;display:grid;grid-template-columns:repeat(3,1fr);align-items:end;position:relative}
 .review-tab{height:52px;display:grid;place-items:center;font-size:14px;font-weight:500;color:#667085}.review-tab.on{color:#101828}
 .review-tab-indicator{position:absolute;bottom:0;left:33.333%;width:33.333%;height:2px;background:#344054}
-.review-preview{width:100%;aspect-ratio:16/9;background:linear-gradient(135deg,#1a1a6e,#0B0BCF 55%,#3D3DE9);padding:42px;position:relative;overflow:hidden}
+.review-preview{width:100%;aspect-ratio:16/9;background:linear-gradient(135deg,#FDA4AF 0%,#FBBF24 100%);padding:42px;position:relative;overflow:hidden}
 .review-preview .screen{position:absolute;inset:42px;width:auto;height:auto}.review-preview .webcam-bubble{left:24px;bottom:24px;width:142px;border-width:4px}
 .review-progress{height:8px;position:relative;background:rgba(242,244,247,.72)}
 .review-progress span{position:absolute;inset:0 auto 0 0;width:22%;background:#344054;border-radius:0 8px 8px 0}
@@ -745,13 +773,297 @@ body.flow-onboarding .onboarding{display:flex}
 .polish-list{display:grid;gap:10px;margin:18px 0 22px}.polish-list li{list-style:none;display:flex;gap:10px;font-size:14px;line-height:20px;color:#344054}
 .polish-list li::before{content:"";width:18px;height:18px;border-radius:50%;background:var(--acc-muted);box-shadow:inset 0 0 0 1px rgba(11,11,207,.18);flex:0 0 auto}
 .review-summary .ob-primary{width:100%}.review-summary .ob-secondary{width:100%;margin-top:8px}
+
+/* ---------- RASK RECORDER SHELL — FIGMA ALIGNMENT ---------- */
+.onboarding{min-width:1432px;background:#fff}
+.ob-shell{background:#fff}
+.ob-sidebar{width:208px;flex-basis:208px;border-right-color:#EAECF0;overflow:hidden}
+.ob-logo{height:52px;padding:10px 10px 10px 18px;gap:8px;font-size:0;letter-spacing:0}
+.ob-logo img{display:block;width:128px;height:24px;object-fit:contain;object-position:left center}
+.ob-logo::before{content:none}
+.ob-logo::after{content:"";margin-left:auto;width:32px;height:32px;border:1px solid #F2F4F7;border-radius:6px;background:#F9FAFB;
+  background-image:linear-gradient(#344054,#344054),linear-gradient(#344054,#344054);
+  background-size:1.5px 12px,1.5px 12px;background-position:11px 10px,19px 10px;background-repeat:no-repeat}
+.ob-logo mark{display:none}
+.sf-symbol{font-family:"SF Compact","SF Pro","SF Pro Display",-apple-system,BlinkMacSystemFont,sans-serif;font-weight:556;line-height:1;display:inline-grid;place-items:center;font-style:normal}
+.ob-space{height:44px;margin:0;padding:2px 10px;border-radius:0;gap:8px}
+.ob-space::after{content:"􀆊";font-family:"SF Compact","SF Pro","SF Pro Display",-apple-system,BlinkMacSystemFont,sans-serif;font-weight:556;font-size:12px;line-height:1;color:#667085;margin-left:auto;width:20px;height:20px;display:grid;place-items:center}
+.ob-space .avatar{width:40px;height:40px;border-radius:10px;background:#F1F3FE;color:#2944CC;font-size:18px;line-height:22px}
+.ob-space b{font-size:13.3px;line-height:20px;color:#344054}
+.ob-space span{font-size:11.1px;line-height:16px;color:#667085}
+.ob-nav{padding:12px 10px;border-top:0;gap:4px}
+.ob-nav:first-of-type{border-top:0;margin-top:0}
+.ob-nav:first-of-type button:first-child{margin-bottom:29px}
+.ob-nav:first-of-type button:first-child::after{content:"";position:absolute;left:-12px;right:-12px;bottom:-12px;height:1px;background:rgba(0,0,0,.12)}
+.ob-nav:nth-of-type(2){margin-top:auto!important;padding-bottom:12px}
+.ob-nav button{position:relative;height:40px;border-radius:10px;padding:10px 12px 10px 34px;font-size:12.8px;line-height:20px;font-weight:500;color:#101828}
+.ob-nav button::before{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;display:grid;place-items:center;
+  font-size:14px;line-height:16px;color:#101828}
+.ob-nav button::before{font-family:"SF Compact","SF Pro","SF Pro Display",-apple-system,BlinkMacSystemFont,sans-serif;font-weight:556}
+.ob-nav:first-of-type button:nth-child(1)::before{content:"􀣋";font-size:13px}
+.ob-nav:first-of-type button:nth-child(2)::before{content:"􀵫";font-size:14px}
+.ob-nav:first-of-type button:nth-child(3)::before{content:"􀊱";font-size:15px}
+.ob-nav:first-of-type button:nth-child(4)::before{content:"􀉉";font-size:13px}
+.ob-nav:first-of-type button:nth-child(5)::before{content:"􀣑";font-size:12px}
+.ob-nav:nth-of-type(2) button:nth-child(1)::before{content:"?";border:1.4px solid #344054;border-radius:50%;font-size:10px}
+.ob-nav:nth-of-type(2) button:nth-child(2)::before{content:"􀍕";font-size:14px}
+.ob-nav button.on,.ob-nav button:hover{background:#F9FAFB;color:#000}
+.ob-bottom{height:60px;margin-top:0;border-top:1px solid #EAECF0;padding:12px}
+.ob-profile{gap:8px}
+.ob-profile img{width:36px;height:36px;background:#E7E7FC}
+.ob-profile b{font-size:12.8px;line-height:20px;color:#101828}
+.ob-profile span{font-size:11.1px;line-height:16px;color:#667085;max-width:139px}
+.ob-main{background:#fff}
+.ob-promo{left:20px;right:20px;top:32px;min-height:262px;padding:30px;border-radius:12px;
+  background:radial-gradient(circle at 96% 93%,rgba(26,103,109,.9),transparent 21%),
+    radial-gradient(circle at 68% 26%,rgba(130,45,95,.5),transparent 32%),
+    linear-gradient(132deg,#1B1025 0%,#101827 55%,#183F54 100%)}
+.ob-promo h2{font-size:21.9px;line-height:30px;margin-bottom:12px}
+.ob-promo p,.ob-promo li{font-size:12.6px;line-height:20px;color:rgba(255,255,255,.65)}
+.ob-promo li::before{width:5px;height:9px;margin-right:8px}
+.ob-plan-cta{margin-top:24px;width:150px;height:40px;border-radius:8px;border:1px solid #EAECF0;background:#fff;color:#344054;font-size:13px;font-weight:500;box-shadow:0 1px 2px rgba(16,24,40,.04)}
+.ob-plan-card{position:absolute;width:190px;height:190px;border-radius:14px;background:#fff;color:#101828;padding:24px 20px 20px;box-shadow:0 24px 40px rgba(0,0,0,.24);display:flex;flex-direction:column;justify-content:flex-end;gap:7px}
+.ob-plan-card.creator{right:390px;top:56px;transform:rotate(8deg)}
+.ob-plan-card.pro{right:190px;top:35px;transform:rotate(-7deg)}
+.ob-plan-card.business{right:36px;top:40px;transform:rotate(0deg)}
+.ob-plan-card b{font-size:19px;line-height:24px;font-weight:600}
+.ob-plan-card span{font-size:12px;line-height:18px;color:#667085}
+.ob-plan-card strong{font-size:16px;line-height:22px;font-weight:600;color:#101828}
+.ob-plan-card em{font-style:normal;font-size:11px;font-weight:400;color:#667085}
+.ob-plan-card del{margin-right:4px;color:#D0D5DD}
+.plan-visual{position:absolute;left:20px;right:20px;top:28px;height:46px;display:flex;align-items:center;gap:10px}
+.flag,.face,.plus{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:#F2F4F7;color:#344054;font-size:15px;font-weight:600;box-shadow:0 0 0 1px rgba(16,24,40,.06)}
+.flag.fi{background:linear-gradient(90deg,transparent 0 36%,#3154A4 36% 50%,transparent 50%),linear-gradient(transparent 0 36%,#3154A4 36% 50%,transparent 50%),#fff}
+.flag.cz{background:linear-gradient(135deg,#244CCB 0 38%,transparent 38%),linear-gradient(#fff 0 50%,#EF4444 50%)}
+.flag.uk{background:#F5F5FF;color:#0B0BCF;font-size:13px}
+.flag.es{background:linear-gradient(#E73838 0 33%,#FFD54A 33% 66%,#E73838 66%)}
+.flag.fr{background:linear-gradient(90deg,#244CCB 0 33%,#fff 33% 66%,#EF4444 66%)}
+.face{background-image:url('assets/avatar.jpg');background-size:cover;background-position:center}
+.face:nth-child(2){filter:hue-rotate(24deg) saturate(.82)}
+.face:nth-child(3){filter:hue-rotate(190deg) saturate(.72)}
+.plus{border:2px dashed #D0D5DD;background:#fff;color:#B9C0CA;font-size:26px;font-weight:400}
+.ob-create{top:calc(50% + 72px);transform:translate(-50%,-50%);width:520px}
+.ob-video-card{margin-bottom:16px;box-shadow:none}
+.ob-create h1{font-size:21.9px;line-height:30px;margin-bottom:4px;color:#101828}
+.ob-create p{font-size:14px;line-height:22px;color:#667085;max-width:480px}
+.ob-actions{margin-top:24px}
+.ob-primary{border-radius:8px;background:#0B0BCF;border-color:#0B0BCF;box-shadow:0 2px 4px rgba(11,11,207,.28)}
+.ob-secondary{min-height:44px;color:#667085}
+.rec-shell,.review-page{left:0;background:#fff}
+.onboarding[data-step="camera-modal"] .rec-shell::before,
+.onboarding[data-step="screen-modal"] .rec-shell::before{
+  content:"";position:fixed;inset:0;background:rgba(0,0,0,.58);z-index:6;pointer-events:none}
+.rec-appbar,.review-topbar{height:73px;flex-basis:73px;padding:16px 20px 17px;border-bottom-color:#EAECF0}
+.rec-app-left,.review-top-left{gap:12px}
+.rec-back,.review-back{color:#344054}
+.rec-title,.review-top-title{font-size:15.1px;line-height:22px;font-weight:500;color:#101828}
+.rec-app-actions .review-top-btn:not(.plan):not(.icon),.rec-app-actions .review-avatar{display:none}
+.review-top-actions .review-top-btn:not(.plan):not(.icon),.review-top-actions .review-avatar,.review-top-actions .review-top-btn.share{display:none}
+.review-top-btn{height:40px;border-radius:8px;font-size:13px;font-weight:500;padding:0 17px}
+.review-top-btn.plan{border-color:#3D3DE9;background:#F5F5FF;color:#0909A2}
+.review-top-btn.icon{width:40px;padding:0;border-radius:8px}
+.rec-canvas{background:#F2F3F8}
+.rec-center{width:420px;max-width:420px;border-radius:16px;border-color:#EAECF0;padding:32px 33px;box-shadow:none}
+.rec-permission-icon{position:relative;width:48px;height:48px;margin:0 0 24px;color:#101828;display:block}
+.rec-permission-icon .camera{position:absolute;left:50%;top:20px;transform:translate(-50%,-50%);width:40px;height:40px;font-size:36px;line-height:36px;color:#101828}
+.rec-permission-icon .mic{position:absolute;left:-4px;top:22px;width:24px;height:24px;border-radius:999px;border:2px solid #fff;background:#101828;color:#fff;font-size:12px;line-height:16px}
+.rec-center h2{font-size:22px;line-height:30px;font-weight:600;margin-bottom:8px}
+.rec-center p{font-size:15px;line-height:22px;color:#7E89A0;margin-bottom:16px}
+.rec-center .ob-primary{width:354px;height:48px;font-size:15px}
+.rec-controls{height:73px;border-top:0;box-shadow:none;gap:24px;background:#fff}
+.rec-control-left,.rec-control-right{display:flex;align-items:center;gap:8px}
+.rec-control-right{gap:16px}
+.rec-divider{width:1.5px;height:24px;background:#D9D9D9;flex:0 0 1.5px}
+.rec-tool,.rec-record,.rec-pause{height:40px;border-radius:8px;border:1px solid #D0D5DD;background:#fff;color:#344054;
+  display:flex;align-items:center;justify-content:center;gap:6px;font-size:13px;line-height:20px;font-weight:500;box-shadow:0 1px 1px rgba(16,24,40,.05);
+  padding:10px 17px;min-width:64px;transition:background .16s ease,border-color .16s ease,box-shadow .16s ease,transform .16s ease,color .16s ease}
+.rec-tool{min-width:auto}
+.rec-tool .device-label{display:none}
+.onboarding.devices-selected .rec-tool[data-device="camera"],
+.onboarding.devices-selected .rec-tool[data-device="microphone"]{min-width:194px;justify-content:center}
+.onboarding.devices-selected .rec-tool .generic-label{display:none}
+.onboarding.devices-selected .rec-tool .device-label{display:inline}
+.rec-tool::after{content:"􀆇";font-family:"SF Compact","SF Pro","SF Pro Display",-apple-system,BlinkMacSystemFont,sans-serif;font-weight:556;font-size:12px;color:#7E89A0;line-height:1;margin-left:2px;transform:rotate(180deg)}
+.rec-tool[data-flow-step="screen-modal"]::after{content:""}
+.rec-tool:hover,.rec-pause:hover{background:#F9FAFB;border-color:#B8C0CC;box-shadow:0 6px 16px rgba(16,24,40,.12),0 1px 2px rgba(16,24,40,.06);transform:translateY(-1px)}
+.rec-tool:focus-visible,.rec-pause:focus-visible,.rec-record:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(61,61,233,.18),0 1px 2px rgba(16,24,40,.08)}
+.rec-tool.hot{background:#fff;border-color:#D0D5DD;color:#344054}
+.rec-tool.active{background:#F5F5FF;border-color:#3D3DE9;color:#0909A2}
+.rec-record{background:#F12135;border-color:#FF384C;color:#fff;width:174px;min-width:174px;max-width:174px}
+.rec-record:hover{background:#E9172E;border-color:#F12135;box-shadow:0 8px 18px rgba(241,33,53,.28),0 1px 2px rgba(16,24,40,.08);transform:translateY(-1px)}
+.rec-record:active,.rec-tool:active,.rec-pause:active{transform:translateY(0);box-shadow:0 1px 2px rgba(16,24,40,.08)}
+.rec-record .rec-record-icon{width:24px;height:24px;font-size:16px;color:currentColor}
+.rec-record .rec-record-icon::before{content:none}
+.rec-record-label{display:inline-block;width:104px;text-align:left;font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1,"kern" 1;white-space:nowrap}
+.rec-pause{width:0;min-width:0;padding:10px 0;opacity:0;transform:scale(.92);pointer-events:none;overflow:hidden;border-color:transparent;transition:width .22s ease,min-width .22s ease,opacity .18s ease,transform .22s ease,border-color .18s ease,box-shadow .16s ease,background .16s ease}
+.onboarding[data-step="recording"] .rec-pause{width:64px;min-width:64px;opacity:1;transform:scale(1);pointer-events:auto;border-color:#D0D5DD}
+.rec-pause::before{content:"􀊆";font-family:"SF Compact","SF Pro","SF Pro Display",-apple-system,BlinkMacSystemFont,sans-serif;font-weight:556;font-size:16px;color:#344054}
+.rec-dot{display:none}
+.browser-permission{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(320px,calc(100vw - 80px));height:auto;border:0;background:transparent;padding:0;box-shadow:none;z-index:999}
+.permission-art{display:block;width:100%;height:auto;object-fit:contain;filter:drop-shadow(0 24px 70px rgba(16,24,40,.28))}
+.permission-hotspot{position:absolute;left:6.25%;right:6.25%;height:5.8%;border-radius:999px;background:transparent}
+.permission-hotspot.allow-site{bottom:17.7%}
+.permission-hotspot.allow-once{bottom:10.6%}
+.permission-hotspot.never{bottom:3.4%}
+.permission-actions-mask{position:absolute;left:0;right:0;bottom:0;height:24%;background:#fff;border-radius:0 0 18px 18px;z-index:1}
+.permission-actions{position:absolute;left:6.25%;right:6.25%;bottom:3.4%;display:grid;gap:8px;z-index:2}
+.permission-btn{height:37px;border-radius:999px;background:#D7E0FA;color:#18284B;font-size:13px;line-height:18px;font-weight:600;box-shadow:none;transition:background .16s ease,transform .16s ease,box-shadow .16s ease}
+.permission-btn:hover{background:#C9D6F7;transform:translateY(-1px);box-shadow:0 6px 16px rgba(24,40,75,.14)}
+.permission-btn:active{transform:translateY(0);box-shadow:none}
+.permission-close{position:absolute;right:6.2%;top:3.6%;width:46px;height:46px;border-radius:50%;background:transparent}
+.system-share{background:rgba(0,0,0,.58);backdrop-filter:blur(1.5px)}
+.system-card{width:min(608px,calc(100vw - 96px));height:auto;border:0;background:transparent;padding:0;box-shadow:none;border-radius:0;position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:999}
+.system-card .permission-art{filter:drop-shadow(0 24px 70px rgba(16,24,40,.32))}
+.share-hotspot{position:absolute;bottom:3.5%;height:6.2%;border-radius:999px;background:transparent}
+.system-card .share-hotspot,.system-card .share-hotspot:first-of-type{position:absolute;margin:0;padding:0;border:0;box-shadow:none;background:transparent;color:transparent}
+.share-hotspot.cancel{right:17.1%;width:12.7%}
+.share-hotspot.share{right:3.3%;width:12.5%}
+.system-actions-mask{position:absolute;left:0;right:0;bottom:0;height:14.8%;background:#fff;border-radius:0 0 12px 12px;z-index:1}
+.system-actions{position:absolute;right:3.3%;bottom:3.5%;display:flex;gap:8px;z-index:2}
+.system-btn{height:36px;border-radius:999px;border:0;padding:0 22px;font-size:13px;line-height:18px;font-weight:600;transition:background .16s ease,color .16s ease,transform .16s ease,box-shadow .16s ease}
+.system-card .system-actions .system-btn.cancel{background:#D7E0FA;color:#18284B}
+.system-card .system-actions .system-btn.share{background:#E5E5E5;color:#969696}
+.system-btn.cancel:hover{background:#C9D6F7;transform:translateY(-1px);box-shadow:0 6px 16px rgba(24,40,75,.14)}
+.system-btn.share:hover{background:#D9D9D9;color:#7A7A7A;transform:translateY(-1px);box-shadow:0 6px 16px rgba(16,24,40,.12)}
+.system-btn:active{transform:translateY(0);box-shadow:none}
+.share-preview{inset:0;border-radius:0;box-shadow:none}
+.share-preview::before{content:none}
+.share-preview .rec-editor-preview{position:absolute;inset:0;display:grid;place-items:center;background:linear-gradient(135deg,#FDA4AF 0%,#FBBF24 100%);overflow:hidden}
+.share-preview .rec-editor-canvas{position:relative;width:min(1040px,78vw);aspect-ratio:16/9;border-radius:14px;box-shadow:0 22px 70px -28px rgba(16,24,40,.55);background:#F6F7FB;overflow:visible}
+.share-preview .rec-editor-canvas .screen{position:absolute;left:6%;top:8%;width:88%;height:84%;border-radius:11px}
+.share-preview .rec-editor-canvas .webcam-bubble{left:calc(6% - 26px);bottom:calc(8% - 26px);width:168px;border-width:5px}
+.share-preview .rec-editor-canvas .caption{display:none}
+.share-preview .rec-editor-canvas .cursor{display:block}
+.onboarding[data-step="recording"] .share-preview .rec-editor-canvas{animation:recVideoFloat 8s ease-in-out infinite alternate}
+.onboarding[data-step="recording"] .share-preview .zoomwrap{animation:recVideoZoom 7.2s cubic-bezier(.42,0,.2,1) infinite}
+.onboarding[data-step="recording"] .share-preview .cursor{animation:recCursorMove 7.2s cubic-bezier(.42,0,.2,1) infinite}
+.onboarding[data-step="recording"] .share-preview .d-chart path:last-child{stroke-dasharray:420;stroke-dashoffset:420;animation:recChartDraw 7.2s ease-in-out infinite}
+.onboarding[data-step="recording"] .share-preview .d-btn.primary{animation:recButtonPulse 2.4s ease-in-out infinite}
+@keyframes recVideoFloat{from{transform:translate3d(-8px,10px,0) scale(.99)}to{transform:translate3d(8px,-8px,0) scale(1.01)}}
+@keyframes recVideoZoom{0%,14%{transform:translate3d(0,0,0) scale(1)}34%,54%{transform:translate3d(-10%,-6%,0) scale(1.34)}74%,100%{transform:translate3d(7%,5%,0) scale(1.22)}}
+@keyframes recCursorMove{0%,14%{left:50%;top:50%}34%,54%{left:82%;top:18%}74%,100%{left:32%;top:72%}}
+@keyframes recChartDraw{0%{stroke-dashoffset:420}28%,100%{stroke-dashoffset:0}}
+@keyframes recButtonPulse{0%,100%{box-shadow:0 0 0 0 rgba(11,11,207,0)}50%{box-shadow:0 0 0 5px rgba(11,11,207,.12)}}
+.rec-camera{background:#F2F3F8}
+.rec-camera video{object-fit:cover}
+.rec-toast{display:none}
+.rec-mini-cam{right:36px;top:auto;bottom:44px;width:172px;height:172px;border-radius:50%;border:4px solid rgba(255,255,255,.86)}
+.rec-mini-cam video{width:100%;height:100%;object-fit:cover;object-position:center;transform:none}
+.rec-time{display:none!important}
+
+/* ---------- POST-RECORD REVIEW — FIGMA 89:35225 ---------- */
+.onboarding[data-step="review"]{min-width:1440px;background:#fff}
+.onboarding[data-step="review"] .ob-sidebar{display:none}
+.onboarding[data-step="review"] .ob-main{flex:1 1 100%;width:100%}
+.onboarding[data-step="review"] .review-page{position:fixed;inset:0;z-index:20;background:#fff}
+.review-loading-page{position:fixed;inset:73px 0 0;z-index:24;background:#fff;display:none;align-items:center;justify-content:center;text-align:center}
+.onboarding[data-step="review-loading"] .review-loading-page{display:flex}
+.onboarding[data-step="review-loading"] .review-heading,
+.onboarding[data-step="review-loading"] .review-content{display:none}
+.review-loading-card{display:grid;place-items:center;gap:18px;color:#101828}
+.review-loading-spinner{width:64px;height:64px;border-radius:50%;border:5px solid #EAECF0;border-top-color:#0B0BCF;animation:reviewSpinner .85s linear infinite}
+.review-loading-card h2{font-size:24px;line-height:32px;font-weight:700;color:#101828}
+.review-loading-card p{font-size:15px;line-height:22px;color:#667085}
+.onboarding[data-step="review"] .review-topbar{height:73px;padding:16px 20px 17px;border-bottom:1px solid #EAECF0}
+.onboarding[data-step="review"] .review-top-left{gap:12px}
+.onboarding[data-step="review"] .review-top-title{font-size:15.1px;line-height:22px;font-weight:500;color:#101828}
+.onboarding[data-step="review"] .review-top-actions{gap:12px}
+.onboarding[data-step="review"] .review-top-actions .review-top-btn,
+.onboarding[data-step="review"] .review-top-actions .review-avatar{display:inline-flex}
+.onboarding[data-step="review"] .review-top-actions .review-avatar{display:block}
+.onboarding[data-step="review"] .review-top-btn{height:40px;border-radius:8px;font-size:13px;font-weight:500;padding:0 17px}
+.onboarding[data-step="review"] .review-top-btn.icon{width:40px;padding:0}
+.onboarding[data-step="review"] .review-top-btn.share{background:#0B0BCF;border-color:#0B0BCF;color:#fff}
+.review-heading{margin:16px 0 16px 16px;font-size:24px;line-height:32px;font-weight:700;color:#101828}
+.onboarding[data-step="review"] .review-content{height:auto;margin:0 16px;display:grid;grid-template-columns:minmax(760px,1fr) 380px;gap:16px;align-items:start;justify-content:stretch;padding:0;background:#fff}
+.onboarding[data-step="review"] .review-player-wrap{align-items:stretch;gap:0;min-width:0}
+.onboarding[data-step="review"] .review-player{width:100%;border:1px solid #D0D5DD;border-radius:16px;box-shadow:none;overflow:hidden;background:#fff}
+.onboarding[data-step="review"] .review-tabs{height:56px;display:grid;grid-template-columns:1fr 1fr;align-items:end;border-bottom:1px solid #D0D5DD}
+.onboarding[data-step="review"] .review-tab{height:56px;font-size:15px;line-height:22px;font-weight:600;color:#667085}
+.onboarding[data-step="review"] .review-tab.on{color:#101828}
+.onboarding[data-step="review"] .review-tab-indicator{bottom:-1px;height:3px;width:50%;left:50%;background:#101828}
+body.mode-before .onboarding[data-step="review"] .review-tab-indicator{left:0}
+body.mode-before .onboarding[data-step="review"] .review-tab[data-review-mode="before"],
+body.mode-after .onboarding[data-step="review"] .review-tab[data-review-mode="after"]{color:#101828}
+body.mode-before .onboarding[data-step="review"] .review-tab[data-review-mode="after"],
+body.mode-after .onboarding[data-step="review"] .review-tab[data-review-mode="before"]{color:#667085}
+.onboarding[data-step="review"] .review-preview{width:100%;aspect-ratio:16/9;height:auto;padding:0;background:transparent;overflow:hidden}
+/* Rule: every prototype preview reuses the real recording scene, never a one-off mock image. */
+.onboarding[data-step="review"] .review-preview{display:grid;place-items:center}
+.onboarding[data-step="review"] .review-preview .canvas{width:100%;height:100%;max-width:none;border-radius:0;box-shadow:none}
+.onboarding[data-step="review"] .review-preview .caption{display:block;opacity:1;transform:translate(-50%,0)}
+.onboarding.review-captions-off[data-step="review"] .review-preview .caption{opacity:0;pointer-events:none}
+.onboarding[data-step="review"] .review-preview .cursor{display:block}
+.onboarding[data-step="review"] .review-preview .webcam-bubble{width:252px;left:calc(6% - 39px);bottom:calc(8% - 39px);border-width:7px}
+.onboarding[data-step="review"] .review-preview .webcam-bubble video{animation-play-state:running}
+body.mode-after .onboarding[data-step="review"] .review-preview .zoomwrap{animation:recVideoZoom 7.2s cubic-bezier(.42,0,.2,1) infinite}
+body.mode-after .onboarding[data-step="review"] .review-preview .cursor{animation:recCursorMove 7.2s cubic-bezier(.42,0,.2,1) infinite}
+body.mode-after .onboarding[data-step="review"] .review-preview .d-chart path:last-child{stroke-dasharray:420;stroke-dashoffset:420;animation:recChartDraw 7.2s ease-in-out infinite}
+body.mode-after .onboarding[data-step="review"] .review-preview .d-btn.primary{animation:recButtonPulse 2.4s ease-in-out infinite}
+body.mode-before .onboarding[data-step="review"] .review-preview .zoomwrap{animation:none;transform:scale(1)!important}
+body.mode-before .onboarding[data-step="review"] .review-preview .caption{display:none}
+body.mode-after .onboarding.review-paused[data-step="review"] .review-preview .zoomwrap,
+body.mode-after .onboarding.review-paused[data-step="review"] .review-preview .cursor,
+body.mode-after .onboarding.review-paused[data-step="review"] .review-preview .d-chart path:last-child,
+body.mode-after .onboarding.review-paused[data-step="review"] .review-preview .d-btn.primary{animation-play-state:paused}
+.onboarding[data-step="review"] .review-progress{height:8px;background:#EAECF0}
+.onboarding[data-step="review"] .review-progress span{width:22%;height:8px;background:#0B0BCF;border-radius:0 8px 8px 0}
+.onboarding[data-step="review"] .review-controls{height:64px;padding:0 24px;background:#fff;gap:22px}
+.onboarding[data-step="review"] .review-control{font-size:19px;color:#344054}
+.onboarding[data-step="review"] .review-time{margin:0;font-size:14px;line-height:20px}
+.review-caption-toggle{margin-left:auto;display:flex;align-items:center;gap:12px;font-size:16px;line-height:24px;font-weight:500;color:#344054}
+.review-caption-toggle .sf-symbol{font-size:24px;color:#101828}
+.review-caption-toggle .toggle{width:36px;height:21px;border-radius:999px;background:#0B0BCF;position:relative}
+.review-caption-toggle .toggle::after{content:"";position:absolute;right:2px;top:2px;width:17px;height:17px;border-radius:50%;background:#fff}
+.review-caption-toggle.off{color:#667085}
+.review-caption-toggle.off .toggle{background:#D0D5DD}
+.review-caption-toggle.off .toggle::after{right:17px}
+.onboarding[data-step="review"] .review-actions-row{display:none}
+.onboarding[data-step="review"] .review-summary{width:380px;min-height:516px;border:0;border-radius:12px;background:#F5F5FF;padding:24px;box-shadow:none;align-self:start}
+.onboarding[data-step="review"] .review-summary h1{font-size:24px;line-height:32px;font-weight:700;margin-bottom:16px;color:#0B0BCF;min-height:64px;transition:opacity .2s ease,transform .2s ease}
+.onboarding[data-step="review"] .review-summary p{font-size:14px;line-height:22px;color:#667085;margin-bottom:16px;min-height:66px;transition:opacity .2s ease,transform .2s ease}
+.onboarding[data-step="review"] .polish-list{gap:8px;margin:0 0 16px;width:330px}
+.onboarding[data-step="review"] .polish-list li{font-size:14px;line-height:20px;color:#344054;gap:12px;width:330px;min-height:40px;align-items:flex-start;transition:color .2s ease,opacity .2s ease,transform .2s ease}
+.onboarding[data-step="review"] .polish-list li span{display:block;flex:1;min-width:0}
+.onboarding[data-step="review"] .polish-list li b{font-weight:600}
+.onboarding[data-step="review"] .polish-list li u{text-decoration:none}
+.onboarding[data-step="review"] .polish-list li::before{content:"􀁣";font-family:"SF Compact","SF Pro","SF Pro Display",-apple-system,BlinkMacSystemFont,sans-serif;width:18px;height:24px;flex:0 0 18px;background:transparent;box-shadow:none;color:#0B0BCF;font-size:20px;line-height:24px;font-weight:458}
+.onboarding.review-processing[data-step="review"] .review-summary h1{transition:opacity .18s ease}
+.onboarding[data-step="review"] .review-summary.is-swapping h1,
+.onboarding[data-step="review"] .review-summary.is-swapping p,
+.onboarding[data-step="review"] .review-summary.is-swapping .polish-list li{opacity:.18;transform:translateY(4px)}
+.onboarding.review-processing[data-step="review"] .polish-list li{opacity:1;transform:none;animation:none;color:#667085}
+.onboarding.review-processing[data-step="review"] .polish-list li.is-active{color:#344054}
+.onboarding.review-processing[data-step="review"] .polish-list li.is-done{color:#344054}
+.onboarding.review-processing[data-step="review"] .polish-list li::before{content:"";width:18px;height:18px;margin-top:2px;border-radius:50%;border:2px solid #D0D5DD;background:transparent;box-shadow:none}
+.onboarding.review-processing[data-step="review"] .polish-list li.is-active::before{border-color:#D7DBFF;border-top-color:#0B0BCF;animation:reviewSpinner .8s linear infinite}
+.onboarding.review-processing[data-step="review"] .polish-list li.is-done::before{content:"􀁣";font-family:"SF Compact","SF Pro","SF Pro Display",-apple-system,BlinkMacSystemFont,sans-serif;border:0;background:transparent;color:#0B0BCF;font-size:20px;line-height:18px;font-weight:458;animation:none}
+.review-saved{display:flex;align-items:flex-end;gap:8px;width:296px;height:20px;margin:0 0 16px;font-size:14px;line-height:20px;white-space:nowrap}
+.review-saved b{font-weight:600;color:#101828}
+.review-saved span{display:inline-flex;align-items:center;gap:4px;color:#7E89A0;font-weight:500}
+.review-process{display:none;margin:-6px 0 20px;padding:12px;border:1px solid rgba(11,11,207,.16);border-radius:12px;background:#fff;color:#344054}
+.review-process-top{display:flex;align-items:center;justify-content:space-between;font-size:13px;line-height:18px;font-weight:600;margin-bottom:9px}
+.review-process-top span:last-child{color:#667085;font-weight:500}
+.review-process-bar{height:6px;border-radius:999px;background:#EAECF0;overflow:hidden}
+.review-process-bar span{display:block;height:100%;width:0;border-radius:inherit;background:#0B0BCF}
+.onboarding.review-processing[data-step="review"] .review-process{display:block}
+.onboarding.review-processing[data-step="review"] .review-process-bar span{animation:reviewProcessFill 12s linear forwards}
+.onboarding.review-processing[data-step="review"] .review-summary-actions{opacity:.42;pointer-events:none;filter:saturate(.65)}
+.onboarding.review-processing[data-step="review"] .review-saved{opacity:0;visibility:hidden}
+@keyframes reviewProcessFill{0%{width:0}35%{width:42%}72%{width:78%}100%{width:100%}}
+@keyframes reviewSpinner{to{transform:rotate(360deg)}}
+.review-summary-actions{display:grid;gap:12px}
+.review-summary-actions .review-action{height:48px;width:332px;border-radius:8px;font-size:15px;line-height:18px;font-weight:500}
+.review-summary-actions .download{background:#0B0BCF;border-color:#0B0BCF;color:#fff;box-shadow:0 4px 10px rgba(11,11,207,.22)}
+.review-summary-actions .review-action:not(.download):not(.rerecord){color:#0B0BCF}
+.review-summary-actions .rerecord{border:0;background:transparent;box-shadow:none;color:#667085}
 </style>
 </head>
 <body class="mode-after flow-onboarding">
 <div class="onboarding" id="onboarding" data-step="intro">
   <div class="ob-shell">
     <aside class="ob-sidebar">
-      <div class="ob-logo"><mark>R</mark>RASK</div>
+      <div class="ob-logo"><img src="assets/rask-logo.svg" alt="Rask"></div>
       <div class="ob-space"><div class="avatar">M</div><div><b>My Teamspace</b><span>Owner</span></div></div>
       <nav class="ob-nav">
         <button>Settings & members</button>
@@ -774,12 +1086,15 @@ body.flow-onboarding .onboarding{display:flex}
           <h2>Trial has ended, subscribe now with 35% off</h2>
           <p>Prices are increasing soon! Subscribe today and get:</p>
           <ul>
-            <li>AI cleanup for long pauses, retakes and filler words</li>
-            <li>Smart zooms and captions for publish-ready demos</li>
-            <li>Team Spaces, subtitles and more</li>
+            <li>High-quality automatic translation in 135+ languages</li>
+            <li>Unlimited redubbing with powerful editor</li>
+            <li>Voice Clone in 32 languages</li>
+            <li>Lip-sync, Team Spaces, Subtitles and more...</li>
           </ul>
-          <div class="ob-plan-card"><b>Creator Pro</b><span>For regular content production</span></div>
-          <div class="ob-plan-card"><b>Business</b><span>For teams shipping global video</span></div>
+          <button class="ob-plan-cta">Choose your plan</button>
+          <div class="ob-plan-card creator"><div class="plan-visual"><i class="flag cz"></i><i class="flag fi"></i><i class="flag uk">UK</i></div><b>Creator</b><span>for testing & small projects</span><strong><del>$2.4</del>$1.3 <em>/per minute</em></strong></div>
+          <div class="ob-plan-card pro"><div class="plan-visual"><i class="flag es"></i><i class="face"></i><i class="flag fr"></i></div><b>Creator Pro</b><span>for regular content production</span><strong><del>$1.5</del>$0.8 <em>/per minute</em></strong></div>
+          <div class="ob-plan-card business"><div class="plan-visual"><i class="face"></i><i class="face"></i><i class="face"></i><i class="plus">+</i></div><b>Business</b><span>for companies going global</span><strong>$1.2 <em>/per minute</em></strong></div>
         </div>
         <div class="ob-create">
           <div class="ob-video-card"><span class="ob-play"></span><span class="ob-video-wave"></span></div>
@@ -808,8 +1123,8 @@ body.flow-onboarding .onboarding{display:flex}
           </header>
           <div class="rec-canvas">
             <div class="rec-center" data-rec-panel="permissions">
-              <svg class="icon" viewBox="0 0 24 24"><path d="M8 11V7a4 4 0 0 1 8 0v4"/><rect x="5" y="11" width="14" height="10" rx="2"/></svg>
-              <h2>Permission to record</h2>
+              <span class="rec-permission-icon" aria-hidden="true"><span class="camera sf-symbol">􀍉</span><span class="mic sf-symbol">􀊰</span></span>
+              <h2>For Start recording record</h2>
               <p>We need access to your camera and microphone.</p>
               <button class="ob-primary" data-flow-step="camera-modal">Enable camera & microphone</button>
             </div>
@@ -818,33 +1133,85 @@ body.flow-onboarding .onboarding{display:flex}
               <div class="rec-toast">We're not detecting much sound from your mic.<a>Learn more</a></div>
             </div>
             <div class="share-preview" data-rec-panel="share" hidden>
-              <div class="share-ui"><div><h2>Your screen is being shared</h2><p>Start recording your video</p></div></div>
-              <div class="rec-mini-cam"><video src="assets/webcam-preview.mp4" autoplay muted loop playsinline></video></div>
+              <div class="rec-editor-preview">
+                <div class="rec-editor-canvas">
+                  <div class="screen">
+                    <div class="zoomwrap">
+                      <div class="dash">
+                        <div class="d-side">
+                          <div class="d-brand"><i></i>Acme</div>
+                          <div class="d-nav on">Dashboard</div>
+                          <div class="d-nav">Reports</div>
+                          <div class="d-nav">Data sources</div>
+                          <div class="d-nav">Audience</div>
+                          <div class="d-nav">Settings</div>
+                        </div>
+                        <div class="d-main">
+                          <div class="d-top">
+                            <div><div class="d-h">Analytics Overview</div><div class="d-sub">Last 30 days · live</div></div>
+                            <div class="d-actions"><button class="d-btn">Share</button><button class="d-btn primary">＋ Create report</button></div>
+                          </div>
+                          <div class="d-kpis">
+                            <div class="d-card"><div class="k-l">Revenue</div><div class="k-v">$48.2k</div><div class="k-d">▲ 12.4%</div></div>
+                            <div class="d-card"><div class="k-l">Active users</div><div class="k-v">3,914</div><div class="k-d">▲ 6.1%</div></div>
+                            <div class="d-card"><div class="k-l">Conversion</div><div class="k-v">4.8%</div><div class="k-d">▲ 0.9%</div></div>
+                          </div>
+                          <div class="d-chart">
+                            <div class="c-h"><span>Revenue trend</span><span>$48,219</span></div>
+                            <svg viewBox="0 0 300 90" preserveAspectRatio="none">
+                              <path d="M0 70 L40 60 L80 64 L120 44 L160 50 L200 28 L240 34 L300 14 L300 90 L0 90 Z" fill="rgba(61,61,233,.16)"/>
+                              <path d="M0 70 L40 60 L80 64 L120 44 L160 50 L200 28 L240 34 L300 14" stroke="#0B0BCF" stroke-width="2.5" fill="none"/>
+                            </svg>
+                          </div>
+                          <div class="d-bottom">
+                            <div class="d-conn"><div><div class="t">Data sources</div><div class="s">2 connected</div></div><button class="d-btn">+ Connect data source</button></div>
+                            <div class="d-publish"><div class="pt">Ready to go live?</div><button class="d-btn primary">Publish</button></div>
+                          </div>
+                        </div>
+                      </div>
+                      <svg class="cursor" viewBox="0 0 24 24" width="20" height="20"><path d="M4 2 L20 12 L13 13 L9 21 Z" fill="#fff" stroke="#1B1B2B" stroke-width="1.4" stroke-linejoin="round"/></svg>
+                    </div>
+                  </div>
+                  <div class="webcam-bubble" aria-label="Speaker video preview">
+                    <video src="assets/webcam-preview.mp4" autoplay muted loop playsinline preload="metadata"></video>
+                  </div>
+                </div>
+              </div>
               <div class="rec-toast">We're not detecting much sound from your mic.<a>Learn more</a></div>
             </div>
             <div class="rec-time" data-rec-panel="recording" hidden>REC 00:00</div>
             <div class="browser-permission" data-rec-panel="camera-dialog" hidden>
-              <h3>Camera & microphone access</h3>
-              <p>Rask needs permission to use your camera and microphone to record.</p>
-              <div class="modal-actions"><button class="light" data-flow-step="permissions">Not now</button><button class="brand" data-flow-step="recorder-ready">Allow access</button></div>
+              <img class="permission-art" src="assets/permission-camera-mic.png" alt="Camera and microphone permission preview">
+              <button class="permission-close" data-flow-step="permissions" aria-label="Close permission dialog"></button>
+              <div class="permission-actions-mask"></div>
+              <div class="permission-actions">
+                <button class="permission-btn" data-flow-step="recorder-ready">Allow while visiting the site</button>
+                <button class="permission-btn" data-flow-step="recorder-ready">Allow this time</button>
+                <button class="permission-btn" data-flow-step="permissions">Never allow</button>
+              </div>
             </div>
             <div class="system-share" data-rec-panel="share-dialog" hidden>
               <div class="system-card">
-                <h3>Share your screen</h3>
-                <p>Select what you want to capture for this recording.</p>
-                <button data-flow-step="recording">Share current window</button>
-                <button data-flow-step="recording">Share full screen</button>
-                <button data-flow-step="recorder-ready">Cancel</button>
+                <img class="permission-art" src="assets/permission-screen-share.png" alt="Screen sharing permission preview">
+                <div class="system-actions-mask"></div>
+                <div class="system-actions">
+                  <button class="system-btn cancel" data-flow-step="recorder-ready">Cancel</button>
+                  <button class="system-btn share" data-flow-step="recording">Share</button>
+                </div>
               </div>
             </div>
           </div>
           <div class="rec-controls">
-            <button class="rec-tool">More</button>
-            <button class="rec-tool hot">Unmute</button>
-            <button class="rec-tool" data-flow-step="camera-modal">Start camera</button>
-            <button class="rec-dot" data-record-action><span></span></button>
-            <button class="rec-tool" data-flow-step="screen-modal">Share screen</button>
-            <button class="rec-tool">Quick mode</button>
+            <div class="rec-control-left">
+              <button class="rec-record" data-record-action><span class="rec-record-icon sf-symbol">􀢙</span><span class="rec-record-label">Start Record</span></button>
+              <button class="rec-pause" aria-label="Pause"></button>
+            </div>
+            <span class="rec-divider"></span>
+            <div class="rec-control-right">
+              <button class="rec-tool" data-flow-step="camera-modal" data-device="camera"><span class="sf-symbol">􀍉</span><span class="generic-label">Camera</span><span class="device-label">Macbook Camera</span></button>
+              <button class="rec-tool hot" data-device="microphone"><span class="sf-symbol">􀊰</span><span class="generic-label">Microphon</span><span class="device-label">Macbook Microphone</span></button>
+              <button class="rec-tool" data-flow-step="screen-modal"><span class="sf-symbol">􁏳</span>Screen Sharing</button>
+            </div>
           </div>
         </div>
       </section>
@@ -856,35 +1223,74 @@ body.flow-onboarding .onboarding{display:flex}
               <button class="review-back" data-flow-step="intro" aria-label="Back">
                 <svg class="icon" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
               </button>
-              <div class="review-top-title">Video</div>
+              <div class="review-top-title">Visa application in the chat, process flow</div>
             </div>
             <div class="review-top-actions">
               <button class="review-top-btn plan">View plans</button>
-              <button class="review-top-btn">✦ Advanced tools</button>
-              <button class="review-top-btn icon" aria-label="Search">⌕</button>
-              <button class="review-top-btn icon" aria-label="Help">?</button>
+              <button class="review-top-btn"><span class="sf-symbol">􀇻</span>Advanced tools <span class="sf-symbol">􀆇</span></button>
+              <button class="review-top-btn icon" aria-label="Help"><span class="sf-symbol">􀅴</span></button>
+              <button class="review-top-btn icon" aria-label="Search"><span class="sf-symbol">􀊫</span></button>
+              <button class="review-top-btn share"><span class="sf-symbol">􀈂</span>Share</button>
               <div class="review-avatar"><img src="assets/avatar.jpg" alt=""></div>
-              <button class="review-top-btn share">Share</button>
             </div>
           </header>
+          <div class="review-loading-page">
+            <div class="review-loading-card" role="status" aria-live="polite">
+              <div class="review-loading-spinner"></div>
+              <h2>Your video is being processed</h2>
+              <p>This usually takes a few seconds.</p>
+            </div>
+          </div>
+          <h1 class="review-heading">Your video is ready!</h1>
           <div class="review-content">
             <div class="review-player-wrap">
-              <h1 class="review-ready-title">Your video is ready!</h1>
               <div class="review-player">
                 <div class="review-tabs">
-                  <button class="review-tab">Original</button>
-                  <button class="review-tab on">Polished</button>
-                  <button class="review-tab">Captions</button>
+                  <button class="review-tab" data-review-mode="before">Original</button>
+                  <button class="review-tab on" data-review-mode="after">Polished</button>
                   <div class="review-tab-indicator"></div>
                 </div>
                 <div class="review-preview">
-                  <div class="screen">
-                    <div class="dash">
-                      <div class="d-side"><div class="d-brand"><i></i>Acme</div><div class="d-nav on">Dashboard</div><div class="d-nav">Reports</div><div class="d-nav">Data sources</div></div>
-                      <div class="d-main"><div class="d-top"><div><div class="d-h">Analytics Overview</div><div class="d-sub">Polished preview</div></div><div class="d-actions"><button class="d-btn">Share</button><button class="d-btn primary">+ Create</button></div></div><div class="d-kpis"><div class="d-card"><div class="k-l">Revenue</div><div class="k-v">$48.2k</div><div class="k-d">▲ 12.4%</div></div><div class="d-card"><div class="k-l">Active users</div><div class="k-v">3,914</div><div class="k-d">▲ 6.1%</div></div><div class="d-card"><div class="k-l">Conversion</div><div class="k-v">4.8%</div><div class="k-d">▲ 0.9%</div></div></div><div class="d-chart"><div class="c-h"><span>Revenue trend</span><span>$48,219</span></div></div></div>
+                  <div class="rec-editor-canvas">
+                    <div class="screen">
+                      <div class="zoomwrap">
+                        <div class="dash">
+                          <div class="d-side">
+                            <div class="d-brand"><i></i>Acme</div>
+                            <div class="d-nav on">Dashboard</div>
+                            <div class="d-nav">Reports</div>
+                            <div class="d-nav">Data sources</div>
+                            <div class="d-nav">Audience</div>
+                            <div class="d-nav">Settings</div>
+                          </div>
+                          <div class="d-main">
+                            <div class="d-top">
+                              <div><div class="d-h">Analytics Overview</div><div class="d-sub">Last 30 days · live</div></div>
+                              <div class="d-actions"><button class="d-btn">Share</button><button class="d-btn primary">＋ Create report</button></div>
+                            </div>
+                            <div class="d-kpis">
+                              <div class="d-card"><div class="k-l">Revenue</div><div class="k-v">$48.2k</div><div class="k-d">▲ 12.4%</div></div>
+                              <div class="d-card"><div class="k-l">Active users</div><div class="k-v">3,914</div><div class="k-d">▲ 6.1%</div></div>
+                              <div class="d-card"><div class="k-l">Conversion</div><div class="k-v">4.8%</div><div class="k-d">▲ 0.9%</div></div>
+                            </div>
+                            <div class="d-chart">
+                              <div class="c-h"><span>Revenue trend</span><span>$48,219</span></div>
+                              <svg viewBox="0 0 300 90" preserveAspectRatio="none">
+                                <path d="M0 70 L40 60 L80 64 L120 44 L160 50 L200 28 L240 34 L300 14 L300 90 L0 90 Z" fill="rgba(61,61,233,.16)"/>
+                                <path d="M0 70 L40 60 L80 64 L120 44 L160 50 L200 28 L240 34 L300 14" stroke="#0B0BCF" stroke-width="2.5" fill="none"/>
+                              </svg>
+                            </div>
+                            <div class="d-bottom">
+                              <div class="d-conn"><div><div class="t">Data sources</div><div class="s">2 connected</div></div><button class="d-btn">+ Connect data source</button></div>
+                              <div class="d-publish"><div class="pt">Ready to go live?</div><button class="d-btn primary">Publish</button></div>
+                            </div>
+                          </div>
+                        </div>
+                        <svg class="cursor" viewBox="0 0 24 24" width="20" height="20"><path d="M4 2 L20 12 L13 13 L9 21 Z" fill="#fff" stroke="#1B1B2B" stroke-width="1.4" stroke-linejoin="round"/></svg>
+                      </div>
                     </div>
+                    <div class="webcam-bubble"><video src="assets/webcam-preview.mp4" autoplay muted loop playsinline preload="metadata"></video></div>
                   </div>
-                  <div class="webcam-bubble"><video src="assets/webcam-preview.mp4" autoplay muted loop playsinline></video></div>
                 </div>
                 <div class="review-progress"><span></span></div>
                 <div class="review-controls">
@@ -892,25 +1298,29 @@ body.flow-onboarding .onboarding{display:flex}
                   <button class="review-control" aria-label="Replay">↺</button>
                   <button class="review-control" aria-label="Redo">↻</button>
                   <div class="review-time">00:00:14,278 <span>/ 00:00:45,000</span></div>
-                  <button class="review-control" aria-label="Fullscreen">⛶</button>
+                  <button class="review-caption-toggle" type="button" aria-pressed="true"><span class="sf-symbol">􀅶</span><span>Caption</span><span class="toggle"></span></button>
                 </div>
-              </div>
-              <div class="review-actions-row">
-                <button class="review-action">Edit polish</button>
-                <button class="review-action primary"><span>Download</span><span>⌄</span></button>
               </div>
             </div>
             <aside class="review-summary">
-              <h1>Your recording is polished</h1>
-              <p>Rask cleaned the first pass automatically. Review the summary, then open the editor for full control.</p>
+              <h1 data-review-title>Your recording is polished</h1>
+              <p data-review-copy>Rask cleaned the first pass automatically. Review the summary, then open the editor for full control.</p>
+              <div class="review-process" aria-live="polite">
+                <div class="review-process-top"><span data-process-stage>Waiting</span><span data-process-step>Step 1 of 4</span></div>
+                <div class="review-process-bar"><span></span></div>
+              </div>
               <ul class="polish-list">
-                <li>Removed 24 filler words and 3 repeated phrases</li>
-                <li>Shortened 7 long pauses and cut 47 seconds</li>
-                <li>Added 4 smart zooms around key product actions</li>
-                <li>Generated captions and an editable transcript</li>
+                <li><span>Removed <b>24 filler</b> words and <b>3 repeated phrases</b></span></li>
+                <li><span>Shortened <b>7 long</b> pauses and cut <b>47 seconds</b></span></li>
+                <li><span>Added <b>4 smart zooms</b> around key product actions</span></li>
+                <li><span>Generated captions and an editable transcript</span></li>
               </ul>
-              <button class="ob-primary" data-open-editor>Open editor</button>
-              <button class="ob-secondary" data-flow-step="recording">Back to recorder preview</button>
+              <div class="review-saved"><b>You saved 47s</b><span>3:12 <span class="sf-symbol">􀄫</span> 2:25</span></div>
+              <div class="review-summary-actions">
+                <button class="review-action download">Download <span class="sf-symbol">􀆈</span></button>
+                <button class="review-action" data-open-editor><span class="sf-symbol">􀌆</span>Edit Video</button>
+                <button class="review-action rerecord" data-flow-step="recording"><span class="sf-symbol">􀅉</span>Re-record video</button>
+              </div>
             </aside>
           </div>
         </div>
@@ -925,7 +1335,7 @@ body.flow-onboarding .onboarding{display:flex}
   <header class="topbar">
     <div class="tb-left">
       <button class="tb-back" aria-label="Back"><svg class="icon" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button>
-      <span class="tb-title">Visa application in the chat, process flow</span>
+      <span class="tb-title">Rask.ai</span>
     </div>
     <button class="btn btn-ghost btn-plans">View plans</button>
     <button class="btn btn-ghost"><svg class="ic icon ic-sparkle" viewBox="0 0 24 24"><path d="M12 3l1.5 4.2L18 9l-4.5 1.8L12 15l-1.5-4.2L6 9l4.5-1.8z"/></svg>Advanced tools<svg class="icon" viewBox="0 0 24 24" style="width:13px;height:13px"><path d="M6 9l6 6 6-6"/></svg></button>
@@ -1032,13 +1442,26 @@ body.flow-onboarding .onboarding{display:flex}
 
     <!-- RIGHT PANEL -->
     <aside class="panel" id="polishPanel">
+      <div class="panel-rail" aria-label="Editor sections">
+        <button class="rail-toggle" id="panelExpand" aria-label="Expand menu">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+        <button class="rail-btn" data-rail="speech" aria-label="Speech cleanup"><span class="sf-symbol">􀊱</span></button>
+        <button class="rail-btn" data-rail="zoom" aria-label="Smart zoom"><span class="sf-symbol">􀎐</span></button>
+        <button class="rail-btn" data-rail="style" aria-label="Style"><span class="sf-symbol">􀇾</span></button>
+        <button class="rail-btn" data-rail="aspect" aria-label="Aspect ratio"><span class="sf-symbol">􀏅</span></button>
+        <button class="rail-btn" data-rail="captions" aria-label="Captions"><span class="sf-symbol">􀅶</span></button>
+      </div>
       <div class="panel-h">
         <div class="panel-normal-head">
           <button class="tr-toggle on" id="trToggle">Transcript</button>
           <div class="seg ba" id="ba">
-            <button data-m="before">Before</button>
-            <button data-m="after" class="on">After</button>
+            <button data-m="before">Original</button>
+            <button data-m="after" class="on">Polished</button>
           </div>
+          <button class="panel-collapse" id="panelCollapse" aria-label="Collapse menu" title="Collapse menu">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>
+          </button>
         </div>
         <div class="panel-zoom-head">
           <button class="zoom-back" id="zoomBack" aria-label="Back to all settings"><svg class="icon" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button>
@@ -1209,8 +1632,37 @@ body.flow-onboarding .onboarding{display:flex}
     {id:'btn-publish',label:'Publish',             cap:"Captions and transcript edits stay ready for review.", zoom:1.9, phrase:3, start:39.8, dur:4.8},
   ];
   const AFTER_TOTAL=45, BEFORE_TOTAL=192, LOOP=AFTER_TOTAL, TOTAL=AFTER_TOTAL, TL_WINDOW=AFTER_TOTAL;
+  const CAPTION_SEGMENTS=[
+    {start:0,end:2.6,text:'Hey team, today I want to show the new Smart Polish flow.'},
+    {start:2.6,end:5.2,text:'It turns a raw walkthrough into a clean shareable clip.'},
+    {start:5.2,end:8.2,text:'Rask removes messy bits automatically.'},
+    {start:8.2,end:11,text:'Then you can review every edit in the transcript.'},
+    {start:11,end:13.6,text:'First, we detect filler words and repeated starts.'},
+    {start:13.6,end:16.2,text:'We also find awkward silence after clicks.'},
+    {start:16.2,end:18.8,text:'Then we trim the pause.'},
+    {start:18.8,end:21.2,text:'We remove words like basically and kind of.'},
+    {start:21.2,end:23,text:'The sentence keeps moving.'},
+    {start:23,end:25.4,text:'Now smart zoom follows the action.'},
+    {start:25.4,end:28,text:'It follows reports, data, and publishing steps.'},
+    {start:28,end:31.2,text:'If there is a stumble, Polish keeps the stronger take.'},
+    {start:31.2,end:36,text:'Risky edits are marked for review.'},
+    {start:36,end:39.2,text:'Captions and transcript stay editable.'},
+    {start:39.2,end:42.2,text:'You can fix product names and false starts.'},
+    {start:42.2,end:45,text:'Then send the polished demo to customers.'}
+  ];
   const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+  window.raskCaptionForTime=function(sec){
+    const time=((sec%AFTER_TOTAL)+AFTER_TOTAL)%AFTER_TOTAL;
+    return (CAPTION_SEGMENTS.find(s=>time>=s.start&&time<s.end)||CAPTION_SEGMENTS[0]).text;
+  };
+  window.raskSetCaptionText=function(el,text){
+    if(!el || el.textContent===text) return;
+    el.textContent=text;
+    el.classList.remove('swap');
+    void el.offsetWidth;
+    el.classList.add('swap');
+  };
   function updateRangeFill(input){
     if(!input) return;
     const min=Number(input.min||0), max=Number(input.max||100), value=Number(input.value||0);
@@ -1296,10 +1748,16 @@ body.flow-onboarding .onboarding{display:flex}
       zoomwrap.style.transformOrigin=z.x+'% '+z.y+'%';
       zoomwrap.style.transform='scale('+sc.toFixed(3)+')';
       cursor.style.left=z.x+'%'; cursor.style.top=z.y+'%';
-      if(S.captions && z.cap){caption.textContent=z.cap;caption.classList.add('show');}
-      else caption.classList.remove('show');
       if(zChanged && S.clickhl && z.auto) fireRipple({x:z.x,y:z.y});
     } else { zoomwrap.style.transform='scale(1)'; caption.classList.remove('show'); }
+  }
+  function updateCaptionOverlay(){
+    if(S.mode!=='after' || !S.captions){
+      caption.classList.remove('show');
+      return;
+    }
+    window.raskSetCaptionText(caption,window.raskCaptionForTime(t));
+    caption.classList.add('show');
   }
 
   function updateActiveStates(z){
@@ -1312,6 +1770,7 @@ body.flow-onboarding .onboarding{display:flex}
   function render(){
     const z=activeZoom();
     applyActive(z);
+    updateCaptionOverlay();
     tickTranscript();
     updateActiveStates(z);
     const total=timelineDuration();
@@ -1545,6 +2004,79 @@ body.flow-onboarding .onboarding{display:flex}
     });
   }
 
+  // ===== cleanup clip selector: select / move / resize timeline edits =====
+  const laneClip=$('.lane-clip');
+  function clearCleanupSelection(){
+    $$('.lane-clip .selected').forEach(el=>{
+      el.classList.remove('selected');
+      el.querySelectorAll('.clip-handle').forEach(h=>h.remove());
+    });
+  }
+  function selectCleanupClip(el){
+    clearCleanupSelection();
+    el.classList.add('selected');
+    if(!el.querySelector('.clip-handle')){
+      const l=document.createElement('span');
+      const r=document.createElement('span');
+      l.className='clip-handle l';
+      r.className='clip-handle r';
+      el.append(l,r);
+    }
+  }
+  function bindCleanupClipEditing(){
+    $$('.lane-clip .cut-gap,.lane-clip .micro-cut').forEach(el=>{
+      const startEdit=e=>{
+        if(document.body.classList.contains('mode-before')) return;
+        const lane=laneClip.getBoundingClientRect();
+        const mode=e.target.classList.contains('l')?'l':e.target.classList.contains('r')?'r':'move';
+        const sx=e.clientX;
+        const startLeft=parseFloat(el.style.left)||el.offsetLeft;
+        const startWidth=parseFloat(el.style.width)||el.offsetWidth;
+        let moved=false;
+        selectCleanupClip(el);
+        if(e.pointerId!=null && el.setPointerCapture) el.setPointerCapture(e.pointerId);
+        const move=ev=>{
+          const dx=ev.clientX-sx;
+          if(Math.abs(dx)>2) moved=true;
+          if(mode==='move'){
+            const left=clamp(startLeft+dx,0,lane.width-startWidth);
+            el.style.left=left+'px';
+          }else if(mode==='l'){
+            const right=startLeft+startWidth;
+            const left=clamp(startLeft+dx,0,right-12);
+            el.style.left=left+'px';
+            el.style.width=(right-left)+'px';
+          }else{
+            const width=clamp(startWidth+dx,12,lane.width-startLeft);
+            el.style.width=width+'px';
+          }
+        };
+        const up=()=>{
+          el.onpointermove=null;
+          el.onpointerup=null;
+          document.removeEventListener('mousemove',move);
+          document.removeEventListener('mouseup',up);
+          if(!moved) selectCleanupClip(el);
+        };
+        if(e.type==='mousedown'){
+          document.addEventListener('mousemove',move);
+          document.addEventListener('mouseup',up,{once:true});
+        }else{
+          el.onpointermove=move;
+          el.onpointerup=up;
+        }
+        e.preventDefault();
+        e.stopPropagation();
+      };
+      el.onpointerdown=startEdit;
+      el.onmousedown=startEdit;
+    });
+    laneClip?.addEventListener('pointerdown',e=>{
+      if(!e.target.closest('.cut-gap,.micro-cut')) clearCleanupSelection();
+    });
+  }
+  bindCleanupClipEditing();
+
   // ===== focus-point picker (drag on preview to aim the zoom) =====
   focusdot.onpointerdown=e=>{
     const z=zooms.find(z=>z.id===selId); if(!z)return;
@@ -1719,20 +2251,43 @@ body.flow-onboarding .onboarding{display:flex}
   // presets
   $$('#presets .preset').forEach(p=>p.onclick=()=>{
     $$('#presets .preset').forEach(x=>x.classList.remove('on')); p.classList.add('on');
-    const map={'1':'linear-gradient(135deg,#3D3DE9 0%,#0B0BCF 100%)',
+    const map={'1':'linear-gradient(135deg,#FDA4AF 0%,#FBBF24 100%)',
                '2':'linear-gradient(135deg,#FDA4AF,#FBBF24)',
                '3':'linear-gradient(135deg,#1B1B2B,#4B4B66)','4':'#EDEDF2'};
     canvas.style.background=map[p.dataset.bg];
   });
 
   // ===== transcript panel — Loom-like: timecode gutter · hover-time · click-seek · running progress =====
-  const tpanel=$('#tpanel'), trToggle=$('#trToggle'), tdoc=$('#tdoc'), wtip=$('#wtip'), rtMark=$('#rtMark');
+  const appRoot=$('.app'), tpanel=$('#tpanel'), trToggle=$('#trToggle'), tdoc=$('#tdoc'), wtip=$('#wtip'), rtMark=$('#rtMark');
   function setTranscript(open){
     tpanel.classList.toggle('collapsed',!open); trToggle.classList.toggle('on',open);
     clearTimeout(window._tp); window._tp=setTimeout(computeCenters,340);
   }
+  let transcriptWasOpen=true;
+  function setSideCompact(on){
+    if(on) transcriptWasOpen=!tpanel.classList.contains('collapsed');
+    appRoot.classList.toggle('side-compact',on);
+    if(on) setTranscript(false);
+    else setTranscript(transcriptWasOpen);
+    closeZoomInspector();
+    clearTimeout(window._panelResize);
+    window._panelResize=setTimeout(()=>{ computeCenters(); window.dispatchEvent(new Event('resize')); },360);
+  }
   trToggle.onclick=()=>setTranscript(tpanel.classList.contains('collapsed'));
   $('#tpClose').onclick=()=>setTranscript(false);
+  $('#panelCollapse').onclick=()=>setSideCompact(true);
+  $('#panelExpand').onclick=()=>setSideCompact(false);
+  $$('.rail-btn').forEach(btn=>btn.onclick=()=>{
+    const target=btn.dataset.rail;
+    setSideCompact(false);
+    if(target==='speech') closeZoomInspector();
+    if(target==='zoom'){
+      const first=zooms[0];
+      if(first) selectZoom(first.id,false,true);
+    }
+    if(target==='style'||target==='aspect') openStyleInspector();
+    if(target==='captions') openCaptionInspector();
+  });
 
   // tokenize every word, assign it a timecode, draw the per-line gutter time
   let toks=[], lastNow=-1, lastLine=null;
@@ -1824,29 +2379,129 @@ body.flow-onboarding .onboarding{display:flex}
 (function(){
   const root=document.getElementById('onboarding');
   if(!root) return;
-  const directEditorRoute=()=>{
-    const path=window.location.pathname.replace(/\/+$/,'');
-    const params=new URLSearchParams(window.location.search);
-    return path.endsWith('/editor') || params.get('mode')==='editor' || window.location.hash==='#editor';
-  };
+  const directEditor=/\/editor\/?$/.test(window.location.pathname);
+  if(directEditor){
+    document.body.classList.remove('flow-onboarding');
+    document.body.classList.add('flow-edit');
+    window.dispatchEvent(new Event('resize'));
+    setTimeout(()=>window.dispatchEvent(new Event('resize')),120);
+  }
   const panels=[...root.querySelectorAll('[data-rec-panel]')];
   const recTime=root.querySelector('.rec-time');
-  let recTimer=null, recStart=0;
+  const recRecordLabel=root.querySelector('.rec-record-label');
+  const reviewTitle=root.querySelector('[data-review-title]');
+  const reviewCopy=root.querySelector('[data-review-copy]');
+  const processStage=root.querySelector('[data-process-stage]');
+  const processStep=root.querySelector('[data-process-step]');
+  const reviewSummary=root.querySelector('.review-summary');
+  const polishItems=[...root.querySelectorAll('.review-summary .polish-list li')];
+  const finalReviewTitle=reviewTitle?.textContent||'Your recording is polished';
+  const finalReviewCopy=reviewCopy?.textContent||'Rask cleaned the first pass automatically. Review the summary, then open the editor for full control.';
+  const finalPolishItems=polishItems.map(item=>item.innerHTML);
+  const PROCESS_STEPS=[
+    {
+      stage:'Waiting',
+      title:'Waiting for media',
+      copy:'Rask is preparing the screen, camera, and microphone tracks before polishing starts.',
+      item:'Waiting for screen, camera, and audio tracks',
+      result:'Loaded screen, camera, and audio tracks'
+    },
+    {
+      stage:'Transcribing',
+      title:'Transcribing your walkthrough',
+      copy:'Speech is being recognized and converted into captions and an editable transcript.',
+      item:'Recognizing speech and building the transcript',
+      result:'Generated captions and an editable transcript'
+    },
+    {
+      stage:'Analyzing',
+      title:'Finding cleanup opportunities',
+      copy:'Rask is detecting filler words, repeated phrases, long pauses, and moments that need review.',
+      item:'Analyzing filler words, repeats, and pauses',
+      result:'Removed 24 filler words and 3 repeated phrases'
+    },
+    {
+      stage:'Polishing',
+      title:'Applying cuts and smart zooms',
+      copy:'Long pauses are being shortened and key product actions are getting smooth zooms.',
+      item:'Cutting pauses, adding zooms, and preparing the editor',
+      result:'Shortened 7 long pauses and added 4 smart zooms'
+    }
+  ];
+  const REVIEW_TOTAL=45;
+  const REVIEW_INITIAL_TIME=14.278;
+  let recTimer=null, recStart=0, reviewLoadTimer=null, reviewProcessTimer=null, reviewProcessInterval=null, reviewSwapTimer=null;
+  let reviewRaf=null, reviewLast=0, reviewCurrent=REVIEW_INITIAL_TIME, reviewPlaying=false;
   const panelMap={
     permissions:['permissions'],
     'camera-modal':['permissions','camera-dialog'],
     'recorder-ready':['camera'],
     'screen-modal':['camera','share-dialog'],
     recording:['share','recording'],
+    'review-loading':[],
     review:[]
   };
   function fmt(sec){
     sec=Math.max(0,Math.floor(sec));
     return String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0');
   }
+  function fmtMs(elapsed){
+    const sec=Math.max(0,elapsed/1000);
+    const whole=Math.floor(sec);
+    const ms=Math.floor((sec-whole)*1000);
+    return '00:'+String(Math.floor(whole/60)).padStart(2,'0')+':'+String(whole%60).padStart(2,'0')+','+String(ms).padStart(3,'0');
+  }
+  function fmtReviewTime(sec){
+    sec=Math.max(0,sec);
+    const whole=Math.floor(sec);
+    const ms=Math.floor((sec-whole)*1000);
+    return '00:'+String(Math.floor(whole/60)).padStart(2,'0')+':'+String(whole%60).padStart(2,'0')+','+String(ms).padStart(3,'0');
+  }
+  function renderReviewPlayer(){
+    const bar=root.querySelector('.review-progress span');
+    const time=root.querySelector('.review-time');
+    const caption=root.querySelector('.review-preview .caption');
+    if(bar) bar.style.width=(reviewCurrent/REVIEW_TOTAL*100)+'%';
+    if(time) time.innerHTML=fmtReviewTime(reviewCurrent)+' <span>/ '+fmtReviewTime(REVIEW_TOTAL)+'</span>';
+    if(caption && !root.classList.contains('review-captions-off')){
+      if(window.raskSetCaptionText && window.raskCaptionForTime) window.raskSetCaptionText(caption,window.raskCaptionForTime(reviewCurrent));
+      caption.classList.add('show');
+    }
+  }
+  function reviewFrame(now){
+    if(reviewPlaying){
+      if(!reviewLast) reviewLast=now;
+      reviewCurrent+=(now-reviewLast)/1000;
+      if(reviewCurrent>=REVIEW_TOTAL) reviewCurrent=0;
+      renderReviewPlayer();
+    }
+    reviewLast=now;
+    reviewRaf=requestAnimationFrame(reviewFrame);
+  }
+  function startReviewPlayer(reset=true){
+    if(reset) reviewCurrent=REVIEW_INITIAL_TIME;
+    reviewPlaying=true;
+    reviewLast=0;
+    root.classList.remove('review-paused');
+    const play=root.querySelector('[data-review-play]');
+    if(play){ play.textContent='▮▮'; play.setAttribute('aria-label','Pause'); }
+    renderReviewPlayer();
+    if(!reviewRaf) reviewRaf=requestAnimationFrame(reviewFrame);
+  }
+  function pauseReviewPlayer(paused){
+    reviewPlaying=!paused;
+    reviewLast=0;
+    root.classList.toggle('review-paused',paused);
+    if(!reviewRaf) reviewRaf=requestAnimationFrame(reviewFrame);
+  }
+  function stopReviewPlayer(){
+    reviewPlaying=false;
+    if(reviewRaf){ cancelAnimationFrame(reviewRaf); reviewRaf=null; }
+  }
   function setRecorderPanels(step){
     const visible=panelMap[step]||[];
     panels.forEach(p=>p.hidden=!visible.includes(p.dataset.recPanel));
+    root.classList.toggle('devices-selected',['recorder-ready','screen-modal','recording'].includes(step));
     root.querySelectorAll('.rec-tool').forEach(btn=>btn.classList.remove('active'));
     if(step==='recording') root.querySelector('[data-flow-step="screen-modal"]')?.classList.add('active');
   }
@@ -1854,46 +2509,167 @@ body.flow-onboarding .onboarding{display:flex}
     clearInterval(recTimer);
     recStart=Date.now();
     if(recTime) recTime.textContent='REC 00:00';
-    recTimer=setInterval(()=>{ if(recTime) recTime.textContent='REC '+fmt((Date.now()-recStart)/1000); },500);
+    if(recRecordLabel) recRecordLabel.textContent='00:00:00,000';
+    recTimer=setInterval(()=>{
+      const elapsed=Date.now()-recStart;
+      if(recTime) recTime.textContent='REC '+fmt(elapsed/1000);
+      if(recRecordLabel) recRecordLabel.textContent=fmtMs(elapsed);
+    },80);
   }
   function stopRecordingClock(){
     clearInterval(recTimer);
     recTimer=null;
+    if(recRecordLabel) recRecordLabel.textContent='Start Record';
+  }
+  function syncReviewMode(mode){
+    root.querySelectorAll('[data-review-mode]').forEach(btn=>btn.classList.toggle('on',btn.dataset.reviewMode===mode));
+  }
+  function setPreviewMode(mode){
+    const editorBtn=document.querySelector(`#ba button[data-m="${mode}"]`);
+    if(editorBtn && !editorBtn.classList.contains('on')) editorBtn.click();
+    root.classList.remove('review-paused');
+    document.body.classList.toggle('mode-before',mode==='before');
+    document.body.classList.toggle('mode-after',mode==='after');
+    syncReviewMode(mode);
+  }
+  function mountReviewPreview(){
+    const reviewPreview=root.querySelector('.review-preview');
+    const editorCanvas=document.getElementById('canvas');
+    if(!reviewPreview || !editorCanvas) return;
+    const clone=editorCanvas.cloneNode(true);
+    clone.classList.remove('r916','r11');
+    clone.querySelectorAll('[id]').forEach(el=>el.removeAttribute('id'));
+    clone.removeAttribute('id');
+    clone.querySelectorAll('.zoomwrap,.cursor,.caption,.ripple').forEach(el=>el.removeAttribute('style'));
+    const clonedCaption=clone.querySelector('.caption');
+    if(clonedCaption){
+      clonedCaption.textContent=window.raskCaptionForTime ? window.raskCaptionForTime(reviewCurrent) : 'First, we detect filler words.';
+      clonedCaption.classList.add('show');
+    }
+    reviewPreview.replaceChildren(clone);
+    clone.querySelectorAll('video').forEach(video=>{
+      video.muted=true;
+      video.loop=true;
+      video.play?.().catch(()=>{});
+    });
+  }
+  function startReviewProcessing(){
+    clearTimeout(reviewProcessTimer);
+    clearInterval(reviewProcessInterval);
+    root.classList.remove('review-processing','review-processed');
+    updateReviewProcessStep(0);
+    void root.offsetWidth;
+    root.classList.add('review-processing');
+    let stepIndex=0;
+    reviewProcessInterval=setInterval(()=>{
+      stepIndex=Math.min(PROCESS_STEPS.length-1,stepIndex+1);
+      updateReviewProcessStep(stepIndex);
+    },3000);
+    reviewProcessTimer=setTimeout(()=>{
+      clearInterval(reviewProcessInterval);
+      root.classList.remove('review-processing');
+      root.classList.add('review-processed');
+      restoreFinalReviewSummary();
+    },12000);
+  }
+  function updateReviewProcessStep(activeIndex){
+    const step=PROCESS_STEPS[activeIndex]||PROCESS_STEPS[0];
+    transitionReviewSummary(()=>{
+      if(reviewTitle) reviewTitle.textContent=step.title;
+      if(reviewCopy) reviewCopy.textContent=step.copy;
+      if(processStage) processStage.textContent=step.stage;
+      if(processStep) processStep.textContent='Step '+(activeIndex+1)+' of '+PROCESS_STEPS.length;
+      polishItems.forEach((item,index)=>{
+        item.classList.toggle('is-done',index<activeIndex);
+        item.classList.toggle('is-active',index===activeIndex);
+        const copy=index<activeIndex ? PROCESS_STEPS[index].result : PROCESS_STEPS[index].item;
+        item.innerHTML='<span>'+copy+'</span>';
+      });
+    });
+  }
+  function transitionReviewSummary(update){
+    clearTimeout(reviewSwapTimer);
+    reviewSummary?.classList.add('is-swapping');
+    reviewSwapTimer=setTimeout(()=>{
+      update();
+      reviewSummary?.classList.remove('is-swapping');
+    },120);
+  }
+  function restoreFinalReviewSummary(){
+    transitionReviewSummary(()=>{
+      if(reviewTitle) reviewTitle.textContent=finalReviewTitle;
+      if(reviewCopy) reviewCopy.textContent=finalReviewCopy;
+      polishItems.forEach((item,index)=>{
+        item.classList.remove('is-done','is-active');
+        item.innerHTML=finalPolishItems[index]||'';
+      });
+    });
   }
   function go(step){
+    if(step!=='review'){
+      clearTimeout(reviewLoadTimer);
+      clearTimeout(reviewProcessTimer);
+      clearInterval(reviewProcessInterval);
+      stopReviewPlayer();
+      root.classList.remove('review-processing','review-processed');
+      restoreFinalReviewSummary();
+    }
     root.dataset.step=step;
     setRecorderPanels(step);
     if(step==='recording') startRecordingClock();
-    else if(step==='review') stopRecordingClock();
-  }
-  function openEditor(updateUrl){
-    stopRecordingClock();
-    document.body.classList.remove('flow-onboarding');
-    document.body.classList.add('flow-edit');
-    if(updateUrl && window.history?.pushState) window.history.pushState(null,'','/editor');
-    window.dispatchEvent(new Event('resize'));
-    setTimeout(()=>window.dispatchEvent(new Event('resize')),120);
+    else if(step==='review-loading'){
+      stopRecordingClock();
+      mountReviewPreview();
+      setPreviewMode('after');
+      clearTimeout(reviewLoadTimer);
+      reviewLoadTimer=setTimeout(()=>go('review'),3000);
+    }
+    else if(step==='review'){ stopRecordingClock(); mountReviewPreview(); setPreviewMode('after'); startReviewProcessing(); startReviewPlayer(true); }
   }
 	  root.addEventListener('click',e=>{
+	    const modeBtn=e.target.closest('[data-review-mode]');
+	    if(modeBtn){ setPreviewMode(modeBtn.dataset.reviewMode); return; }
 	    const stepBtn=e.target.closest('[data-flow-step]');
 	    if(stepBtn){ go(stepBtn.dataset.flowStep); return; }
 	    const reviewPlay=e.target.closest('[data-review-play]');
-	    if(reviewPlay){
-	      const video=root.querySelector('.review-preview video');
-	      if(video?.paused){ video.play(); reviewPlay.textContent='▮▮'; reviewPlay.setAttribute('aria-label','Pause'); }
-	      else { video?.pause(); reviewPlay.textContent='▶'; reviewPlay.setAttribute('aria-label','Play'); }
-	      return;
-	    }
+    if(reviewPlay){
+      const videos=[...root.querySelectorAll('.review-preview video')];
+      const paused=root.classList.toggle('review-paused');
+      pauseReviewPlayer(paused);
+      videos.forEach(video=>{
+        if(paused) video.pause?.();
+        else video.play?.().catch(()=>{});
+      });
+      reviewPlay.textContent=paused?'▶':'▮▮';
+      reviewPlay.setAttribute('aria-label',paused?'Play':'Pause');
+      return;
+    }
+    const captionToggle=e.target.closest('.review-caption-toggle');
+    if(captionToggle){
+      const off=root.classList.toggle('review-captions-off');
+      captionToggle.classList.toggle('off',off);
+      captionToggle.setAttribute('aria-pressed',String(!off));
+      return;
+    }
 	    if(e.target.closest('[data-record-action]')){
-	      go(root.dataset.step==='recording'?'review':'screen-modal');
+	      go(root.dataset.step==='recording'?'review-loading':'screen-modal');
 	    }
     if(e.target.closest('[data-open-editor]')){
-      openEditor(true);
+      stopRecordingClock();
+      document.body.classList.remove('flow-onboarding');
+      document.body.classList.add('flow-edit');
+      window.dispatchEvent(new Event('resize'));
+      setTimeout(()=>window.dispatchEvent(new Event('resize')),120);
     }
   });
-  root.dataset.step='intro';
-  setRecorderPanels('intro');
-  if(directEditorRoute()) openEditor(false);
+  root.dataset.step=directEditor?'review':'intro';
+  setRecorderPanels(root.dataset.step);
+  if(root.dataset.step==='review'){
+    mountReviewPreview();
+    setPreviewMode('after');
+    startReviewProcessing();
+    startReviewPlayer(true);
+  }
 })();
 </script>
 </body>

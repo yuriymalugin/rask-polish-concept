@@ -929,6 +929,7 @@ body.flow-onboarding .onboarding{display:flex}
 .system-screen-preview{position:absolute;left:7.25%;top:26.8%;z-index:2;width:41.1%;height:24.35%;
   border-radius:4px;overflow:hidden;background:var(--preview-bg);
   box-shadow:0 0 0 1px rgba(16,24,40,.08)}
+.system-screen-preview img{width:100%;height:100%;display:block;object-fit:cover}
 .system-screen-preview .rec-editor-canvas{position:absolute;inset:0;width:100%;height:100%;border-radius:0;background:var(--preview-bg);overflow:hidden}
 .system-screen-preview .screen{position:absolute;left:6%;top:8%;width:88%;height:84%;border-radius:3px;box-shadow:0 4px 12px rgba(16,24,40,.18)}
 .system-screen-preview .webcam-bubble{display:none}
@@ -1219,7 +1220,9 @@ body.mode-after .onboarding.review-paused[data-step="review"] .review-preview .d
               <div class="system-card">
                 <img class="permission-art" src="assets/permission-screen-share.png" alt="Screen sharing permission preview">
                 <div class="system-title-plate">Choose what to share with rask.ai</div>
-                <div class="system-screen-preview" id="systemScreenPreview" aria-hidden="true"></div>
+                <div class="system-screen-preview" id="systemScreenPreview" aria-hidden="true">
+                  <img src="assets/screen-share-background.png" alt="">
+                </div>
                 <div class="system-actions-mask"></div>
                 <div class="system-actions">
                   <button class="system-btn cancel" data-flow-step="recorder-ready">Cancel</button>
@@ -1726,16 +1729,6 @@ body.mode-after .onboarding.review-paused[data-step="review"] .review-preview .d
       else video.pause?.();
     });
   }
-  function mountSystemSharePreview(){
-    const target=$('#systemScreenPreview'), source=$('.share-preview .rec-editor-canvas');
-    if(!target || !source || target.childElementCount) return;
-    const clone=source.cloneNode(true);
-    clone.querySelectorAll('[id]').forEach(el=>el.removeAttribute('id'));
-    target.appendChild(clone);
-    syncOnboardingVideoPlayback();
-  }
-  mountSystemSharePreview();
-
   let playing=true, t=4.55, last=performance.now();
   let centers=[], lastKey='', lastActiveStateId='__init';
   const S={zoom:true,captions:true,clickhl:true,smooth:true,fillers:true,pauses:true,retakes:false,

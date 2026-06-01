@@ -1498,7 +1498,7 @@ body.mode-after .onboarding.review-paused[data-step="review"] .review-preview .d
         </div>
 
         <!-- SPEECH CLEANUP -->
-        <section class="grp open" data-g>
+        <section class="grp open speech-group" data-g>
           <button class="grp-h"><svg class="gi icon" viewBox="0 0 24 24"><path d="M12 3v18M7 8v8M17 8v8M3 11v2M21 11v2"/></svg>Speech cleanup <span class="cnt">· 34 edits</span><svg class="chev icon" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
           <div class="grp-b">
             <div class="row"><span class="lbl">Remove filler words<span class="info-pop" id="fillerInfo"><button class="info-dot" type="button" aria-label="Show removed filler words">i</button><span class="filler-popover" role="tooltip"><span class="filler-copy">“um”, “uh”, “like”, “basically”, “actually” — 24 found</span><span class="filler-list" id="fillerList"><span class="filler-chip">um</span><span class="filler-chip">uh</span><span class="filler-chip">like</span><span class="filler-chip">basically</span><span class="filler-chip">actually</span><span class="filler-chip">you know</span><span class="filler-chip">kind of</span></span><span class="filler-actions"><button class="filler-edit" type="button" id="fillerEdit">Edit</button><button class="filler-add" type="button" id="fillerAdd">Add more</button></span></span></span></span><button class="sw" aria-pressed="true" data-k="fillers"><span class="knob"></span></button></div>
@@ -1530,7 +1530,7 @@ body.mode-after .onboarding.review-paused[data-step="review"] .review-preview .d
         </section>
 
         <!-- CURSOR -->
-        <section class="grp open" data-g>
+        <section class="grp open cursor-group" data-g>
           <button class="grp-h"><svg class="gi icon" viewBox="0 0 24 24"><path d="M5 3l13 8-5.5 1.5L9 19 5 3z"/></svg>Cursor<svg class="chev icon" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
           <div class="grp-b">
             <div class="row"><span class="lbl">Smooth cursor movement</span><button class="sw" aria-pressed="true" data-k="smooth"><span class="knob"></span></button></div>
@@ -2306,17 +2306,29 @@ body.mode-after .onboarding.review-paused[data-step="review"] .review-preview .d
   $('#tpClose').onclick=()=>setTranscript(false);
   $('#panelCollapse').onclick=()=>setSideCompact(true);
   $('#panelExpand').onclick=()=>setSideCompact(false);
+  const railTargets={
+    speech:'.speech-group',
+    zoom:'.zoom-group',
+    cursor:'.cursor-group',
+    style:'.style-group',
+    captions:'.caption-group'
+  };
+  function scrollPanelToSection(target){
+    const scroller=$('.panel-scroll'), section=$(railTargets[target]);
+    if(!scroller||!section) return;
+    closeZoomInspector();
+    section.classList.add('open');
+    scroller.scrollTo({top:Math.max(0,section.offsetTop-12),behavior:'smooth'});
+    section.animate?.(
+      [{boxShadow:'0 0 0 3px rgba(11,11,207,.16)'},{boxShadow:'0 0 0 0 rgba(11,11,207,0)'}],
+      {duration:900,easing:'ease-out'}
+    );
+  }
   $$('.rail-btn').forEach(btn=>btn.onclick=()=>{
     const target=btn.dataset.rail;
     setSideCompact(false);
-    if(target==='speech') closeZoomInspector();
-    if(target==='zoom'){
-      const first=zooms[0];
-      if(first) selectZoom(first.id,false,true);
-    }
-    if(target==='style') openStyleInspector();
-    if(target==='cursor') closeZoomInspector();
-    if(target==='captions') openCaptionInspector();
+    clearTimeout(window._railScroll);
+    window._railScroll=setTimeout(()=>scrollPanelToSection(target),360);
   });
 
   // tokenize every word, assign it a timecode, draw the per-line gutter time

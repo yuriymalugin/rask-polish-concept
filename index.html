@@ -232,9 +232,9 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .rail-toggle{height:48px;background:var(--bg-850);color:var(--t-lo)}
 .rail-toggle:hover,.rail-btn:hover{background:var(--acc-muted);color:var(--acc-deep)}
 .rail-toggle .icon{width:18px;height:18px}
+.rail-btn svg{width:26px;height:26px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.rail-btn .smartzoom-icon{width:28px;height:24px;fill:currentColor;stroke:none}
 .rail-btn .sf-symbol{font-size:24px;line-height:1}
-.rail-btn[data-rail="transcript"] .sf-symbol{font-size:21px}
-.rail-btn[data-rail="style"] .sf-symbol{font-size:25px}
 .rail-btn::after{content:attr(aria-label);position:absolute;right:calc(100% + 10px);top:50%;transform:translate(4px,-50%);
   padding:5px 8px;border-radius:7px;background:#101828;color:#fff;font-size:11px;font-weight:600;white-space:nowrap;
   opacity:0;pointer-events:none;transition:.14s;box-shadow:0 8px 18px rgba(16,24,40,.18)}
@@ -1465,11 +1465,11 @@ body.mode-after .onboarding.review-paused[data-step="review"] .review-preview .d
         <button class="rail-toggle" id="panelExpand" aria-label="Expand menu">
           <svg class="icon" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
         </button>
-        <button class="rail-btn" data-rail="speech" aria-label="Speech cleanup"><span class="sf-symbol">􀊱</span></button>
-        <button class="rail-btn" data-rail="zoom" aria-label="Smart zoom"><span class="sf-symbol">􀎐</span></button>
-        <button class="rail-btn" data-rail="style" aria-label="Style"><span class="sf-symbol">􀇾</span></button>
-        <button class="rail-btn" data-rail="aspect" aria-label="Aspect ratio"><span class="sf-symbol">􀏅</span></button>
-        <button class="rail-btn" data-rail="captions" aria-label="Captions"><span class="sf-symbol">􀅶</span></button>
+        <button class="rail-btn" data-rail="speech" aria-label="Speech cleanup"><svg viewBox="0 0 24 24"><path d="M12 3v18M7 8v8M17 8v8M3 11v2M21 11v2"/></svg></button>
+        <button class="rail-btn" data-rail="zoom" aria-label="Smart zoom"><svg class="smartzoom-icon" viewBox="0 0 28 24" aria-hidden="true"></svg></button>
+        <button class="rail-btn" data-rail="cursor" aria-label="Cursor"><svg viewBox="0 0 24 24"><path d="M5 3l13 8-5.5 1.5L9 19 5 3z"/></svg></button>
+        <button class="rail-btn" data-rail="style" aria-label="Style & background"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18"/></svg></button>
+        <button class="rail-btn" data-rail="captions" aria-label="Captions"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 11h4M7 14h7"/></svg></button>
       </div>
       <div class="panel-h">
         <div class="panel-normal-head">
@@ -1696,6 +1696,7 @@ body.mode-after .onboarding.review-paused[data-step="review"] .review-preview .d
         zoomInspectorTitle=$('#zoomInspectorTitle'), zeVideoPreview=$('#zeVideoPreview'),
         captionText=$('#captionText');
   const SMART_ZOOM_PATHS=$('.zoom-group .smartzoom-icon')?.innerHTML||'';
+  $$('.panel-rail .smartzoom-icon').forEach(svg=>{ svg.innerHTML=SMART_ZOOM_PATHS; });
   function smartZoomIcon(cls){
     return '<svg class="'+cls+' smartzoom-icon" viewBox="0 0 28 24" aria-hidden="true">'+SMART_ZOOM_PATHS+'</svg>';
   }
@@ -2313,7 +2314,8 @@ body.mode-after .onboarding.review-paused[data-step="review"] .review-preview .d
       const first=zooms[0];
       if(first) selectZoom(first.id,false,true);
     }
-    if(target==='style'||target==='aspect') openStyleInspector();
+    if(target==='style') openStyleInspector();
+    if(target==='cursor') closeZoomInspector();
     if(target==='captions') openCaptionInspector();
   });
 

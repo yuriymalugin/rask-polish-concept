@@ -1068,7 +1068,7 @@ body.mode-after .onboarding.review-paused[data-step="review"] .review-preview .d
 .review-process-bar{height:6px;border-radius:999px;background:#EAECF0;overflow:hidden}
 .review-process-bar span{display:block;height:100%;width:0;border-radius:inherit;background:#0B0BCF}
 .onboarding.review-processing[data-step="review"] .review-process{display:block}
-.onboarding.review-processing[data-step="review"] .review-process-bar span{animation:reviewProcessFill 12s linear forwards}
+.onboarding.review-processing[data-step="review"] .review-process-bar span{animation:reviewProcessFill 18s linear forwards}
 .onboarding.review-processing[data-step="review"] .review-summary-actions{opacity:.42;pointer-events:none;filter:saturate(.65)}
 .onboarding.review-processing[data-step="review"] .review-saved{opacity:0;visibility:hidden}
 @keyframes reviewProcessFill{0%{width:0}35%{width:42%}72%{width:78%}100%{width:100%}}
@@ -2479,6 +2479,8 @@ body.mode-after .onboarding.review-paused[data-step="review"] .review-preview .d
       result:'Shortened 7 long pauses and added 4 smart zooms'
     }
   ];
+  const REVIEW_PROCESS_STEP_MS=4500;
+  const REVIEW_PROCESS_TOTAL_MS=REVIEW_PROCESS_STEP_MS*PROCESS_STEPS.length;
   const REVIEW_TOTAL=45;
   const REVIEW_INITIAL_TIME=14.278;
   let recTimer=null, recStart=0, reviewLoadTimer=null, reviewProcessTimer=null, reviewProcessInterval=null, reviewSwapTimer=null;
@@ -2615,13 +2617,13 @@ body.mode-after .onboarding.review-paused[data-step="review"] .review-preview .d
     reviewProcessInterval=setInterval(()=>{
       stepIndex=Math.min(PROCESS_STEPS.length-1,stepIndex+1);
       updateReviewProcessStep(stepIndex);
-    },3000);
+    },REVIEW_PROCESS_STEP_MS);
     reviewProcessTimer=setTimeout(()=>{
       clearInterval(reviewProcessInterval);
       root.classList.remove('review-processing');
       root.classList.add('review-processed');
       restoreFinalReviewSummary();
-    },12000);
+    },REVIEW_PROCESS_TOTAL_MS);
   }
   function updateReviewProcessStep(activeIndex){
     const step=PROCESS_STEPS[activeIndex]||PROCESS_STEPS[0];

@@ -497,15 +497,17 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .lane-clip{position:absolute;left:16px;top:0;width:3050px;height:91px;background:transparent;border-radius:0;overflow:visible;border:0}
 .lane-clip::before{display:none}
 .clip-card{position:absolute;top:35px;height:48px;border-radius:8px;background:rgba(11,11,207,.08);border:1px solid rgba(11,11,207,.12);
-  color:#0000B8;font-size:13px;line-height:16px;font-weight:600;padding:16px 14px 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;z-index:4}
-.clip-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--acc)}
-.clip-card.active{background:rgba(11,11,207,.08);border:2px solid #0000FF;box-shadow:inset 3px 0 0 #0000FF;padding-top:14px}
-.clip-card.active::after{content:"";position:absolute;right:7px;top:8px;width:3px;height:32px;border-radius:2px;background:#0000FF}
+  color:#0000B8;font-size:13px;line-height:16px;font-weight:600;padding:16px 14px 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;z-index:4;touch-action:none;cursor:pointer}
+.clip-card::before,.clip-card::after{display:none}
+.clip-card.active{background:rgba(11,11,207,.08);border:1px solid rgba(11,11,207,.12);box-shadow:none;padding-top:16px}
 .clip-card.kept{background:rgba(11,11,207,.08);color:#0000B8;opacity:1}
+.clip-card.selected{background:rgba(11,11,207,.08);border:2px solid #0000FF;box-shadow:none;padding-top:14px;z-index:9;overflow:visible}
+.clip-card.selected::before,.clip-card.selected::after{content:"";display:block;position:absolute;top:8px;width:3px;height:32px;border-radius:2px;background:#0000FF}
+.clip-card.selected::before{left:7px}.clip-card.selected::after{right:7px}
 .raw-clip{display:none}
 .mode-before .clip-card:not(.raw-clip),.mode-before .cut-gap,.mode-before .lane-zooms{display:none}
 .mode-before .raw-clip{display:block;left:10px!important;width:calc(100% - 20px)!important;background:rgba(11,11,207,.08);border:1px solid rgba(11,11,207,.12);padding-top:16px}
-.mode-before .raw-clip::after{display:none}
+.mode-before .raw-clip::after{display:none}.mode-before .raw-clip::before{display:none}
 .cut-gap{position:absolute;top:35px;height:48px;border-radius:7px;background:repeating-linear-gradient(45deg,rgba(255,56,76,.13) 0 6px,rgba(255,56,76,.04) 6px 12px);
   border-left:1px solid rgba(255,56,76,.36);border-right:1px solid rgba(255,56,76,.36);z-index:2}
 .cut-gap::after{content:attr(data-label);position:absolute;left:50%;top:6px;transform:translateX(-50%);
@@ -522,6 +524,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .cut-gap.selected::before,.micro-cut.selected::after{content:"";position:absolute;left:50%;top:-18px;width:1px;height:18px;background:#F59E0B}
 .clip-handle{position:absolute;top:-3px;bottom:-3px;width:10px;border-radius:5px;background:#fff;border:1.5px solid #F59E0B;box-shadow:0 2px 8px rgba(16,24,40,.12);cursor:ew-resize;z-index:10}
 .clip-handle.l{left:-6px}.clip-handle.r{right:-6px}
+.clip-card.selected .clip-handle{top:4px;bottom:4px;width:22px;border:0;background:transparent;box-shadow:none;border-radius:0}
+.clip-card.selected .clip-handle.l{left:0}.clip-card.selected .clip-handle.r{right:0}
 .micro-cut.tiny{width:12px;min-width:12px;padding:0}
 .micro-cut.tiny span{position:absolute;left:50%;bottom:calc(100% + 5px);transform:translateX(-50%);
   background:#fff;border:1px solid #FEE4E2;border-radius:5px;padding:2px 6px;opacity:0;pointer-events:none;
@@ -2053,7 +2057,7 @@ body.mode-after .onboarding.review-paused[data-step="review"] .review-preview .d
     }
   }
   function bindCleanupClipEditing(){
-    $$('.lane-clip .cut-gap,.lane-clip .micro-cut').forEach(el=>{
+    $$('.lane-clip .clip-card:not(.raw-clip),.lane-clip .cut-gap,.lane-clip .micro-cut').forEach(el=>{
       const startEdit=e=>{
         if(document.body.classList.contains('mode-before')) return;
         const lane=laneClip.getBoundingClientRect();
@@ -2061,6 +2065,7 @@ body.mode-after .onboarding.review-paused[data-step="review"] .review-preview .d
         const sx=e.clientX;
         const startLeft=parseFloat(el.style.left)||el.offsetLeft;
         const startWidth=parseFloat(el.style.width)||el.offsetWidth;
+        const minWidth=el.classList.contains('clip-card')?44:12;
         let moved=false;
         selectCleanupClip(el);
         if(e.pointerId!=null && el.setPointerCapture) el.setPointerCapture(e.pointerId);
@@ -2072,11 +2077,11 @@ body.mode-after .onboarding.review-paused[data-step="review"] .review-preview .d
             el.style.left=left+'px';
           }else if(mode==='l'){
             const right=startLeft+startWidth;
-            const left=clamp(startLeft+dx,0,right-12);
+            const left=clamp(startLeft+dx,0,right-minWidth);
             el.style.left=left+'px';
             el.style.width=(right-left)+'px';
           }else{
-            const width=clamp(startWidth+dx,12,lane.width-startLeft);
+            const width=clamp(startWidth+dx,minWidth,lane.width-startLeft);
             el.style.width=width+'px';
           }
         };
@@ -2101,7 +2106,7 @@ body.mode-after .onboarding.review-paused[data-step="review"] .review-preview .d
       el.onmousedown=startEdit;
     });
     laneClip?.addEventListener('pointerdown',e=>{
-      if(!e.target.closest('.cut-gap,.micro-cut')) clearCleanupSelection();
+      if(!e.target.closest('.clip-card:not(.raw-clip),.cut-gap,.micro-cut')) clearCleanupSelection();
     });
   }
   bindCleanupClipEditing();

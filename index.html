@@ -100,14 +100,14 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .zoomwrap{position:absolute;inset:0;transform-origin:50% 50%;
   transition:transform .85s cubic-bezier(.34,1.56,.55,1)}
 .mode-before .zoomwrap{transition:transform .4s ease}
-.webcam-bubble{position:absolute;left:calc(6% - 16px);bottom:calc(8% - 16px);z-index:12;width:168px;aspect-ratio:1;
+.webcam-bubble{position:absolute;left:calc(6% - 26px);bottom:calc(8% - 26px);z-index:12;width:168px;aspect-ratio:1;
   border-radius:50%;overflow:hidden;background:#1B1B2B;border:5px solid #fff;
   box-shadow:0 18px 42px -12px rgba(16,24,40,.42),0 4px 12px rgba(16,24,40,.18);
   pointer-events:none}
 .webcam-bubble video{width:130%;height:130%;display:block;object-fit:cover;object-position:center;
   transform:translate(-11.5%,-1.5%)}
-.canvas.r916 .webcam-bubble{width:128px;left:calc(6% - 14px);bottom:calc(8% - 14px);border-width:4px}
-.canvas.r11 .webcam-bubble{width:152px;left:calc(6% - 14px);bottom:calc(8% - 14px)}
+.canvas.r916 .webcam-bubble{width:128px;left:calc(6% - 24px);bottom:calc(8% - 24px);border-width:4px}
+.canvas.r11 .webcam-bubble{width:152px;left:calc(6% - 24px);bottom:calc(8% - 24px)}
 
 /* mock dashboard inside recording */
 .dash{position:absolute;inset:0;display:grid;grid-template-columns:128px 1fr;background:#F6F7FB;color:#1B1B2B}
@@ -1228,6 +1228,12 @@ body.flow-onboarding .onboarding{display:flex}
   function smartZoomIcon(cls){
     return '<svg class="'+cls+' smartzoom-icon" viewBox="0 0 28 24" aria-hidden="true">'+SMART_ZOOM_PATHS+'</svg>';
   }
+  function syncWebcamPlayback(){
+    $$('.app .webcam-bubble video').forEach(video=>{
+      if(playing) video.play?.().catch(()=>{});
+      else video.pause?.();
+    });
+  }
 
   let playing=true, t=4.55, last=performance.now();
   let centers=[], lastKey='', lastActiveStateId='__init';
@@ -1614,6 +1620,7 @@ body.flow-onboarding .onboarding{display:flex}
     $('#play-ic').innerHTML = playing
       ? '<rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/>'
       : '<path d="M7 4 L20 12 L7 20 Z"/>';
+    syncWebcamPlayback();
     // focus picker is an editing affordance — show only when paused on a selected zoom
     if(playing) focusdot.hidden=true;
     else if(selId) showFocus(zooms.find(z=>z.id===selId));

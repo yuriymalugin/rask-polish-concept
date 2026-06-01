@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Rask · First Recording Flow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fff;
+  --surface:#f9fafb;
+  --surface-2:#f2f4f7;
+  --line:#eaecf0;
+  --line-2:#d0d5dd;
+  --text:#101828;
+  --text-2:#344054;
+  --text-3:#667085;
+  --brand:#0b0bcf;
+  --brand-2:#3d3de9;
+  --brand-deep:#0909a2;
+  --brand-soft:#f5f5ff;
+  --success:#12b76a;
+  --warning:#f79009;
+  --danger:#ff384c;
+  --radius-sm:8px;
+  --radius:12px;
+  --shadow:0 1px 1px rgba(16,24,40,.05),0 12px 32px -18px rgba(16,24,40,.28);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family:Inter,system-ui,sans-serif;
+  color:var(--text);
+  background:#eef1f6;
+  -webkit-font-smoothing:antialiased;
+}
+button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
+.frame{
+  width:1440px;
+  height:900px;
+  margin:0 auto;
+  display:flex;
+  background:var(--bg);
+  overflow:hidden;
+}
+.sidebar{
+  width:208px;
+  flex:0 0 208px;
+  border-right:1px solid var(--line);
+  background:#fff;
+  display:flex;
+  flex-direction:column;
+}
+.side-top{
+  height:96px;
+  padding:16px 10px 0;
+  border-bottom:1px solid rgba(0,0,0,.08);
+}
+.logo{
+  height:24px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  margin:0 8px 16px;
+  font-size:23px;
+  font-weight:800;
+  letter-spacing:-.07em;
+  color:#111827;
+}
+.logo-mark{
+  width:24px;
+  height:18px;
+  border-radius:4px;
+  background:linear-gradient(135deg,var(--brand),var(--brand-2));
+  clip-path:polygon(0 0,100% 0,74% 48%,100% 100%,0 100%,26% 49%);
+}
+.team{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:2px 8px;
+  height:44px;
+}
+.team-avatar{
+  width:32px;
+  height:32px;
+  border-radius:8px;
+  display:grid;
+  place-items:center;
+  background:#f1f3fe;
+  color:#2944cc;
+  font-weight:600;
+}
+.team b{display:block;font-size:13px;font-weight:500;color:var(--text-2);line-height:18px}
+.team span{display:block;font-size:11px;color:var(--text-3);line-height:16px}
+.nav{
+  padding:12px 10px;
+  border-bottom:1px solid rgba(0,0,0,.08);
+}
+.nav-group{display:flex;flex-direction:column;gap:4px;margin-bottom:22px}
+.nav-item{
+  height:40px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:0 12px;
+  border-radius:10px;
+  font-size:13px;
+  font-weight:500;
+  color:var(--text);
+}
+.nav-item.muted{color:var(--text-2)}
+.nav-item.active{background:#f9fafb}
+.nav-ico{
+  width:16px;
+  height:16px;
+  display:grid;
+  place-items:center;
+  color:var(--text);
+  font-size:14px;
+}
+.side-spacer{flex:1}
+.side-footer{
+  border-top:1px solid var(--line);
+  padding:12px;
+}
+.help{display:flex;flex-direction:column;gap:4px;margin-bottom:12px}
+.profile{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  padding-top:10px;
+}
+.photo{
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  background:radial-gradient(circle at 50% 34%,#f7d2bf 0 17%,transparent 18%),radial-gradient(circle at 48% 33%,#241915 0 21%,transparent 22%),linear-gradient(135deg,#f1b489,#a66740);
+}
+.profile b{display:block;font-size:12px;font-weight:500;line-height:18px}
+.profile span{display:block;font-size:11px;color:var(--text-3);line-height:16px;max-width:134px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.main{
+  flex:1;
+  min-width:0;
+  background:#fff;
+  display:flex;
+  flex-direction:column;
+}
+.topbar{
+  height:72px;
+  padding:16px 24px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  border-bottom:1px solid var(--line);
+}
+.crumb{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  color:var(--text-3);
+  font-size:13px;
+  flex:1;
+}
+.crumb b{font-size:15px;font-weight:600;color:var(--text)}
+.chip{
+  display:inline-flex;
+  align-items:center;
+  height:24px;
+  padding:0 8px;
+  border-radius:999px;
+  background:var(--brand-soft);
+  color:var(--brand);
+  border:1px solid rgba(11,11,207,.14);
+  font-size:11px;
+  font-weight:600;
+}
+.top-actions{display:flex;align-items:center;gap:8px}
+.icon-btn{
+  width:40px;
+  height:40px;
+  display:grid;
+  place-items:center;
+  border:1px solid var(--line-2);
+  border-radius:8px;
+  color:var(--text-2);
+  background:#fff;
+}
+.btn{
+  min-height:40px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:10px 17px;
+  border-radius:8px;
+  border:1px solid var(--line-2);
+  background:#fff;
+  color:var(--text-2);
+  font-size:13px;
+  font-weight:500;
+  box-shadow:0 1px 1px rgba(16,24,40,.05);
+}
+.btn.primary{
+  border-color:var(--brand);
+  background:var(--brand);
+  color:#fff;
+  box-shadow:0 2px 8px rgba(11,11,207,.25);
+}
+.workspace{
+  flex:1;
+  height:calc(100% - 72px);
+  min-height:0;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 368px;
+  background:#fff;
+  overflow:hidden;
+}
+.content{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  background:#f2f3f8;
+}
+.canvas-area{
+  flex:1;
+  min-height:0;
+  padding:34px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.empty-canvas{
+  width:min(852px,100%);
+  aspect-ratio:16/9;
+  border-radius:16px;
+  padding:22px;
+  position:relative;
+  background:linear-gradient(135deg,#3d3de9 0%,#0b0bcf 55%,#0909a2 100%);
+  box-shadow:0 20px 60px -20px rgba(11,11,100,.45),0 0 0 1px rgba(11,11,207,.12);
+}
+.record-shell{
+  width:100%;
+  height:100%;
+  border-radius:12px;
+  background:#fff;
+  box-shadow:0 16px 42px -18px rgba(16,24,40,.4);
+  overflow:hidden;
+  display:grid;
+  grid-template-columns:142px 1fr;
+}
+.mock-side{
+  border-right:1px solid #ecedf3;
+  background:#fbfcff;
+  padding:15px 12px;
+}
+.mock-brand{
+  height:22px;
+  display:flex;
+  gap:8px;
+  align-items:center;
+  font-size:13px;
+  font-weight:700;
+  margin-bottom:14px;
+}
+.mock-brand i{width:18px;height:18px;border-radius:5px;background:#1b1b2b}
+.mock-nav{height:28px;border-radius:7px;margin-bottom:5px;background:#f6f7fb}
+.mock-nav.on{background:#ededfd}
+.mock-main{
+  padding:18px;
+  background:#f6f7fb;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.mock-top{display:flex;justify-content:space-between;align-items:center}
+.mock-title{width:196px;height:22px;border-radius:6px;background:#d9deeb}
+.mock-button{width:116px;height:32px;border-radius:8px;background:#1b1b2b}
+.mock-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.mock-card{height:78px;border-radius:10px;background:#fff;border:1px solid #ecedf3}
+.mock-chart{flex:1;border-radius:10px;background:#fff;border:1px solid #ecedf3;position:relative;overflow:hidden}
+.mock-chart:before{
+  content:"";
+  position:absolute;
+  inset:24px 24px 18px;
+  background:linear-gradient(180deg,rgba(61,61,233,.24),rgba(61,61,233,0));
+  clip-path:polygon(0 70%,18% 62%,32% 66%,47% 44%,60% 50%,73% 29%,86% 34%,100% 12%,100% 100%,0 100%);
+}
+.mock-bottom{height:56px;border-radius:10px;background:#fff;border:1px solid #ecedf3}
+.canvas-overlay{
+  position:absolute;
+  inset:22px;
+  border-radius:12px;
+  background:rgba(255,255,255,.74);
+  backdrop-filter:blur(3px);
+  display:grid;
+  place-items:center;
+  text-align:center;
+}
+.empty-card{
+  width:448px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+.status-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  height:28px;
+  padding:0 10px;
+  border-radius:999px;
+  background:#ecfdf3;
+  color:#067647;
+  border:1px solid #abefc6;
+  font-size:12px;
+  font-weight:600;
+  margin-bottom:18px;
+}
+.status-dot{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:var(--success);
+}
+.empty-card h1{
+  margin:0;
+  max-width:420px;
+  font-size:30px;
+  line-height:38px;
+  letter-spacing:-.02em;
+  font-weight:600;
+}
+.empty-card p{
+  margin:10px 0 22px;
+  max-width:412px;
+  color:var(--text-3);
+  font-size:14px;
+  line-height:22px;
+}
+.cta-row{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+}
+.timeline-empty{
+  height:128px;
+  border-top:1px solid var(--line);
+  background:#fff;
+  padding:18px 30px 20px;
+}
+.transport{
+  height:32px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  color:var(--text-3);
+  font-size:12px;
+  font-weight:500;
+}
+.play-skel{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.play-circle{
+  width:32px;
+  height:32px;
+  border-radius:50%;
+  background:#eef0f5;
+  display:grid;
+  place-items:center;
+  color:#98a2b3;
+}
+.ghost-track{
+  height:48px;
+  margin-top:14px;
+  border:1px dashed var(--line-2);
+  border-radius:10px;
+  background:repeating-linear-gradient(90deg,#f9fafb 0 68px,#f2f4f7 68px 69px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--text-3);
+  font-size:13px;
+}
+.panel{
+  border-left:1px solid var(--line);
+  background:#fff;
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+  min-height:0;
+  height:100%;
+}
+.panel-head{
+  min-height:64px;
+  padding:14px 16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-bottom:1px solid var(--line);
+}
+.panel-head h2{margin:0;font-size:16px;line-height:24px;font-weight:600}
+.panel-head span{font-size:12px;color:var(--text-3);font-weight:500}
+.panel-body{
+  padding:16px;
+  overflow:auto;
+  min-height:0;
+}
+.setup-card{
+  border-radius:12px;
+  background:var(--brand-soft);
+  padding:16px;
+  margin-bottom:16px;
+}
+.setup-card h3{
+  margin:0;
+  color:var(--brand);
+  font-size:16px;
+  line-height:24px;
+  font-weight:600;
+}
+.setup-card p{
+  margin:6px 0 0;
+  color:var(--text-2);
+  font-size:13px;
+  line-height:20px;
+}
+.checklist{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  margin-bottom:18px;
+}
+.check-item{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  padding:12px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  background:#fff;
+}
+.check{
+  width:20px;
+  height:20px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  flex:0 0 auto;
+  font-size:12px;
+  font-weight:700;
+}
+.check.ok{background:#ecfdf3;color:#067647}
+.check.next{background:var(--brand-soft);color:var(--brand)}
+.check.later{background:#f2f4f7;color:var(--text-3)}
+.check-copy{min-width:0}
+.check-copy b{display:block;font-size:13px;line-height:20px;font-weight:600}
+.check-copy span{display:block;font-size:12px;line-height:18px;color:var(--text-3)}
+.permission{
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:14px;
+  margin-bottom:16px;
+}
+.permission h3{
+  margin:0 0 10px;
+  font-size:14px;
+  line-height:20px;
+  font-weight:600;
+}
+.permission-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  padding:10px 0;
+  border-top:1px solid var(--line);
+}
+.permission-row:first-of-type{border-top:0;padding-top:0}
+.permission-row b{display:block;font-size:13px;line-height:20px;font-weight:500}
+.permission-row span{display:block;font-size:12px;line-height:18px;color:var(--text-3)}
+.toggle{
+  width:36px;
+  height:21px;
+  border-radius:999px;
+  background:var(--brand);
+  padding:2px;
+  flex:0 0 auto;
+}
+.toggle:after{
+  content:"";
+  display:block;
+  width:17px;
+  height:17px;
+  border-radius:50%;
+  background:#fff;
+  margin-left:15px;
+  box-shadow:0 1px 3px rgba(16,24,40,.25);
+}
+.flow-card{
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:14px;
+}
+.flow-card h3{
+  margin:0 0 12px;
+  font-size:14px;
+  line-height:20px;
+  font-weight:600;
+}
+.flow-step{
+  display:grid;
+  grid-template-columns:24px 1fr;
+  gap:10px;
+  position:relative;
+  padding-bottom:14px;
+}
+.flow-step:after{
+  content:"";
+  position:absolute;
+  left:11px;
+  top:26px;
+  bottom:2px;
+  width:1px;
+  background:var(--line);
+}
+.flow-step:last-child{padding-bottom:0}
+.flow-step:last-child:after{display:none}
+.num{
+  width:24px;
+  height:24px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:#f2f4f7;
+  color:var(--text-3);
+  font-size:12px;
+  font-weight:600;
+  z-index:1;
+}
+.flow-step.active .num{background:var(--brand);color:#fff}
+.flow-step b{display:block;font-size:13px;line-height:20px;font-weight:600}
+.flow-step span{display:block;font-size:12px;line-height:18px;color:var(--text-3)}
+.note-strip{
+  margin-top:16px;
+  padding:12px 14px;
+  border-radius:10px;
+  background:#fff7ed;
+  color:#9a3412;
+  font-size:12px;
+  line-height:18px;
+  border:1px solid #fed7aa;
+}
+.icon{width:18px;height:18px;stroke:currentColor;stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
+</style>
+</head>
+<body>
+  <div class="frame">
+    <aside class="sidebar">
+      <div class="side-top">
+        <div class="logo"><span class="logo-mark"></span><span>Rask</span></div>
+        <div class="team">
+          <div class="team-avatar">M</div>
+          <div><b>My Teamspace</b><span>Owner</span></div>
+        </div>
+      </div>
+      <nav class="nav">
+        <div class="nav-group">
+          <div class="nav-item muted"><span class="nav-ico">⚙</span>Settings & members</div>
+        </div>
+        <div class="nav-group">
+          <div class="nav-item"><span class="nav-ico">⌘</span>Translation</div>
+          <div class="nav-item"><span class="nav-ico">◌</span>Voice Clone Library</div>
+          <div class="nav-item"><span class="nav-ico">□</span>Dictionary</div>
+          <div class="nav-item active"><span class="nav-ico">▣</span>Create Video</div>
+        </div>
+      </nav>
+      <div class="side-spacer"></div>
+      <div class="side-footer">
+        <div class="help">
+          <div class="nav-item muted"><span class="nav-ico">?</span>Help Center</div>
+          <div class="nav-item muted"><span class="nav-ico">◌</span>Get help</div>
+        </div>
+        <div class="profile">
+          <div class="photo"></div>
+          <div><b>Free Plan</b><span>yuriymalugin@gmail.com</span></div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="crumb">
+          <span>Create Video</span>
+          <span>/</span>
+          <b>Record & Polish</b>
+          <span class="chip">Extension connected</span>
+        </div>
+        <div class="top-actions">
+          <button class="btn">View plans</button>
+          <button class="icon-btn" aria-label="Help">
+            <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.6 9a2.4 2.4 0 1 1 3.4 2.2c-.8.4-1 .9-1 1.6M12 17h.01"/></svg>
+          </button>
+          <button class="icon-btn" aria-label="Search">
+            <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <section class="workspace">
+        <div class="content">
+          <div class="canvas-area">
+            <div class="empty-canvas">
+              <div class="record-shell">
+                <div class="mock-side">
+                  <div class="mock-brand"><i></i>Acme</div>
+                  <div class="mock-nav on"></div>
+                  <div class="mock-nav"></div>
+                  <div class="mock-nav"></div>
+                  <div class="mock-nav"></div>
+                </div>
+                <div class="mock-main">
+                  <div class="mock-top"><div class="mock-title"></div><div class="mock-button"></div></div>
+                  <div class="mock-cards"><div class="mock-card"></div><div class="mock-card"></div><div class="mock-card"></div></div>
+                  <div class="mock-chart"></div>
+                  <div class="mock-bottom"></div>
+                </div>
+              </div>
+              <div class="canvas-overlay">
+                <div class="empty-card">
+                  <div class="status-pill"><span class="status-dot"></span>Chrome extension connected</div>
+                  <h1>Record your first product walkthrough</h1>
+                  <p>Capture your screen. Rask will clean up speech, add smart zooms, and prepare a share-ready video.</p>
+                  <div class="cta-row">
+                    <button class="btn primary">
+                      <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2"/></svg>
+                      Start recording
+                    </button>
+                    <button class="btn">Try sample recording</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="timeline-empty">
+            <div class="transport">
+              <div class="play-skel">
+                <div class="play-circle">
+                  <svg class="icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+                <span>0:00 / 0:00</span>
+              </div>
+              <span>Single-track timeline will appear after recording</span>
+            </div>
+            <div class="ghost-track">Your recording, cuts, and smart zooms will appear here</div>
+          </div>
+        </div>
+
+        <aside class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>First recording</h2>
+              <span>Ready state before capture</span>
+            </div>
+            <span class="chip">Step 1</span>
+          </div>
+          <div class="panel-body">
+            <div class="setup-card">
+              <h3>You are ready to record</h3>
+              <p>Rask asks for access only when it is needed. The user chooses the tab, window, or screen each time.</p>
+            </div>
+
+            <div class="checklist">
+              <div class="check-item">
+                <div class="check ok">✓</div>
+                <div class="check-copy"><b>Chrome extension</b><span>Connected and waiting for the first capture.</span></div>
+              </div>
+              <div class="check-item">
+                <div class="check next">1</div>
+                <div class="check-copy"><b>Screen access</b><span>Requested after Start recording via Chrome picker.</span></div>
+              </div>
+              <div class="check-item">
+                <div class="check later">2</div>
+                <div class="check-copy"><b>Microphone</b><span>Asked only if microphone is enabled in pre-record setup.</span></div>
+              </div>
+            </div>
+
+            <div class="permission">
+              <h3>Pre-record defaults</h3>
+              <div class="permission-row">
+                <div><b>Capture clicks for smart zoom</b><span>Uses click targets to frame the action precisely.</span></div>
+                <div class="toggle"></div>
+              </div>
+              <div class="permission-row">
+                <div><b>Microphone</b><span>On by default, permission requested on record.</span></div>
+                <div class="toggle"></div>
+              </div>
+              <div class="permission-row">
+                <div><b>AI polish</b><span>Speech cleanup and zooms applied after upload.</span></div>
+                <div class="toggle"></div>
+              </div>
+            </div>
+
+            <div class="flow-card">
+              <h3>First-use flow</h3>
+              <div class="flow-step active">
+                <div class="num">1</div>
+                <div><b>Ready to record</b><span>Empty editor invites the first capture.</span></div>
+              </div>
+              <div class="flow-step">
+                <div class="num">2</div>
+                <div><b>Choose source</b><span>Tab, window, or entire screen in a compact setup modal.</span></div>
+              </div>
+              <div class="flow-step">
+                <div class="num">3</div>
+                <div><b>Record</b><span>Extension control shows timer, pause, finish.</span></div>
+              </div>
+              <div class="flow-step">
+                <div class="num">4</div>
+                <div><b>AI polish</b><span>Progressively adds transcript, cuts, and zooms.</span></div>
+              </div>
+              <div class="flow-step">
+                <div class="num">5</div>
+                <div><b>Review result</b><span>Editor opens with auto-polish summary and export.</span></div>
+              </div>
+            </div>
+
+            <div class="note-strip">Design note: before the first recording, the screen explains permissions only through value: precise smart zooms, speech cleanup, and user-controlled capture.</div>
+          </div>
+        </aside>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

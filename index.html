@@ -2486,6 +2486,7 @@ body.mode-after .onboarding.review-paused[data-step="review"] .review-preview .d
   ];
   const REVIEW_PROCESS_STEP_MS=4500;
   const REVIEW_PROCESS_TOTAL_MS=REVIEW_PROCESS_STEP_MS*PROCESS_STEPS.length;
+  const REVIEW_LOADING_MS=4000;
   const REVIEW_TOTAL=45;
   const REVIEW_INITIAL_TIME=14.278;
   let recTimer=null, recStart=0, reviewLoadTimer=null, reviewProcessTimer=null, reviewProcessInterval=null, reviewSwapTimer=null;
@@ -2677,7 +2678,7 @@ body.mode-after .onboarding.review-paused[data-step="review"] .review-preview .d
       mountReviewPreview();
       setPreviewMode('after');
       clearTimeout(reviewLoadTimer);
-      reviewLoadTimer=setTimeout(()=>go('review'),3000);
+      reviewLoadTimer=setTimeout(()=>go('review'),REVIEW_LOADING_MS);
     }
     else if(step==='review'){ stopRecordingClock(); mountReviewPreview(); setPreviewMode('after'); startReviewProcessing(); startReviewPlayer(true); }
   }

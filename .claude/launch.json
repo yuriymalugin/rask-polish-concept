@@ -4,7 +4,7 @@
     {
       "name": "rask-concept",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "4599", "--directory", "."],
+      "runtimeArgs": ["dev_server.py"],
       "port": 4599
     }
   ]

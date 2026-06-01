@@ -1824,6 +1824,11 @@ body.flow-onboarding .onboarding{display:flex}
 (function(){
   const root=document.getElementById('onboarding');
   if(!root) return;
+  const directEditorRoute=()=>{
+    const path=window.location.pathname.replace(/\/+$/,'');
+    const params=new URLSearchParams(window.location.search);
+    return path.endsWith('/editor') || params.get('mode')==='editor' || window.location.hash==='#editor';
+  };
   const panels=[...root.querySelectorAll('[data-rec-panel]')];
   const recTime=root.querySelector('.rec-time');
   let recTimer=null, recStart=0;
@@ -1861,6 +1866,14 @@ body.flow-onboarding .onboarding{display:flex}
     if(step==='recording') startRecordingClock();
     else if(step==='review') stopRecordingClock();
   }
+  function openEditor(updateUrl){
+    stopRecordingClock();
+    document.body.classList.remove('flow-onboarding');
+    document.body.classList.add('flow-edit');
+    if(updateUrl && window.history?.pushState) window.history.pushState(null,'','/editor');
+    window.dispatchEvent(new Event('resize'));
+    setTimeout(()=>window.dispatchEvent(new Event('resize')),120);
+  }
 	  root.addEventListener('click',e=>{
 	    const stepBtn=e.target.closest('[data-flow-step]');
 	    if(stepBtn){ go(stepBtn.dataset.flowStep); return; }
@@ -1875,15 +1888,12 @@ body.flow-onboarding .onboarding{display:flex}
 	      go(root.dataset.step==='recording'?'review':'screen-modal');
 	    }
     if(e.target.closest('[data-open-editor]')){
-      stopRecordingClock();
-      document.body.classList.remove('flow-onboarding');
-      document.body.classList.add('flow-edit');
-      window.dispatchEvent(new Event('resize'));
-      setTimeout(()=>window.dispatchEvent(new Event('resize')),120);
+      openEditor(true);
     }
   });
   root.dataset.step='intro';
   setRecorderPanels('intro');
+  if(directEditorRoute()) openEditor(false);
 })();
 </script>
 </body>
